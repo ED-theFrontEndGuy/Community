@@ -1,0 +1,15 @@
+.board {
+    background-color: #000;
+    max-width: 480px;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 150px;
+    height: 150px;
+    margin: 5px;
+    background-color: #fff;
+}
