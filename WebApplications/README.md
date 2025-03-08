@@ -47,6 +47,7 @@ dotnet aspnet-codegenerator controller -name ContactTypesController -m App.Domai
 dotnet aspnet-codegenerator controller -name ContactsController -m App.Domain.Contact -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 ~~~
 
+Kaver compose
 ~~~docker-compose.yml
 services:
   postgres:
@@ -70,4 +71,34 @@ volumes:
 networks:
   default:
     name: infra
+~~~
+
+My compose
+~~~docker-compose.yml
+services:
+  community-postgres:
+    container_name: "community-postgres"
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    name: infra
+~~~
+
+~~~sh
+docker compose --project-name local-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
+
+docker compose --project-name community-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
+docker compose --project-name community-dev-infra down
 ~~~
