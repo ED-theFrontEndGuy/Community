@@ -10,23 +10,23 @@ using App.Domain;
 
 namespace WebApp.Controllers
 {
-    public class AssignmentsController : Controller
+    public class BookmarksController : Controller
     {
         private readonly AppDbContext _context;
 
-        public AssignmentsController(AppDbContext context)
+        public BookmarksController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Assignments
+        // GET: Bookmarks
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Assignments.Include(a => a.Declaration);
+            var appDbContext = _context.Bookmarks.Include(b => b.Assignment).Include(b => b.User);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Assignments/Details/5
+        // GET: Bookmarks/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,43 +34,46 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _context.Assignments
-                .Include(a => a.Declaration)
+            var bookmark = await _context.Bookmarks
+                .Include(b => b.Assignment)
+                .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (assignment == null)
+            if (bookmark == null)
             {
                 return NotFound();
             }
 
-            return View(assignment);
+            return View(bookmark);
         }
 
-        // GET: Assignments/Create
+        // GET: Bookmarks/Create
         public IActionResult Create()
         {
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id");
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
-        // POST: Assignments/Create
+        // POST: Bookmarks/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,DeclarationId,Id")] Assignment assignment)
+        public async Task<IActionResult> Create([Bind("Link,UserId,AssignmentId,Id")] Bookmark bookmark)
         {
             if (ModelState.IsValid)
             {
-                assignment.Id = Guid.NewGuid();
-                _context.Add(assignment);
+                bookmark.Id = Guid.NewGuid();
+                _context.Add(bookmark);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
-            return View(assignment);
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", bookmark.AssignmentId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", bookmark.UserId);
+            return View(bookmark);
         }
 
-        // GET: Assignments/Edit/5
+        // GET: Bookmarks/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -78,23 +81,24 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _context.Assignments.FindAsync(id);
-            if (assignment == null)
+            var bookmark = await _context.Bookmarks.FindAsync(id);
+            if (bookmark == null)
             {
                 return NotFound();
             }
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
-            return View(assignment);
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", bookmark.AssignmentId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", bookmark.UserId);
+            return View(bookmark);
         }
 
-        // POST: Assignments/Edit/5
+        // POST: Bookmarks/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,DeclarationId,Id")] Assignment assignment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Link,UserId,AssignmentId,Id")] Bookmark bookmark)
         {
-            if (id != assignment.Id)
+            if (id != bookmark.Id)
             {
                 return NotFound();
             }
@@ -103,12 +107,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(assignment);
+                    _context.Update(bookmark);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AssignmentExists(assignment.Id))
+                    if (!BookmarkExists(bookmark.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +123,12 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
-            return View(assignment);
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", bookmark.AssignmentId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", bookmark.UserId);
+            return View(bookmark);
         }
 
-        // GET: Assignments/Delete/5
+        // GET: Bookmarks/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -131,35 +136,36 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _context.Assignments
-                .Include(a => a.Declaration)
+            var bookmark = await _context.Bookmarks
+                .Include(b => b.Assignment)
+                .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (assignment == null)
+            if (bookmark == null)
             {
                 return NotFound();
             }
 
-            return View(assignment);
+            return View(bookmark);
         }
 
-        // POST: Assignments/Delete/5
+        // POST: Bookmarks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var assignment = await _context.Assignments.FindAsync(id);
-            if (assignment != null)
+            var bookmark = await _context.Bookmarks.FindAsync(id);
+            if (bookmark != null)
             {
-                _context.Assignments.Remove(assignment);
+                _context.Bookmarks.Remove(bookmark);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AssignmentExists(Guid id)
+        private bool BookmarkExists(Guid id)
         {
-            return _context.Assignments.Any(e => e.Id == id);
+            return _context.Bookmarks.Any(e => e.Id == id);
         }
     }
 }

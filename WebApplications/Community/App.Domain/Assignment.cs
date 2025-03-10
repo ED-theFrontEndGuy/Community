@@ -8,13 +8,10 @@ public class Assignment : BaseEntity
     [MaxLength(128)]
     public string Name { get; set; }
 
-    public Guid CourseId { get; set; }
-    public Course? Course { get; set; }
-
-    public Guid UserId { get; set; }
-    public User? User { get; set; }
+    public Guid DeclarationId { get; set; }
+    public Declaration? Declaration { get; set; }
     
     public ICollection<Timelog>? Timelogs { get; set; }
-    public ICollection<Attachment>? Attachments { get; set; }
+    public ICollection<Bookmark>? Bookmarks { get; set; }
     public ICollection<StudySession>? StudySessions { get; set; }
 }

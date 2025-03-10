@@ -14,10 +14,6 @@ public class User : BaseEntity
     public ICollection<UserAchievement>? UserAchievements { get; set; }
     public ICollection<Dashboard>? Dashboards { get; set; }
     public ICollection<Declaration>? Declarations { get; set; }
-    public ICollection<Timelog>? Timelogs { get; set; }
-    public ICollection<Attachment>? Attachments { get; set; }
-    public ICollection<Assignment>? Tasks { get; set; }
-    public ICollection<Room>? Rooms { get; set; }
     public ICollection<StudyGroup>? Groups { get; set; }
     public ICollection<Message>? Messages { get; set; }
 } 
