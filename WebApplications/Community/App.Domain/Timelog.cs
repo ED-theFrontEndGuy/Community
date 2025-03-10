@@ -5,8 +5,8 @@ namespace App.Domain;
 
 public class Timelog : BaseEntity
 {
-    public DateTimeOffset StartTime { get; set; }
-    public DateTimeOffset? EndTime { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
 
     public Guid DeclarationId { get; set; }
     public Declaration? Declaration { get; set; }

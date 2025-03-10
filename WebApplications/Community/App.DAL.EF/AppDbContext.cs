@@ -25,4 +25,25 @@ public class AppDbContext : IdentityDbContext
         : base(options)
     {
     }
+    
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        foreach (var entity in ChangeTracker.Entries().Where(e => e.State != EntityState.Deleted))
+        {
+            foreach (var prop in entity.Properties)
+            {
+                if (prop.CurrentValue is DateTime dateTimeValue)
+                {
+                    // todo: find all datetime props, change to utc.
+                    if (dateTimeValue.Kind == DateTimeKind.Unspecified)
+                    {
+                        prop.CurrentValue = DateTime.SpecifyKind(dateTimeValue, DateTimeKind.Utc);
+                        prop.CurrentValue = dateTimeValue.ToUniversalTime();
+                    }
+                }
+            }
+        }
+        
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }
