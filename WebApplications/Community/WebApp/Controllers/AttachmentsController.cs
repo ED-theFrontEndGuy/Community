@@ -10,23 +10,23 @@ using App.Domain;
 
 namespace WebApp.Controllers
 {
-    public class BookmarksController : Controller
+    public class AttachmentsController : Controller
     {
         private readonly AppDbContext _context;
 
-        public BookmarksController(AppDbContext context)
+        public AttachmentsController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Bookmarks
+        // GET: Attachments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Bookmarks.Include(b => b.Assignment).Include(b => b.User);
+            var appDbContext = _context.Attachments.Include(a => a.Assignment);
             return View(await appDbContext.ToListAsync());
         }
 
-        // GET: Bookmarks/Details/5
+        // GET: Attachments/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,46 +34,43 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var bookmark = await _context.Bookmarks
-                .Include(b => b.Assignment)
-                .Include(b => b.User)
+            var attachment = await _context.Attachments
+                .Include(a => a.Assignment)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookmark == null)
+            if (attachment == null)
             {
                 return NotFound();
             }
 
-            return View(bookmark);
+            return View(attachment);
         }
 
-        // GET: Bookmarks/Create
+        // GET: Attachments/Create
         public IActionResult Create()
         {
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
-        // POST: Bookmarks/Create
+        // POST: Attachments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Link,UserId,AssignmentId,Id")] Bookmark bookmark)
+        public async Task<IActionResult> Create([Bind("Link,AssignmentId,Id")] Attachment attachment)
         {
             if (ModelState.IsValid)
             {
-                bookmark.Id = Guid.NewGuid();
-                _context.Add(bookmark);
+                attachment.Id = Guid.NewGuid();
+                _context.Add(attachment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", bookmark.AssignmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", bookmark.UserId);
-            return View(bookmark);
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
+            return View(attachment);
         }
 
-        // GET: Bookmarks/Edit/5
+        // GET: Attachments/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -81,24 +78,23 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var bookmark = await _context.Bookmarks.FindAsync(id);
-            if (bookmark == null)
+            var attachment = await _context.Attachments.FindAsync(id);
+            if (attachment == null)
             {
                 return NotFound();
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", bookmark.AssignmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", bookmark.UserId);
-            return View(bookmark);
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
+            return View(attachment);
         }
 
-        // POST: Bookmarks/Edit/5
+        // POST: Attachments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Link,UserId,AssignmentId,Id")] Bookmark bookmark)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Link,AssignmentId,Id")] Attachment attachment)
         {
-            if (id != bookmark.Id)
+            if (id != attachment.Id)
             {
                 return NotFound();
             }
@@ -107,12 +103,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(bookmark);
+                    _context.Update(attachment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookmarkExists(bookmark.Id))
+                    if (!AttachmentExists(attachment.Id))
                     {
                         return NotFound();
                     }
@@ -123,12 +119,11 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", bookmark.AssignmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", bookmark.UserId);
-            return View(bookmark);
+            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
+            return View(attachment);
         }
 
-        // GET: Bookmarks/Delete/5
+        // GET: Attachments/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -136,36 +131,35 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var bookmark = await _context.Bookmarks
-                .Include(b => b.Assignment)
-                .Include(b => b.User)
+            var attachment = await _context.Attachments
+                .Include(a => a.Assignment)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookmark == null)
+            if (attachment == null)
             {
                 return NotFound();
             }
 
-            return View(bookmark);
+            return View(attachment);
         }
 
-        // POST: Bookmarks/Delete/5
+        // POST: Attachments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var bookmark = await _context.Bookmarks.FindAsync(id);
-            if (bookmark != null)
+            var attachment = await _context.Attachments.FindAsync(id);
+            if (attachment != null)
             {
-                _context.Bookmarks.Remove(bookmark);
+                _context.Attachments.Remove(attachment);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookmarkExists(Guid id)
+        private bool AttachmentExists(Guid id)
         {
-            return _context.Bookmarks.Any(e => e.Id == id);
+            return _context.Attachments.Any(e => e.Id == id);
         }
     }
 }

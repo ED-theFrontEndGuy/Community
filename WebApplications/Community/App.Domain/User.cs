@@ -14,6 +14,5 @@ public class User : BaseEntity
     public ICollection<UserAchievement>? UserAchievements { get; set; }
     public ICollection<Dashboard>? Dashboards { get; set; }
     public ICollection<Declaration>? Declarations { get; set; }
-    public ICollection<StudyGroup>? Groups { get; set; }
     public ICollection<Message>? Messages { get; set; }
 } 

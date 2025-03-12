@@ -125,6 +125,11 @@
       <_ContentIncludedByDefault Remove="Views\Users\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Views\_ViewImports.cshtml" />
       <_ContentIncludedByDefault Remove="Views\_ViewStart.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bookmarks\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bookmarks\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bookmarks\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bookmarks\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Bookmarks\Index.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -133,6 +138,16 @@
       <UpToDateCheckInput Remove="Views\Timelogs\Details.cshtml" />
       <UpToDateCheckInput Remove="Views\Timelogs\Edit.cshtml" />
       <UpToDateCheckInput Remove="Views\Timelogs\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Index.cshtml" />
     </ItemGroup>
 
 </Project>

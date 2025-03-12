@@ -12,6 +12,6 @@ public class Assignment : BaseEntity
     public Declaration? Declaration { get; set; }
     
     public ICollection<Timelog>? Timelogs { get; set; }
-    public ICollection<Bookmark>? Bookmarks { get; set; }
+    public ICollection<Attachment>? Attachments { get; set; }
     public ICollection<StudySession>? StudySessions { get; set; }
 }

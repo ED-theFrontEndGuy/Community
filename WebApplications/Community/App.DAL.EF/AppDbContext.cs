@@ -13,7 +13,7 @@ public class AppDbContext : IdentityDbContext
     public DbSet<Declaration> Declarations { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Timelog> Timelogs { get; set; }
-    public DbSet<Bookmark> Bookmarks { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Assignment> Assignments { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<StudySession> StudySessions { get; set; }

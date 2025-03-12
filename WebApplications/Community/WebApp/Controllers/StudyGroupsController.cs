@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: StudyGroups
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.StudyGroups.Include(s => s.Conversation).Include(s => s.User);
+            var appDbContext = _context.StudyGroups.Include(s => s.StudySession);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -35,8 +35,7 @@ namespace WebApp.Controllers
             }
 
             var studyGroup = await _context.StudyGroups
-                .Include(s => s.Conversation)
-                .Include(s => s.User)
+                .Include(s => s.StudySession)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (studyGroup == null)
             {
@@ -49,8 +48,7 @@ namespace WebApp.Controllers
         // GET: StudyGroups/Create
         public IActionResult Create()
         {
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["StudySessionId"] = new SelectList(_context.StudySessions, "Id", "Id");
             return View();
         }
 
@@ -59,7 +57,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,ConversationId,Id")] StudyGroup studyGroup)
+        public async Task<IActionResult> Create([Bind("StudySessionId,Id")] StudyGroup studyGroup)
         {
             if (ModelState.IsValid)
             {
@@ -68,8 +66,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", studyGroup.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", studyGroup.UserId);
+            ViewData["StudySessionId"] = new SelectList(_context.StudySessions, "Id", "Id", studyGroup.StudySessionId);
             return View(studyGroup);
         }
 
@@ -86,8 +83,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", studyGroup.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", studyGroup.UserId);
+            ViewData["StudySessionId"] = new SelectList(_context.StudySessions, "Id", "Id", studyGroup.StudySessionId);
             return View(studyGroup);
         }
 
@@ -96,7 +92,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("UserId,ConversationId,Id")] StudyGroup studyGroup)
+        public async Task<IActionResult> Edit(Guid id, [Bind("StudySessionId,Id")] StudyGroup studyGroup)
         {
             if (id != studyGroup.Id)
             {
@@ -123,8 +119,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", studyGroup.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", studyGroup.UserId);
+            ViewData["StudySessionId"] = new SelectList(_context.StudySessions, "Id", "Id", studyGroup.StudySessionId);
             return View(studyGroup);
         }
 
@@ -137,8 +132,7 @@ namespace WebApp.Controllers
             }
 
             var studyGroup = await _context.StudyGroups
-                .Include(s => s.Conversation)
-                .Include(s => s.User)
+                .Include(s => s.StudySession)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (studyGroup == null)
             {

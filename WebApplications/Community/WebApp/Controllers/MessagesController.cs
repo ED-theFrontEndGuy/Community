@@ -59,7 +59,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,ConversationId,Id")] Message message)
+        public async Task<IActionResult> Create([Bind("UserMessage,UserId,ConversationId,Id")] Message message)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("UserId,ConversationId,Id")] Message message)
+        public async Task<IActionResult> Edit(Guid id, [Bind("UserMessage,UserId,ConversationId,Id")] Message message)
         {
             if (id != message.Id)
             {

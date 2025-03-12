@@ -6,8 +6,10 @@ namespace App.Domain;
 public class Conversation : BaseEntity
 {
     [MaxLength(128)]
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
-    public ICollection<StudyGroup>? Groups { get; set; }
+    public Guid StudyGroupId { get; set; }
+    public StudyGroup? StudyGroup { get; set; }
+    
     public ICollection<Message>? Messages { get; set; }
 }

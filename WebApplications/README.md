@@ -4,8 +4,8 @@ dotnet ef migrations add InitialCreate
 dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AdjustTimelog8
-dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AdjustTimelog8
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AdjustMessage
+dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AdjustMessage
 
 dotnet ef migrations remove --project App.DAL.EF --startup-project WebApp --context AppDbContext
 
@@ -25,7 +25,7 @@ dotnet aspnet-codegenerator controller -name DashboardsController -actions -m Ap
 dotnet aspnet-codegenerator controller -name DeclarationsController -actions -m App.Domain.Declaration -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name CoursesController -actions -m App.Domain.Course -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name TimelogsController -actions -m App.Domain.Timelog -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-dotnet aspnet-codegenerator controller -name BookmarksController -actions -m App.Domain.Bookmark -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name AttachmentsController -actions -m App.Domain.Attachment -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name AssignmentsController -actions -m App.Domain.Assignment -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name RoomsController -actions -m App.Domain.Room -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name ConversationsController -actions -m App.Domain.Conversation -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
