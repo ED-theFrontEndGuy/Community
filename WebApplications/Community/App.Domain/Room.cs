@@ -8,8 +8,5 @@ public class Room : BaseEntity
     [MaxLength(128)]
     public string Name { get; set; }
 
-    public Guid UserId { get; set; }
-    public User? User { get; set; }
-
     public ICollection<StudySession>? StudySessions { get; set; }
 }

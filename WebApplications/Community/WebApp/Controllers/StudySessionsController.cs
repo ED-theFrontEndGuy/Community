@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: StudySessions
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.StudySessions.Include(s => s.Assignment).Include(s => s.Room).Include(s => s.StudyGroup);
+            var appDbContext = _context.StudySessions.Include(s => s.Assignment).Include(s => s.Room);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -37,7 +37,6 @@ namespace WebApp.Controllers
             var studySession = await _context.StudySessions
                 .Include(s => s.Assignment)
                 .Include(s => s.Room)
-                .Include(s => s.StudyGroup)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (studySession == null)
             {
@@ -52,7 +51,6 @@ namespace WebApp.Controllers
         {
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
-            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id");
             return View();
         }
 
@@ -61,7 +59,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AssignmentId,RoomId,StudyGroupId,Id")] StudySession studySession)
+        public async Task<IActionResult> Create([Bind("AssignmentId,RoomId,Id")] StudySession studySession)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +70,6 @@ namespace WebApp.Controllers
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", studySession.AssignmentId);
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", studySession.RoomId);
-            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id", studySession.StudyGroupId);
             return View(studySession);
         }
 
@@ -91,7 +88,6 @@ namespace WebApp.Controllers
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", studySession.AssignmentId);
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", studySession.RoomId);
-            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id", studySession.StudyGroupId);
             return View(studySession);
         }
 
@@ -100,7 +96,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("AssignmentId,RoomId,StudyGroupId,Id")] StudySession studySession)
+        public async Task<IActionResult> Edit(Guid id, [Bind("AssignmentId,RoomId,Id")] StudySession studySession)
         {
             if (id != studySession.Id)
             {
@@ -129,7 +125,6 @@ namespace WebApp.Controllers
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", studySession.AssignmentId);
             ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", studySession.RoomId);
-            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id", studySession.StudyGroupId);
             return View(studySession);
         }
 
@@ -144,7 +139,6 @@ namespace WebApp.Controllers
             var studySession = await _context.StudySessions
                 .Include(s => s.Assignment)
                 .Include(s => s.Room)
-                .Include(s => s.StudyGroup)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (studySession == null)
             {

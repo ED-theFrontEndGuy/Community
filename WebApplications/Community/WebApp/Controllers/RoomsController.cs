@@ -22,8 +22,7 @@ namespace WebApp.Controllers
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Rooms.Include(r => r.User);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Rooms.ToListAsync());
         }
 
         // GET: Rooms/Details/5
@@ -35,7 +34,6 @@ namespace WebApp.Controllers
             }
 
             var room = await _context.Rooms
-                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
@@ -48,7 +46,6 @@ namespace WebApp.Controllers
         // GET: Rooms/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
@@ -57,7 +54,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,UserId,Id")] Room room)
+        public async Task<IActionResult> Create([Bind("Name,Id")] Room room)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +63,6 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", room.UserId);
             return View(room);
         }
 
@@ -83,7 +79,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", room.UserId);
             return View(room);
         }
 
@@ -92,7 +87,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,UserId,Id")] Room room)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Id")] Room room)
         {
             if (id != room.Id)
             {
@@ -119,7 +114,6 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", room.UserId);
             return View(room);
         }
 
@@ -132,7 +126,6 @@ namespace WebApp.Controllers
             }
 
             var room = await _context.Rooms
-                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {

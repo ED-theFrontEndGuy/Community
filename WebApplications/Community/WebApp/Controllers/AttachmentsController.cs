@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Attachments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Attachments.Include(a => a.Assignment).Include(a => a.User);
+            var appDbContext = _context.Attachments.Include(a => a.Assignment);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -36,7 +36,6 @@ namespace WebApp.Controllers
 
             var attachment = await _context.Attachments
                 .Include(a => a.Assignment)
-                .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (attachment == null)
             {
@@ -50,7 +49,6 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
@@ -59,7 +57,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Link,UserId,AssignmentId,Id")] Attachment attachment)
+        public async Task<IActionResult> Create([Bind("Link,AssignmentId,Id")] Attachment attachment)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +67,6 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", attachment.UserId);
             return View(attachment);
         }
 
@@ -87,7 +84,6 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", attachment.UserId);
             return View(attachment);
         }
 
@@ -96,7 +92,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Link,UserId,AssignmentId,Id")] Attachment attachment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Link,AssignmentId,Id")] Attachment attachment)
         {
             if (id != attachment.Id)
             {
@@ -124,7 +120,6 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", attachment.UserId);
             return View(attachment);
         }
 
@@ -138,7 +133,6 @@ namespace WebApp.Controllers
 
             var attachment = await _context.Attachments
                 .Include(a => a.Assignment)
-                .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (attachment == null)
             {

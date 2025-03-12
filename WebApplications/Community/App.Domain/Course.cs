@@ -9,5 +9,4 @@ public class Course : BaseEntity
     public string Name { get; set; } = default!;
 
     public ICollection<Declaration>? Declarations { get; set; }
-    public ICollection<Assignment>? Tasks { get; set; }
 }

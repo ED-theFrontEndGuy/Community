@@ -6,9 +6,6 @@ namespace App.DAL.EF;
 
 public class AppDbContext : IdentityDbContext
 {
-    public DbSet<Contact> Contacts { get; set; } = default!;
-    public DbSet<ContactType> ContactTypes { get; set; } = default!;
-    public DbSet<Person> Persons { get; set; } = default!;
     public DbSet<User> Users { get; set; } = default!;
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
@@ -27,5 +24,26 @@ public class AppDbContext : IdentityDbContext
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
+    }
+    
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        foreach (var entity in ChangeTracker.Entries().Where(e => e.State != EntityState.Deleted))
+        {
+            foreach (var prop in entity.Properties)
+            {
+                if (prop.CurrentValue is DateTime dateTimeValue)
+                {
+                    // todo: find all datetime props, change to utc.
+                    if (dateTimeValue.Kind == DateTimeKind.Unspecified)
+                    {
+                        prop.CurrentValue = DateTime.SpecifyKind(dateTimeValue, DateTimeKind.Utc);
+                        prop.CurrentValue = dateTimeValue.ToUniversalTime();
+                    }
+                }
+            }
+        }
+        
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
