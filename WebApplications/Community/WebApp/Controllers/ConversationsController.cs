@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: Conversations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Conversations.ToListAsync());
+            var appDbContext = _context.Conversations.Include(c => c.StudyGroup);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: Conversations/Details/5
@@ -34,6 +35,7 @@ namespace WebApp.Controllers
             }
 
             var conversation = await _context.Conversations
+                .Include(c => c.StudyGroup)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conversation == null)
             {
@@ -46,6 +48,7 @@ namespace WebApp.Controllers
         // GET: Conversations/Create
         public IActionResult Create()
         {
+            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id")] Conversation conversation)
+        public async Task<IActionResult> Create([Bind("Name,StudyGroupId,Id")] Conversation conversation)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +66,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id", conversation.StudyGroupId);
             return View(conversation);
         }
 
@@ -79,6 +83,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id", conversation.StudyGroupId);
             return View(conversation);
         }
 
@@ -87,7 +92,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Id")] Conversation conversation)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,StudyGroupId,Id")] Conversation conversation)
         {
             if (id != conversation.Id)
             {
@@ -114,6 +119,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["StudyGroupId"] = new SelectList(_context.StudyGroups, "Id", "Id", conversation.StudyGroupId);
             return View(conversation);
         }
 
@@ -126,6 +132,7 @@ namespace WebApp.Controllers
             }
 
             var conversation = await _context.Conversations
+                .Include(c => c.StudyGroup)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (conversation == null)
             {

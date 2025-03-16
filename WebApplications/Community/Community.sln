@@ -15,6 +15,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "!Solution Items", "!Solution Items", "{3CBF4044-94C1-4310-BA11-45013585F623}"
 	ProjectSection(SolutionItems) = preProject
 		..\README.md = ..\README.md
+		docker-compose.yml = docker-compose.yml
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Resources", "Base.Resources\Base.Resources.csproj", "{B79F1937-E80C-4EF6-A5FE-CC1502D2E3C1}"

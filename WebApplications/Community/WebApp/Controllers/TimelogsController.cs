@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Timelogs
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Timelogs.Include(t => t.Assignment).Include(t => t.Declaration).Include(t => t.User);
+            var appDbContext = _context.Timelogs.Include(t => t.Assignment).Include(t => t.Declaration);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -37,7 +37,6 @@ namespace WebApp.Controllers
             var timelog = await _context.Timelogs
                 .Include(t => t.Assignment)
                 .Include(t => t.Declaration)
-                .Include(t => t.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (timelog == null)
             {
@@ -52,7 +51,6 @@ namespace WebApp.Controllers
         {
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
             ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
@@ -61,7 +59,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StartTime,EndTime,DeclarationId,UserId,AssignmentId,Id")] Timelog timelog)
+        public async Task<IActionResult> Create([Bind("StartTime,EndTime,DeclarationId,AssignmentId,Id")] Timelog timelog)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +70,6 @@ namespace WebApp.Controllers
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", timelog.AssignmentId);
             ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", timelog.DeclarationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", timelog.UserId);
             return View(timelog);
         }
 
@@ -91,7 +88,6 @@ namespace WebApp.Controllers
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", timelog.AssignmentId);
             ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", timelog.DeclarationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", timelog.UserId);
             return View(timelog);
         }
 
@@ -100,7 +96,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("StartTime,EndTime,DeclarationId,UserId,AssignmentId,Id")] Timelog timelog)
+        public async Task<IActionResult> Edit(Guid id, [Bind("StartTime,EndTime,DeclarationId,AssignmentId,Id")] Timelog timelog)
         {
             if (id != timelog.Id)
             {
@@ -129,7 +125,6 @@ namespace WebApp.Controllers
             }
             ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", timelog.AssignmentId);
             ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", timelog.DeclarationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", timelog.UserId);
             return View(timelog);
         }
 
@@ -144,7 +139,6 @@ namespace WebApp.Controllers
             var timelog = await _context.Timelogs
                 .Include(t => t.Assignment)
                 .Include(t => t.Declaration)
-                .Include(t => t.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (timelog == null)
             {

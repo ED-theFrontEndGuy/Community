@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Assignments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Assignments.Include(a => a.Course).Include(a => a.User);
+            var appDbContext = _context.Assignments.Include(a => a.Declaration);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -35,8 +35,7 @@ namespace WebApp.Controllers
             }
 
             var assignment = await _context.Assignments
-                .Include(a => a.Course)
-                .Include(a => a.User)
+                .Include(a => a.Declaration)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (assignment == null)
             {
@@ -49,8 +48,7 @@ namespace WebApp.Controllers
         // GET: Assignments/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id");
             return View();
         }
 
@@ -59,7 +57,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,CourseId,UserId,Id")] Assignment assignment)
+        public async Task<IActionResult> Create([Bind("Name,DeclarationId,Id")] Assignment assignment)
         {
             if (ModelState.IsValid)
             {
@@ -68,8 +66,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", assignment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", assignment.UserId);
+            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
             return View(assignment);
         }
 
@@ -86,8 +83,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", assignment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", assignment.UserId);
+            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
             return View(assignment);
         }
 
@@ -96,7 +92,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,CourseId,UserId,Id")] Assignment assignment)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,DeclarationId,Id")] Assignment assignment)
         {
             if (id != assignment.Id)
             {
@@ -123,8 +119,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", assignment.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", assignment.UserId);
+            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
             return View(assignment);
         }
 
@@ -137,8 +132,7 @@ namespace WebApp.Controllers
             }
 
             var assignment = await _context.Assignments
-                .Include(a => a.Course)
-                .Include(a => a.User)
+                .Include(a => a.Declaration)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (assignment == null)
             {

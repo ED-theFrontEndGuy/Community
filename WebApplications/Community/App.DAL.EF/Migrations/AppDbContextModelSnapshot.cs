@@ -4,6 +4,7 @@ using App.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,18 +16,22 @@ namespace App.DAL.EF.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("App.Domain.Achievement", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
 
@@ -37,24 +42,19 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("DeclarationId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("DeclarationId");
 
                     b.ToTable("Assignments");
                 });
@@ -63,82 +63,40 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssignmentId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Attachments");
-                });
-
-            modelBuilder.Entity("App.Domain.Contact", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ContactTypeId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactTypeId");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("App.Domain.ContactType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ContactTypeName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContactTypes");
                 });
 
             modelBuilder.Entity("App.Domain.Conversation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid>("StudyGroupId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudyGroupId");
 
                     b.ToTable("Conversations");
                 });
@@ -147,12 +105,12 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
 
@@ -163,15 +121,15 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConfigJson")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -184,16 +142,16 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("Active")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("CourseId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -208,13 +166,18 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ConversationId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserMessage")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -225,39 +188,18 @@ namespace App.DAL.EF.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("App.Domain.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PersonName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Persons");
-                });
-
             modelBuilder.Entity("App.Domain.Room", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Rooms");
                 });
@@ -266,19 +208,14 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<Guid>("StudySessionId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("StudySessionId");
 
                     b.ToTable("StudyGroups");
                 });
@@ -287,24 +224,19 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssignmentId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("RoomId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("StudyGroupId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
 
                     b.HasIndex("RoomId");
-
-                    b.HasIndex("StudyGroupId");
 
                     b.ToTable("StudySessions");
                 });
@@ -313,30 +245,25 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AssignmentId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("DeclarationId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
 
                     b.HasIndex("DeclarationId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Timelogs");
                 });
@@ -345,17 +272,17 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(64)");
 
                     b.HasKey("Id");
 
@@ -366,13 +293,13 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("AchievementId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -386,19 +313,19 @@ namespace App.DAL.EF.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -413,17 +340,19 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -435,54 +364,54 @@ namespace App.DAL.EF.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -500,17 +429,19 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -523,18 +454,18 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("ProviderKey")
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -546,10 +477,10 @@ namespace App.DAL.EF.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -561,18 +492,18 @@ namespace App.DAL.EF.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -581,21 +512,13 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Assignment", b =>
                 {
-                    b.HasOne("App.Domain.Course", "Course")
-                        .WithMany("Tasks")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("App.Domain.Declaration", "Declaration")
+                        .WithMany("Assignments")
+                        .HasForeignKey("DeclarationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.User", "User")
-                        .WithMany("Tasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
+                    b.Navigation("Declaration");
                 });
 
             modelBuilder.Entity("App.Domain.Attachment", b =>
@@ -606,34 +529,18 @@ namespace App.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.User", "User")
-                        .WithMany("Attachments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Assignment");
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.Contact", b =>
+            modelBuilder.Entity("App.Domain.Conversation", b =>
                 {
-                    b.HasOne("App.Domain.ContactType", "ContactType")
-                        .WithMany("Contacts")
-                        .HasForeignKey("ContactTypeId")
+                    b.HasOne("App.Domain.StudyGroup", "StudyGroup")
+                        .WithMany("Conversations")
+                        .HasForeignKey("StudyGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.Person", "Person")
-                        .WithMany("Contacts")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ContactType");
-
-                    b.Navigation("Person");
+                    b.Navigation("StudyGroup");
                 });
 
             modelBuilder.Entity("App.Domain.Dashboard", b =>
@@ -685,34 +592,15 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.Room", b =>
-                {
-                    b.HasOne("App.Domain.User", "User")
-                        .WithMany("Rooms")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("App.Domain.StudyGroup", b =>
                 {
-                    b.HasOne("App.Domain.Conversation", "Conversation")
-                        .WithMany("Groups")
-                        .HasForeignKey("ConversationId")
+                    b.HasOne("App.Domain.StudySession", "StudySession")
+                        .WithMany("StudyGroups")
+                        .HasForeignKey("StudySessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.User", "User")
-                        .WithMany("Groups")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
+                    b.Navigation("StudySession");
                 });
 
             modelBuilder.Entity("App.Domain.StudySession", b =>
@@ -729,17 +617,9 @@ namespace App.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.StudyGroup", "StudyGroup")
-                        .WithMany("StudySessions")
-                        .HasForeignKey("StudyGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Assignment");
 
                     b.Navigation("Room");
-
-                    b.Navigation("StudyGroup");
                 });
 
             modelBuilder.Entity("App.Domain.Timelog", b =>
@@ -756,17 +636,9 @@ namespace App.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("App.Domain.User", "User")
-                        .WithMany("Timelogs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Assignment");
 
                     b.Navigation("Declaration");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("App.Domain.UserAchievement", b =>
@@ -853,33 +725,21 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("Timelogs");
                 });
 
-            modelBuilder.Entity("App.Domain.ContactType", b =>
-                {
-                    b.Navigation("Contacts");
-                });
-
             modelBuilder.Entity("App.Domain.Conversation", b =>
                 {
-                    b.Navigation("Groups");
-
                     b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("App.Domain.Course", b =>
                 {
                     b.Navigation("Declarations");
-
-                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("App.Domain.Declaration", b =>
                 {
-                    b.Navigation("Timelogs");
-                });
+                    b.Navigation("Assignments");
 
-            modelBuilder.Entity("App.Domain.Person", b =>
-                {
-                    b.Navigation("Contacts");
+                    b.Navigation("Timelogs");
                 });
 
             modelBuilder.Entity("App.Domain.Room", b =>
@@ -889,26 +749,21 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.StudyGroup", b =>
                 {
-                    b.Navigation("StudySessions");
+                    b.Navigation("Conversations");
+                });
+
+            modelBuilder.Entity("App.Domain.StudySession", b =>
+                {
+                    b.Navigation("StudyGroups");
                 });
 
             modelBuilder.Entity("App.Domain.User", b =>
                 {
-                    b.Navigation("Attachments");
-
                     b.Navigation("Dashboards");
 
                     b.Navigation("Declarations");
 
-                    b.Navigation("Groups");
-
                     b.Navigation("Messages");
-
-                    b.Navigation("Rooms");
-
-                    b.Navigation("Tasks");
-
-                    b.Navigation("Timelogs");
 
                     b.Navigation("UserAchievements");
                 });

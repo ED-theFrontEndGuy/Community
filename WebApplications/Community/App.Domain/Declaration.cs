@@ -13,4 +13,5 @@ public class Declaration : BaseEntity
     public Course? Course { get; set; }
 
     public ICollection<Timelog>? Timelogs { get; set; }
+    public ICollection<Assignment>? Assignments { get; set; }
 }
