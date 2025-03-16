@@ -11,4 +11,13 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
+    <data name="Messages" xml:space="preserve">
+        <value>Sõnumid</value>
+    </data>
+    <data name="Name" xml:space="preserve">
+        <value>Vestluse Nimi</value>
+    </data>
+    <data name="StudyGroup" xml:space="preserve">
+        <value>Õppegrupp</value>
+    </data>
 </root>
