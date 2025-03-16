@@ -5,8 +5,7 @@ namespace App.Domain;
 
 public class Dashboard : BaseEntity
 {
-    [MaxLength(128)]
-    public string ConfigJson { get; set; }
+    [MaxLength(128)] public string ConfigJson { get; set; } = default!;
 
     public Guid UserId { get; set; }
     public User? User { get; set; }

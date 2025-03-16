@@ -5,8 +5,7 @@ namespace App.Domain;
 
 public class Assignment : BaseEntity
 {
-    [MaxLength(128)]
-    public string Name { get; set; }
+    [MaxLength(128)] public string Name { get; set; } = default!;
 
     public Guid DeclarationId { get; set; }
     public Declaration? Declaration { get; set; }
