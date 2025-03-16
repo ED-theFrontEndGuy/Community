@@ -66,7 +66,7 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseRequestLocalization(options: app.Services.GetService<IOptions<RequestLocalizationOptions>>()!.Value!);
+app.UseRequestLocalization(options: app.Services.GetService<IOptions<RequestLocalizationOptions>>()!.Value);
 
 app.UseRouting();
 

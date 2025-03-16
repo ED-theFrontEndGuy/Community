@@ -20,6 +20,7 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-conten t-between">
                 <ul class="navbar-nav flex-grow-1">
+                    <partial name="_LanguageSelection"/>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
@@ -80,7 +81,7 @@
 <footer class="border-top footer text-muted">
     <div class="container">
         <!--ToDo rewatch this spot from lecture -->
-        &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common</a>
+        @* &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common</a> *@
         @Thread.CurrentThread.CurrentCulture.Name | @Thread.CurrentThread.CurrentUICulture.Name
     </div>
 </footer>
