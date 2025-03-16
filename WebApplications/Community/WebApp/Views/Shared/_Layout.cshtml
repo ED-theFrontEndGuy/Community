@@ -11,8 +11,7 @@
 </head>
 <body>
 <header>
-    @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"> *@
-    <nav class="navbar navbar-light bg-white border-right box-shadow position-fixed h-100 d-flex flex-column p-3" style="width: 250px;">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -73,7 +72,7 @@
         </div>
     </nav>
 </header>
-<div class="container">
+<div class="container col-md-0 col-lg-10 p-0=4">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
@@ -83,6 +82,7 @@
     <div class="container">
         <!--ToDo rewatch this spot from lecture -->
         @* &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common</a> *@
+        &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         @Thread.CurrentThread.CurrentCulture.Name | @Thread.CurrentThread.CurrentUICulture.Name
     </div>
 </footer>
