@@ -11,7 +11,8 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"> *@
+    <nav class="navbar navbar-light bg-white border-right box-shadow position-fixed h-100 d-flex flex-column p-3" style="width: 250px;">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -67,8 +68,8 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Messages" asp-action="Index">Messages</a>
                     </li>
                 </ul>
-                <partial name="_LoginPartial"/>
             </div>
+            <partial name="_LoginPartial"/>
         </div>
     </nav>
 </header>
