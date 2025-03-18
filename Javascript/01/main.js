@@ -1,3 +1,7 @@
 "use strict";
+import * as helpers from "./helpers.js";
+import * as board from "./board.js";
 
-console.log("Hello")
+
+helpers.createMainDiv();
+board.drawBoard();

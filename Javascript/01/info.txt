@@ -1,0 +1,10 @@
+Starting simple http server for local dev:
+    http-server -c-1
+
+ToDo
+1. There is a 5 x 5 board
+2. Inside there is tic tac toe 3 x 3 board
+3. Win condition is 3 in a row in 3x3 board.
+4. You can move the 3x3 board withing 5x5 limits but the gist of it is the same.
+   Winning condition is based on 3x3.
+5. After every move check win condition of 3x3.
