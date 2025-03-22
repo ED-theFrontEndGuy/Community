@@ -1,33 +1,42 @@
 "use strict";
 
-function isActiveCell(i, j, activeBoard) {
-    return activeBoard.some(row => row.some(cell => cell[0] === i && cell[1] === j));
-}
-
-export function drawBoard(boardState, activeBoard, cellUpdateFn) {
+export function drawBoard(game) {
     const board = document.getElementById("app");
 
-    for (let i = 0; i < 5; i++) {
+    for (let x = 0; x < 5; x++) {
         let row = document.createElement("div");
         row.classList.add("row");
 
-        for (let j=0; j < 5; j++) {
+        for (let y=0; y < 5; y++) {
             let cell = document.createElement("div");
             cell.classList.add("cell");
+            cell.innerHTML = game.board[x][y] || `${x}${y}`;
 
-            if (isActiveCell(i, j, activeBoard)) {
-                cell.classList.add("active");
-                cell.addEventListener("click", (e) => {
-                    cellUpdateFn(i, j, e);
-                });
-            }
-            
-
-            cell.innerHTML = boardState[i][j] || `${i}${j}`;
             row.appendChild(cell);
         }
+
         board.appendChild(row);
     }
 
+    setListenersToActiveBoard(game, board);
+
     return board;
+}
+
+function setListenersToActiveBoard(game, board) {
+    let x = game.activeBoard[0];
+    let y = game.activeBoard[1];
+    
+    for (let i = x; i < x+3; i++) {
+        let rowNode = board.childNodes[i];
+        
+        for (let j = y; j < y+3; j++) {
+            let cellNode = rowNode.childNodes[j];
+
+            cellNode.classList.add("active");
+            cellNode.addEventListener("click", (e) => {
+                game.currentPlayer.makeAMove(game.board, i, j, e);
+            });
+        }
+    }
 }

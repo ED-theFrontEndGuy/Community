@@ -1,14 +1,12 @@
 "use strict";
-import * as helpers from "./helpers.js";
+
+import "./helpers.js";
 import { GameBrain } from "./brain.js";
 import { drawBoard } from "./board.js";
+import { Player } from "./player.js";
 
-helpers.createMainDiv();
-let game = new GameBrain();
+let playerX = new Player("X");
+let playerO = new Player("O");
+let game = new GameBrain(playerX, playerO);
 
-function cellUpdateFn(x, y, e) {
-    game.makeAMove(x, y);
-    e.target.innerHTML = game.board[x][y] || "";
-}
-
-drawBoard(game.board, game.activeBoard, cellUpdateFn);
+drawBoard(game);

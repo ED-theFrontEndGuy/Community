@@ -1,54 +1,55 @@
-"use strict";
-
-export class GameBrain{
+export class GameBrain {
     #board = [[], [], [], [], []];
-    currentPlayer = "X";
-    winningConditions = [
-        [[1,1], [1,2], [1,3]],
-        [[2,1], [2,2], [2,3]],
-        [[3,1], [3,2], [3,3]],
-        [[1,1], [2,1], [3,1]],
-        [[1,2], [2,2], [3,2]],
-        [[1,3], [2,3], [3,3]],
-        [[1,1], [2,2], [3,3]],
-        [[1,3], [2,2], [3,1]]
-    ];
-    activeBoard = [
-        [[1,1], [1,2], [1,3]],
-        [[2,1], [2,2], [2,3]],
-        [[3,1], [3,2], [3,3]]
-    ]
+    #playerX
+    #playerO
+    #moveActiveBoardAllowed = false;
+    #currentPlayer
 
-    makeAMove(x, y) {
-        if (this.#board[x][y] === undefined) {
-            this.#board[x][y] = this.currentPlayer;
-            
-            if (this.handleResultValidation()) {
-                alert(`${this.currentPlayer} wins!`);
-                // this.resetBoard();
-                return;
-            }
-            
-            this.currentPlayer = this.currentPlayer === "X" ? "O" : "X";
-        }
+    #activeBoard = [1,1]
+
+    constructor(playerX, playerO) {
+        this.#playerX = playerX;
+        this.#playerO = playerO;
     }
 
     handleResultValidation() {
-        for (let condition of this.winningConditions) {
-            const [[ax, ay], [bx, by], [cx, cy]] = condition;
+        // for (let condition of this.winningConditions) {
+        //     const [[ax, ay], [bx, by], [cx, cy]] = condition;
         
-            let A = this.#board[ax][ay];
-            let B = this.#board[bx][by];
-            let C = this.#board[cx][cy];
+        //     let A = this.#board[ax][ay];
+        //     let B = this.#board[bx][by];
+        //     let C = this.#board[cx][cy];
         
-            if (A && A === B && B === C) {
-                return true;
-            }
-        }
-        return false;
+        //     if (A && A === B && B === C) {
+        //         return true;
+        //     }
+        // }
+        // return false;
+    }
+
+    set moveActiveBoardAllowed(flag) {
+        this.#moveActiveBoardAllowed = true;
+    }
+
+    get activeBoard() {
+        return this.#activeBoard;
     }
 
     get board() {
         return this.#board;
+    }
+
+    getCell(x, y) {
+        return this.#board[x][y];
+    }
+
+    get currentPlayer() {
+        if (this.#currentPlayer === this.#playerX) {
+            this.#currentPlayer = this.#playerO;
+        } else {
+            this.#currentPlayer = this.#playerX;
+        }
+
+        return this.#currentPlayer;
     }
 }
