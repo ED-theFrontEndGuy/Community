@@ -2,9 +2,15 @@
     min-height: 100vh;
 } */
 
-#app {
-
+body {
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#app {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,4 +34,12 @@
 
 .active {
     background-color: aqua;
+}
+
+#announcement {
+    color: #000;
+    font-weight: bold;
+    height: 50px;
+    width: auto;
+    
 }
