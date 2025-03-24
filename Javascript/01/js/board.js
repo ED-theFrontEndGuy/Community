@@ -1,7 +1,11 @@
 "use strict";
 
+import { showWinner } from "./helpers.js";
+
 export function drawBoard(game) {
     const board = document.getElementById("app");
+
+
 
     for (let x = 0; x < 5; x++) {
         let row = document.createElement("div");
@@ -35,7 +39,28 @@ function setListenersToActiveBoard(game, board) {
 
             cellNode.classList.add("active");
             cellNode.addEventListener("click", (e) => {
-                game.currentPlayer.makeAMove(game.board, i, j, e);
+                let currentPlayer = game.currentPlayer;
+                currentPlayer.makeAMove(game, i, j, e);
+
+                
+                
+                if (game.handleResultValidation() === "win") {
+                    console.log("vauavivua");
+                    
+                    const resultEvent = new CustomEvent("gameEnd", {
+                        detail: {
+                            text: `Player ${currentPlayer.symbol} wins!`,
+                        },
+                    });
+                    
+
+
+                    cellNode.dispatchEvent(resultEvent);
+                }
+            });
+
+            cellNode.addEventListener("gameEnd", (e) => {
+                showWinner(e);
             });
         }
     }

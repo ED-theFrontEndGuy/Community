@@ -1,5 +1,6 @@
 export class GameBrain {
-    #board = [[], [], [], [], []];
+    // #board = [[], [], [], [], []];
+    #board = Array.from({ length: 5}, () => Array(5).fill(null));
     #playerX
     #playerO
     #moveActiveBoardAllowed = false;
@@ -13,19 +14,71 @@ export class GameBrain {
     }
 
     handleResultValidation() {
-        // for (let condition of this.winningConditions) {
-        //     const [[ax, ay], [bx, by], [cx, cy]] = condition;
+        let x = this.#activeBoard[0];
+        let y = x + 3;
+        if (this.checkWin(x, y, this.#currentPlayer.symbol)) {
+
+            console.log(`${this.#currentPlayer.symbol} wins!`);
+            // alert(`${this.#currentPlayer.symbol} wins!`);
+
+            return "win";
+        }
         
-        //     let A = this.#board[ax][ay];
-        //     let B = this.#board[bx][by];
-        //     let C = this.#board[cx][cy];
-        
-        //     if (A && A === B && B === C) {
-        //         return true;
-        //     }
-        // }
-        // return false;
+        if (this.checkTie()) {
+            console.log("It's a tie!");
+            alert("It's a tie!");
+            return "tie";
+        }
     }
+    
+    checkWin(x, y, symbol) {
+        console.log(`row: ${x}`);
+        console.log(`column: ${y}`);
+        
+        return (
+            this.checkRow(x, symbol) ||
+            this.checkColumn(y, symbol) ||
+            this.checkDiagonals(symbol)
+        );
+    }
+    
+    checkRow(row, symbol) {
+        // return this.#board[row].every(cell => cell === symbol);
+        console.log(symbol);
+        let col = this.#activeBoard[1];
+
+        console.log(this.#activeBoard[1]);
+        
+        let tryout = this.#board[row];
+        console.log(tryout);
+        console.log(this.#board[row]);
+        
+    
+
+        // for (let i of tryout) {
+        //     console.log(i);
+            
+        // }
+        
+        
+        return tryout.toSpliced(0, row).toSpliced(row+2,col).every(cell => cell === symbol);
+    }
+    
+    checkColumn(col, symbol) {
+        return this.#board.every(row => row[col] === symbol);
+    }
+    
+    checkDiagonals(symbol) {
+        const mainDiagonalWin = this.#board.every((row, idx) => row[idx] === symbol);
+        const antiDiagonalWin = this.#board.every((row, idx) => row[4 - idx] === symbol);
+        
+        return mainDiagonalWin || antiDiagonalWin;
+    }
+    
+    checkTie() {
+        return this.#board.every(row => row.every(cell => cell !== null));
+    }
+    
 
     set moveActiveBoardAllowed(flag) {
         this.#moveActiveBoardAllowed = true;

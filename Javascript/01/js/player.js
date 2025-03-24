@@ -14,15 +14,20 @@ export class Player {
         return this.#symbol;
     }
 
-    makeAMove(board, x, y, e) {
-        console.log(board[x][y])
-        if (board[x][y] === undefined && this.#piecesLeft > 0) {
-            board[x][y] = this.#symbol;
+    makeAMove(game, x, y, e) {
+        if (game.board[x][y] === null && this.#piecesLeft > 0) {
+            game.board[x][y] = this.#symbol;
+            for (let i of game.board) {
+                console.log(i);
+                
+            }
 
-            e.target.innerHTML = board[x][y] || this.#symbol;
+            e.target.innerHTML = game.board[x][y] || this.#symbol;
             this.#piecesLeft--;
-            console.log(this.#piecesLeft)
-            console.log(board[x][y])
+
+            return true;
         }
+
+        return false;
     }
 }
