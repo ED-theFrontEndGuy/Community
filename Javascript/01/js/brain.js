@@ -1,5 +1,4 @@
 export class GameBrain {
-    // #board = [[], [], [], [], []];
     #board = Array.from({ length: 5}, () => Array(5).fill(null));
     #playerX
     #playerO
@@ -16,10 +15,9 @@ export class GameBrain {
     handleResultValidation() {
         let x = this.#activeBoard[0];
         let y = x + 3;
-        if (this.checkWin(x, y, this.#currentPlayer.symbol)) {
 
+        if (this.checkWin(x, y, this.#currentPlayer.symbol)) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
-            // alert(`${this.#currentPlayer.symbol} wins!`);
 
             return "win";
         }
@@ -43,28 +41,31 @@ export class GameBrain {
     }
     
     checkRow(row, symbol) {
-        // return this.#board[row].every(cell => cell === symbol);
-        console.log(symbol);
-        let col = this.#activeBoard[1];
+        let col = this.#activeBoard[row];
 
-        console.log(this.#activeBoard[1]);
-        
-        let tryout = this.#board[row];
-        console.log(tryout);
-        console.log(this.#board[row]);
-        
-    
+        for (let i = row; i < row+3; i++) {
+            let tryout = this.#board[i].toSpliced(row-1, row).toSpliced(row+2,col);
 
-        // for (let i of tryout) {
-        //     console.log(i);
-            
-        // }
-        
-        
-        return tryout.toSpliced(0, row).toSpliced(row+2,col).every(cell => cell === symbol);
+            if (tryout.every(cell => cell === symbol)) {
+                return true;
+            } else {
+                continue;
+            }
+        }
     }
     
     checkColumn(col, symbol) {
+        let row = this.#activeBoard[col];
+
+        for (let i = row; i < row+3; i++) {
+            let tryout = this.#board[i].toSpliced(row-1, row).toSpliced(row+2,col);
+
+            if (tryout.every(cell => cell === symbol)) {
+                return true;
+            } else {
+                continue;
+            }
+        }
         return this.#board.every(row => row[col] === symbol);
     }
     

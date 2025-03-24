@@ -17,11 +17,6 @@ export class Player {
     makeAMove(game, x, y, e) {
         if (game.board[x][y] === null && this.#piecesLeft > 0) {
             game.board[x][y] = this.#symbol;
-            for (let i of game.board) {
-                console.log(i);
-                
-            }
-
             e.target.innerHTML = game.board[x][y] || this.#symbol;
             this.#piecesLeft--;
 

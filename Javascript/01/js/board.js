@@ -42,18 +42,13 @@ function setListenersToActiveBoard(game, board) {
                 let currentPlayer = game.currentPlayer;
                 currentPlayer.makeAMove(game, i, j, e);
 
-                
-                
+
                 if (game.handleResultValidation() === "win") {
-                    console.log("vauavivua");
-                    
                     const resultEvent = new CustomEvent("gameEnd", {
                         detail: {
                             text: `Player ${currentPlayer.symbol} wins!`,
                         },
                     });
-                    
-
 
                     cellNode.dispatchEvent(resultEvent);
                 }
