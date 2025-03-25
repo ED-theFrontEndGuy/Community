@@ -10,4 +10,5 @@ let playerO = new Player("O");
 let game = new GameBrain(playerX, playerO);
 
 helpers.createMainDiv();
+helpers.createGameResetButton(game, drawBoard);
 drawBoard(game);

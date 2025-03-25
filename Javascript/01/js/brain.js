@@ -1,7 +1,7 @@
 export class GameBrain {
     #board = Array.from({ length: 5}, () => Array(5).fill(null));
     #activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
-    #activeBoardAnchor = [0, 0];
+    #activeBoardAnchor = [1, 1];
     #playerX
     #playerO
     #currentPlayer
@@ -15,6 +15,12 @@ export class GameBrain {
 
     get activeBoardAnchor() {
         return this.#activeBoardAnchor;
+    }
+
+    resetGame() {
+        this.#board = Array.from({ length: 5}, () => Array(5).fill(null));
+        this.#activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
+        this.#activeBoardAnchor = [1, 1];
     }
 
     updateActiveBoard() {

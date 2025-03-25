@@ -14,27 +14,28 @@ export function createMainDiv() {
     });
 }
 
+export function createGameResetButton(game, drawBoard) {
+    let button = document.createElement("button");
+    button.innerHTML = "Reset";
+    button.onclick = function() {
+        console.log("Resetting game...");
+        
+        game.resetGame();
+
+        let board = document.getElementById("app");
+        board.innerHTML = "";
+
+        drawBoard(game);
+
+        let announcement = document.getElementById("announcement");
+        announcement.innerHTML = "";
+    };
+
+    document.body.appendChild(button);
+}
+
 export function showWinner(e) {
     let target = document.getElementById("announcement");
     
     target.innerHTML = e.detail.text
-}
-
-
-
-export function test() {
-    let row = ["X", "X", "X", "X", "X"];
-    // console.log(row.every(cell => cell === "X"));
-
-    let row2 = ["X", "X", "O", "X", "X"];
-    // console.log(row2.every(cell => cell === "X"));
-
-    let arr = Array.from({ length: 5}, () => Array(5))
-    // for (let i of arr) {
-    //     console.log(i);
-    // }
-
-    console.log("X" === "X");
-    
-
 }
