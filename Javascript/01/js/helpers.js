@@ -81,6 +81,7 @@ function playerBoardMoveButtons(player) {
     let leftBtn = createButton("left");
     let rightBtn = createButton("right");
     let downBtn = createButton("down");
+    
     return new Array(upBtn, leftBtn, rightBtn, downBtn);
 }
 
