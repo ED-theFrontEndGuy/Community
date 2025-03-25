@@ -2,14 +2,6 @@
     min-height: 100vh;
 } */
 
-body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
-
 #app {
     display: flex;
     justify-content: center;
@@ -19,6 +11,10 @@ body {
 
 .row {
     display: flex;
+}
+
+.btn-container {
+    text-align: center;
 }
 
 .cell {
@@ -36,10 +32,22 @@ body {
     background-color: aqua;
 }
 
+.reset-button {
+    margin: 10px 0;
+    text-align: center;
+}
+
 #announcement {
     color: #000;
     font-weight: bold;
     height: 50px;
     width: auto;
-    
+    text-align: center;
 }
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+

@@ -5,8 +5,6 @@ import { showWinner } from "./helpers.js";
 export function drawBoard(game) {
     const board = document.getElementById("app");
 
-
-
     for (let x = 0; x < 5; x++) {
         let row = document.createElement("div");
         row.classList.add("row");

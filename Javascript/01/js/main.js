@@ -9,6 +9,8 @@ let playerX = new Player("X");
 let playerO = new Player("O");
 let game = new GameBrain(playerX, playerO);
 
+helpers.drawPlayerPanels(game)
 helpers.createMainDiv();
 helpers.createGameResetButton(game, drawBoard);
 drawBoard(game);
+

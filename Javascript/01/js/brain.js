@@ -17,10 +17,21 @@ export class GameBrain {
         return this.#activeBoardAnchor;
     }
 
+    get getPlayerX() {
+        return this.#playerX;
+    }
+
+    get getPlayerO() {
+        return this.#playerO;
+    }
+
     resetGame() {
         this.#board = Array.from({ length: 5}, () => Array(5).fill(null));
         this.#activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
         this.#activeBoardAnchor = [1, 1];
+        this.#playerX.resetPlayerStats();
+        this.#playerO.resetPlayerStats();
+        this.#currentPlayer = this.#playerO;
     }
 
     updateActiveBoard() {
@@ -48,6 +59,8 @@ export class GameBrain {
 
         if (this.checkWin()) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
+
+            this.#currentPlayer.increasePlayerWinCount();
 
             return "win";
         }

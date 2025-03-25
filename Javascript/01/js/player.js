@@ -1,9 +1,10 @@
 export class Player {
     #symbol
     #piecesLeft = 4;
+    #winCount = 0;
 
     constructor(symbol) {
-        this.#symbol = symbol
+        this.#symbol = symbol;
     }
 
     get piecesLeft() {
@@ -12,6 +13,10 @@ export class Player {
 
     get symbol() {
         return this.#symbol;
+    }
+
+    get playerWinCount() {
+        return this.#winCount;
     }
 
     makeAMove(game, x, y, e) {
@@ -24,5 +29,13 @@ export class Player {
         }
 
         return false;
+    }
+
+    increasePlayerWinCount() {
+        this.#winCount++;
+    }
+
+    resetPlayerStats() {
+        this.#piecesLeft = 4;
     }
 }
