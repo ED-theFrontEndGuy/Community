@@ -28,8 +28,7 @@ export function drawBoard(game) {
 }
 
 function setListenersToActiveBoard(game, board) {
-    let x = game.activeBoard[0];
-    let y = game.activeBoard[1];
+    let [x, y] = game.activeBoardAnchor;
     
     for (let i = x; i < x+3; i++) {
         let rowNode = board.childNodes[i];

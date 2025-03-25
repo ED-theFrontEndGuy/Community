@@ -1,22 +1,46 @@
 export class GameBrain {
     #board = Array.from({ length: 5}, () => Array(5).fill(null));
+    #activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
+    #activeBoardAnchor = [0, 0];
     #playerX
     #playerO
-    #moveActiveBoardAllowed = false;
     #currentPlayer
+    #moveActiveBoardAllowed = false;
 
-    #activeBoard = [1,1]
 
     constructor(playerX, playerO) {
         this.#playerX = playerX;
         this.#playerO = playerO;
     }
 
-    handleResultValidation() {
-        let x = this.#activeBoard[0];
-        let y = this.#activeBoard[1];
+    get activeBoardAnchor() {
+        return this.#activeBoardAnchor;
+    }
 
-        if (this.checkWin(x, y, this.#currentPlayer.symbol)) {
+    updateActiveBoard() {
+        let [x, y] = this.#activeBoardAnchor;
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                this.#activeBoard[i][j] = this.#board[x + i][y + j];
+            }
+        }
+
+        return this.#activeBoard;
+    }
+
+    testPrintActiveBoard() {
+        for (let i = 0; i < 3; i++) {
+            console.log(this.#activeBoard[i]);
+        }
+    }
+
+    handleResultValidation() {
+        this.updateActiveBoard();
+        this.testPrintActiveBoard();
+        
+
+        if (this.checkWin()) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
 
             return "win";
@@ -29,55 +53,33 @@ export class GameBrain {
         }
     }
     
-    checkWin(x, y, symbol) {
-        console.log(`row: ${x}`);
-        console.log(`column: ${y}`);
-        
+    checkWin() {
         return (
-            this.checkRow(x, symbol) ||
-            this.checkColumn(y, symbol) ||
-            this.checkDiagonals(symbol)
+            this.checkRow() ||
+            this.checkColumn() ||
+            this.checkDiagonals()
         );
     }
     
-    checkRow(row, symbol) {
-        let col = this.#activeBoard[row];
-
-        for (let i = row; i < row+3; i++) {
-            let tryout = this.#board[i].toSpliced(row-1, row).toSpliced(row+2,col);
-
-            if (tryout.every(cell => cell === symbol)) {
-                return true;
-            } else {
-                continue;
-            }
-        }
+    checkRow() {
+        return this.#activeBoard.some(row => row.every(cell => cell === this.#currentPlayer.symbol));
     }
     
-    checkColumn(col, symbol) {
-        let row = this.#activeBoard[col];
-
-        for (let i = col; i < col+3; i++) {
-            let tryout = this.#board[i].toSpliced(row-1, row).toSpliced(row+2,col);
-
-            if (tryout.every(cell => cell === symbol)) {
-                return true;
-            } else {
-                continue;
-            }
-        }
-        return this.#board.every(row => row[col] === symbol);
+    checkColumn() {
+        return [0, 1, 2].some(col => 
+            this.#activeBoard.every(row => row[col] === this.#currentPlayer.symbol)
+        );
     }
     
-    checkDiagonals(symbol) {
-        const mainDiagonalWin = this.#board.every((row, idx) => row[idx] === symbol);
-        const antiDiagonalWin = this.#board.every((row, idx) => row[4 - idx] === symbol);
+    checkDiagonals() {
+        const mainDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][i] === this.#currentPlayer.symbol);
+        const antiDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][2 - i] === this.#currentPlayer.symbol);
         
         return mainDiagonalWin || antiDiagonalWin;
     }
     
     checkTie() {
-        return this.#board.every(row => row.every(cell => cell !== null));
+        return this.#activeBoard.every(row => row.every(cell => cell !== null));
     }
     
 
