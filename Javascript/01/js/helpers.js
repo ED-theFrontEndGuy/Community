@@ -20,7 +20,7 @@ export function createGameResetButton(game, drawBoard) {
     div.appendChild(button);
     div.classList.add("btn-container")
 
-    button.classList.add("reset-button");
+    button.classList.add("btn-reset");
     button.innerHTML = "Reset";
     button.onclick = function() {
         console.log("Resetting game...");
@@ -64,13 +64,30 @@ export function drawPlayerPanels(game) {
 function drawPlayerPanel(player) {    
     let div = document.createElement("div");
     let playerHeader = document.createElement('h1');
-    let winCount = document.createElement("span");
+    let winCount = document.createElement("p");
     
     playerHeader.innerHTML = `Player ${player.symbol}`;
     winCount.innerHTML = player.playerWinCount;
     
     div.appendChild(playerHeader);
     div.appendChild(winCount);
+    div.append(...playerBoardMoveButtons());
 
     return div;
+}
+
+function playerBoardMoveButtons(player) {
+    let upBtn = createButton("up");
+    let leftBtn = createButton("left");
+    let rightBtn = createButton("right");
+    let downBtn = createButton("down");
+    return new Array(upBtn, leftBtn, rightBtn, downBtn);
+}
+
+function createButton(text) {
+    let button = document.createElement("button");
+    button.classList.add("btn-reset");
+    button.innerHTML = text;
+
+    return button;
 }
