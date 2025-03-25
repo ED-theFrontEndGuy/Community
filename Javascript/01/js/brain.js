@@ -14,7 +14,7 @@ export class GameBrain {
 
     handleResultValidation() {
         let x = this.#activeBoard[0];
-        let y = x + 3;
+        let y = this.#activeBoard[1];
 
         if (this.checkWin(x, y, this.#currentPlayer.symbol)) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
@@ -57,7 +57,7 @@ export class GameBrain {
     checkColumn(col, symbol) {
         let row = this.#activeBoard[col];
 
-        for (let i = row; i < row+3; i++) {
+        for (let i = col; i < col+3; i++) {
             let tryout = this.#board[i].toSpliced(row-1, row).toSpliced(row+2,col);
 
             if (tryout.every(cell => cell === symbol)) {

@@ -16,7 +16,6 @@ export function createMainDiv() {
 
 export function showWinner(e) {
     let target = document.getElementById("announcement");
-    // target.innerHTML = e.result
     
     target.innerHTML = e.detail.text
 }
