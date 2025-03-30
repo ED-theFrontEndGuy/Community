@@ -10,8 +10,8 @@ export function createMainDiv() {
     document.body.appendChild(announcementDiv);
     document.body.appendChild(appDiv);
 
-    announcementDiv.addEventListener("gameEnd", (e) => {
-        showWinner(announcementDiv, e);
+    appDiv.addEventListener("gameEnd", (e) => {
+        showWinner(e);
     });
 }
 

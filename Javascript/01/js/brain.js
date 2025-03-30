@@ -86,7 +86,17 @@ export class GameBrain {
                 default:
                     console.log(`Unknown direction ${direction}`);
             }
-            this.handleResultValidation();
+            
+            if (this.handleResultValidation() === "win") {
+                const resultEvent = new CustomEvent("gameEnd", {
+                    detail: {
+                        text: `Player ${this.#currentPlayer.symbol} wins!`,
+                    },
+                });
+    
+                document.getElementById("app").dispatchEvent(resultEvent); 
+            };
+
         } else {
             console.log("Not able to move active board yet.");
         }
