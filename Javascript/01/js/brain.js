@@ -7,7 +7,7 @@ export class GameBrain {
     #playerX
     #playerO
     #currentPlayer
-    #moveActiveBoardAllowed = false;
+    #moveActiveBoardAllowed = true;
 
 
     constructor(playerX, playerO) {
@@ -48,6 +48,10 @@ export class GameBrain {
         return this.#activeBoard;
     }
 
+    displayError(direction) {
+        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+    }
+
     moveActiveBoard(direction) {
         if (this.#moveActiveBoardAllowed) {
             switch (direction) {
@@ -55,28 +59,28 @@ export class GameBrain {
                     if (this.#activeBoardAnchor[0] > 0) {
                         this.#activeBoardAnchor[0] = this.#activeBoardAnchor[0] - 1;
                     } else {
-                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                        this.displayError(direction);
                     }
                     break;
                 case DIRECTIONS.DOWN:
                     if (this.#activeBoardAnchor[0] < 2) {
                         this.#activeBoardAnchor[0] = this.#activeBoardAnchor[0] + 1;
                     } else {
-                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                        this.displayError(direction);
                     }
                     break;
                 case DIRECTIONS.LEFT:
                     if (this.#activeBoardAnchor[1] > 0) {
                         this.#activeBoardAnchor[1] = this.#activeBoardAnchor[1] - 1;
                     } else {
-                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                        this.displayError(direction);
                     }
                     break;
                 case DIRECTIONS.RIGHT:
                     if (this.#activeBoardAnchor[1] < 2) {
                         this.#activeBoardAnchor[1] = this.#activeBoardAnchor[1] + 1;
                     } else {
-                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                        this.displayError(direction);
                     }
                     break;
                 default:
@@ -96,7 +100,7 @@ export class GameBrain {
 
     handleResultValidation() {
         this.updateActiveBoard();
-        this.testPrintActiveBoard();
+        // this.testPrintActiveBoard();
         
 
         if (this.checkWin()) {
