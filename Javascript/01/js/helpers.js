@@ -1,4 +1,5 @@
 import { DIRECTIONS } from "./EDirections.js";
+import { drawBoard } from "./board.js";
 
 
 export function createMainDiv() {
@@ -34,7 +35,6 @@ export function createGameResetButton(game, drawBoard) {
         stats.innerHTML = "";
 
         drawBoard(game);
-        drawPlayerPanels(game);
 
         let announcement = document.getElementById("announcement");
         announcement.innerHTML = "";
@@ -87,10 +87,16 @@ function playerBoardMoveButtons(game) {
 
 function createButton(game, DIRECTION) {
     let button = document.createElement("button");
-    button.classList.add("btn-reset");
+    // button.classList.add("btn-reset");
     button.innerHTML = DIRECTIONS.toString(DIRECTION);
     button.onclick = function () {
+        let board = document.getElementById("app");
+        let stats = document.getElementsByClassName("stats")[0];
+        
+        board.innerHTML = "";
+        stats.innerHTML = "";
         game.moveActiveBoard(DIRECTION);
+        drawBoard(game);
     }
 
     return button;

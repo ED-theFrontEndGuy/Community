@@ -1,6 +1,8 @@
 "use strict";
 
 import { showWinner } from "./helpers.js";
+import * as helpers from "./helpers.js";
+
 
 export function drawBoard(game) {
     const board = document.getElementById("app");
@@ -19,6 +21,8 @@ export function drawBoard(game) {
 
         board.appendChild(row);
     }
+
+    helpers.drawPlayerPanels(game);
 
     setListenersToActiveBoard(game, board);
 

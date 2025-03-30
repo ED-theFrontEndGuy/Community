@@ -7,7 +7,7 @@ export class GameBrain {
     #playerX
     #playerO
     #currentPlayer
-    #moveActiveBoardAllowed = true;
+    #moveActiveBoardAllowed = false;
 
 
     constructor(playerX, playerO) {
@@ -54,24 +54,35 @@ export class GameBrain {
                 case DIRECTIONS.UP:
                     if (this.#activeBoardAnchor[0] > 0) {
                         this.#activeBoardAnchor[0] = this.#activeBoardAnchor[0] - 1;
-                        this.updateActiveBoard();
-
-                        console.log(this.#activeBoardAnchor)
+                    } else {
+                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
                     }
-                    console.log(direction.toString(direction));
                     break;
                 case DIRECTIONS.DOWN:
-                    console.log(direction.toString(direction));
+                    if (this.#activeBoardAnchor[0] < 2) {
+                        this.#activeBoardAnchor[0] = this.#activeBoardAnchor[0] + 1;
+                    } else {
+                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                    }
                     break;
                 case DIRECTIONS.LEFT:
-                    console.log(direction.toString(direction));
+                    if (this.#activeBoardAnchor[1] > 0) {
+                        this.#activeBoardAnchor[1] = this.#activeBoardAnchor[1] - 1;
+                    } else {
+                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                    }
                     break;
                 case DIRECTIONS.RIGHT:
-                    console.log(direction.toString(direction));
+                    if (this.#activeBoardAnchor[1] < 2) {
+                        this.#activeBoardAnchor[1] = this.#activeBoardAnchor[1] + 1;
+                    } else {
+                        console.log(`Not allowed move. Move ${direction} out of bounds.`);
+                    }
                     break;
                 default:
                     console.log(`Unknown direction ${direction}`);
             }
+            this.handleResultValidation();
         } else {
             console.log("Not able to move active board yet.");
         }
