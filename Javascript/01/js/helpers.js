@@ -1,4 +1,4 @@
-"use strict";
+import { DIRECTIONS } from "./EDirections.js";
 
 
 export function createMainDiv() {
@@ -52,8 +52,8 @@ export function showWinner(e) {
 export function drawPlayerPanels(game) {
     let div = document.createElement("div");
     div.classList.add("stats");
-    let player1Panel = drawPlayerPanel(game.getPlayerX);
-    let player2Panel = drawPlayerPanel(game.getPlayerO);
+    let player1Panel = drawPlayerPanel(game, game.getPlayerX);
+    let player2Panel = drawPlayerPanel(game, game.getPlayerO);
     
     div.appendChild(player1Panel);
     div.appendChild(player2Panel);
@@ -61,7 +61,7 @@ export function drawPlayerPanels(game) {
     document.body.prepend(div);
 }
 
-function drawPlayerPanel(player) {    
+function drawPlayerPanel(game, player) {    
     let div = document.createElement("div");
     let playerHeader = document.createElement('h1');
     let winCount = document.createElement("p");
@@ -71,24 +71,27 @@ function drawPlayerPanel(player) {
     
     div.appendChild(playerHeader);
     div.appendChild(winCount);
-    div.append(...playerBoardMoveButtons());
+    div.append(...playerBoardMoveButtons(game));
 
     return div;
 }
 
-function playerBoardMoveButtons(player) {
-    let upBtn = createButton("up");
-    let leftBtn = createButton("left");
-    let rightBtn = createButton("right");
-    let downBtn = createButton("down");
-    
+function playerBoardMoveButtons(game) {
+    let upBtn = createButton(game, DIRECTIONS.UP);
+    let downBtn = createButton(game, DIRECTIONS.DOWN);
+    let leftBtn = createButton(game, DIRECTIONS.LEFT);
+    let rightBtn = createButton(game, DIRECTIONS.RIGHT);
+
     return new Array(upBtn, leftBtn, rightBtn, downBtn);
 }
 
-function createButton(text) {
+function createButton(game, DIRECTION) {
     let button = document.createElement("button");
     button.classList.add("btn-reset");
-    button.innerHTML = text;
+    button.innerHTML = DIRECTIONS.toString(DIRECTION);
+    button.onclick = function () {
+        game.moveActiveBoard(DIRECTION);
+    }
 
     return button;
 }

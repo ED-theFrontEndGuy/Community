@@ -1,3 +1,5 @@
+import { DIRECTIONS } from "./EDirections.js";
+
 export class GameBrain {
     #board = Array.from({ length: 5}, () => Array(5).fill(null));
     #activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
@@ -5,7 +7,7 @@ export class GameBrain {
     #playerX
     #playerO
     #currentPlayer
-    #moveActiveBoardAllowed = false;
+    #moveActiveBoardAllowed = true;
 
 
     constructor(playerX, playerO) {
@@ -44,6 +46,35 @@ export class GameBrain {
         }
 
         return this.#activeBoard;
+    }
+
+    moveActiveBoard(direction) {
+        if (this.#moveActiveBoardAllowed) {
+            switch (direction) {
+                case DIRECTIONS.UP:
+                    if (this.#activeBoardAnchor[0] > 0) {
+                        this.#activeBoardAnchor[0] = this.#activeBoardAnchor[0] - 1;
+                        this.updateActiveBoard();
+
+                        console.log(this.#activeBoardAnchor)
+                    }
+                    console.log(direction.toString(direction));
+                    break;
+                case DIRECTIONS.DOWN:
+                    console.log(direction.toString(direction));
+                    break;
+                case DIRECTIONS.LEFT:
+                    console.log(direction.toString(direction));
+                    break;
+                case DIRECTIONS.RIGHT:
+                    console.log(direction.toString(direction));
+                    break;
+                default:
+                    console.log(`Unknown direction ${direction}`);
+            }
+        } else {
+            console.log("Not able to move active board yet.");
+        }
     }
 
     testPrintActiveBoard() {
