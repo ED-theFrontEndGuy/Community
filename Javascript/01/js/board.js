@@ -11,9 +11,6 @@ export function drawBoard(game) {
         let row = document.createElement("div");
         row.classList.add("row");
 
-        console.log(game.board[x]);
-        
-
         for (let y=0; y < 5; y++) {
             let cell = document.createElement("div");
             cell.classList.add("cell");

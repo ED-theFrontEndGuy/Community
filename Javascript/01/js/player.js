@@ -26,10 +26,7 @@ export class Player {
     makeAMove(game, x, y, e) {
         if (game.board[x][y] === null && this.#piecesLeft >= 0) {
             game.board[x][y] = this.#symbol;
-            console.log(typeof(e.target.innerHTML));
-            
             e.target.innerHTML = game.board[x][y] || this.#symbol;
-            
 
             if (this.#selectedNode !== null) {
                 this.#selectedNode.innerHTML = "";
@@ -39,6 +36,11 @@ export class Player {
                 
                 game.handleResultValidation();
             }
+
+            // for (let i = 0; i < game.board[0].length; i++) {
+            //     console.log(game.board[i]);
+                
+            // }
 
             this.#piecesLeft--;
 
@@ -50,12 +52,13 @@ export class Player {
             this.#selectedY = y;
             this.#selectedNode = e.target;
             this.#selectedNode.classList.add("selected");
-        } else {
-            this.#selectedNode.classList.remove("selected");
-            this.#selectedNode = null;
-            this.#selectedX = null;
-            this.#selectedY = null;
-        }
+        } 
+        // else {
+        //     this.#selectedNode.classList.remove("selected");
+        //     this.#selectedNode = null;
+        //     this.#selectedX = null;
+        //     this.#selectedY = null;
+        // }
 
         return false;
     }
