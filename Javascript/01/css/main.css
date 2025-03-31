@@ -2,6 +2,10 @@
     min-height: 100vh;
 } */
 
+body {
+    background-color: #dddbd7;
+}
+
 #app {
     display: flex;
     justify-content: center;
@@ -51,3 +55,6 @@
     text-align: center;
 }
 
+.selected {
+    background-color: #fe8598;
+}

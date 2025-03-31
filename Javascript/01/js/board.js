@@ -14,7 +14,7 @@ export function drawBoard(game) {
         for (let y=0; y < 5; y++) {
             let cell = document.createElement("div");
             cell.classList.add("cell");
-            cell.innerHTML = game.board[x][y] || `${x}${y}`;
+            cell.innerHTML = game.board[x][y]; //|| `${x}${y}`;
 
             row.appendChild(cell);
         }
@@ -28,6 +28,7 @@ export function drawBoard(game) {
 
     return board;
 }
+
 
 function setListenersToActiveBoard(game, board) {
     let [x, y] = game.activeBoardAnchor;

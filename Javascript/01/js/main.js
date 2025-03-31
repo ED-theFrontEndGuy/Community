@@ -9,7 +9,7 @@ let playerX = new Player("X");
 let playerO = new Player("O");
 let game = new GameBrain(playerX, playerO);
 
-helpers.createMainDiv();
+helpers.createBase();
 helpers.createGameResetButton(game, drawBoard);
 
 drawBoard(game);

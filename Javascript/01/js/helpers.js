@@ -2,11 +2,13 @@ import { DIRECTIONS } from "./EDirections.js";
 import { drawBoard } from "./board.js";
 
 
-export function createMainDiv() {
+export function createBase() {
     let appDiv = document.createElement("div");
-    appDiv.id = "app";
     let announcementDiv = document.createElement("div");
+    
+    appDiv.id = "app";
     announcementDiv.id = "announcement"
+    
     document.body.appendChild(announcementDiv);
     document.body.appendChild(appDiv);
 
@@ -15,9 +17,20 @@ export function createMainDiv() {
     });
 }
 
+function clearBoard() {
+    let board = document.getElementById("app");
+    let stats = document.getElementsByClassName("stats")[0];
+    let announcement = document.getElementById("announcement");
+        
+    announcement.innerHTML = "";
+    board.innerHTML = "";
+    stats.innerHTML = "";
+}
+
 export function createGameResetButton(game, drawBoard) {
     let div = document.createElement("div");
     let button = document.createElement("button");
+
     div.appendChild(button);
     div.classList.add("btn-container")
 
@@ -28,16 +41,8 @@ export function createGameResetButton(game, drawBoard) {
         
         game.resetGame();
 
-        let board = document.getElementById("app");
-        let stats = document.getElementsByClassName("stats")[0];
-        
-        board.innerHTML = "";
-        stats.innerHTML = "";
-
+        clearBoard();
         drawBoard(game);
-
-        let announcement = document.getElementById("announcement");
-        announcement.innerHTML = "";
     };
 
     document.body.appendChild(div);
