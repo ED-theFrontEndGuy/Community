@@ -2,6 +2,10 @@ export class Player {
     #symbol
     #piecesLeft = 4;
     #winCount = 0;
+    #selectedNode = null;
+    #selectedCell = null;
+    #selectedX = null;
+    #selectedY = null;
 
     constructor(symbol) {
         this.#symbol = symbol;
@@ -20,12 +24,32 @@ export class Player {
     }
 
     makeAMove(game, x, y, e) {
-        if (game.board[x][y] === null && this.#piecesLeft > 0) {
+        if (game.board[x][y] === null && this.#piecesLeft >= 0) {
             game.board[x][y] = this.#symbol;
+            console.log(typeof(e.target.innerHTML));
+            
             e.target.innerHTML = game.board[x][y] || this.#symbol;
+            
+
+            if (this.#selectedNode !== null) {
+                this.#selectedNode.innerHTML = "";
+                this.#selectedNode.classList.remove("selected");
+                this.#selectedNode = null;
+                game.board[this.#selectedX][this.#selectedY] = null;
+                
+                game.handleResultValidation();
+            }
+
             this.#piecesLeft--;
 
+            game.switchActivePlayer();
+
             return true;
+        } else if (game.board[x][y] === this.#symbol && this.#piecesLeft <= 2 && this.#selectedNode === null) {
+            this.#selectedX = x;
+            this.#selectedY = y;
+            this.#selectedNode = e.target;
+            this.#selectedNode.classList.add("selected");
         }
 
         return false;

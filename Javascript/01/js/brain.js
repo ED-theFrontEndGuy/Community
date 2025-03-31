@@ -13,6 +13,7 @@ export class GameBrain {
     constructor(playerX, playerO) {
         this.#playerX = playerX;
         this.#playerO = playerO;
+        this.#currentPlayer = this.#playerX;
     }
 
     get activeBoardAnchor() {
@@ -110,7 +111,7 @@ export class GameBrain {
 
     handleResultValidation() {
         this.updateActiveBoard();
-        // this.testPrintActiveBoard();
+        this.testPrintActiveBoard();
         
 
         if (this.checkWin()) {
@@ -174,13 +175,15 @@ export class GameBrain {
         return this.#board[x][y];
     }
 
-    get currentPlayer() {
+    switchActivePlayer() {
         if (this.#currentPlayer === this.#playerX) {
             this.#currentPlayer = this.#playerO;
         } else {
             this.#currentPlayer = this.#playerX;
         }
+    }
 
+    get currentPlayer() {
         return this.#currentPlayer;
     }
 }
