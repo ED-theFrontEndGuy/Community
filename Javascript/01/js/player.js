@@ -50,6 +50,11 @@ export class Player {
             this.#selectedY = y;
             this.#selectedNode = e.target;
             this.#selectedNode.classList.add("selected");
+        } else {
+            this.#selectedNode.classList.remove("selected");
+            this.#selectedNode = null;
+            this.#selectedX = null;
+            this.#selectedY = null;
         }
 
         return false;

@@ -111,7 +111,7 @@ export class GameBrain {
 
     handleResultValidation() {
         this.updateActiveBoard();
-        this.testPrintActiveBoard();
+        // this.testPrintActiveBoard();
         
 
         if (this.checkWin()) {
