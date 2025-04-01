@@ -44,8 +44,7 @@ export class Player {
 
             this.#piecesLeft--;
 
-            game.handleResultValidation(e);
-
+            game.handleResultValidation();
             game.switchActivePlayer();
 
             return true;
@@ -63,7 +62,7 @@ export class Player {
         // }
 
         game.handleResultValidation(e);
-        
+
         return false;
     }
 

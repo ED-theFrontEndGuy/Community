@@ -95,15 +95,26 @@ function createButton(game, DIRECTION) {
     let button = document.createElement("button");
     // button.classList.add("btn-reset");
     button.innerHTML = DIRECTIONS.toString(DIRECTION);
-    button.onclick = function () {
+    // button.onclick = function () {
+    //     let board = document.getElementById("app");
+    //     let stats = document.getElementsByClassName("stats")[0];
+        
+    //     board.innerHTML = "";
+    //     stats.innerHTML = "";
+    //     game.moveActiveBoard(DIRECTION);
+    //     game.handleResultValidation();
+    //     drawBoard(game);
+    // }
+    button.addEventListener("click", (e) => {
         let board = document.getElementById("app");
         let stats = document.getElementsByClassName("stats")[0];
         
         board.innerHTML = "";
         stats.innerHTML = "";
         game.moveActiveBoard(DIRECTION);
+        game.handleResultValidation();
         drawBoard(game);
-    }
+    });
 
     return button;
 }

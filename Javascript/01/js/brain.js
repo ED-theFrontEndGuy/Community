@@ -97,16 +97,23 @@ export class GameBrain {
         }
     }
 
-    handleResultValidation(e) {
+    handleResultValidation() {
         this.updateActiveBoard();
         // this.testPrintActiveBoard();
+
         if (this.checkTie()) {
             console.log("It's a tie!");
-            alert("It's a tie!");
-            return "tie";
-        }
-        
-        if (this.checkWin()) {
+            const resultEvent = new CustomEvent("gameEnd", {
+                detail: {
+                    text: `It's a tie!`,
+                },
+                bubbles: true,
+            });
+
+            document.getElementById("announcement").dispatchEvent(resultEvent);
+
+            
+        } else if (this.checkWin()) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
 
             const resultEvent = new CustomEvent("gameEnd", {
@@ -116,40 +123,49 @@ export class GameBrain {
                 bubbles: true,
             });
 
-            e.target.dispatchEvent(resultEvent);
+            document.getElementById("announcement").dispatchEvent(resultEvent);
             this.#currentPlayer.increasePlayerWinCount();
-
-            return "win";
         }
     }
     
     checkWin() {
-        return (
-            this.checkRow() ||
-            this.checkColumn() ||
-            this.checkDiagonals()
-        );
+        const players = [this.#playerX, this.#playerO];
+
+        for (let player of players) {
+            if (this.checkRow(player) ||
+                this.checkColumn(player) ||
+                this.checkDiagonals(player)
+            ) {
+                this.#currentPlayer = player;
+                return true;
+            }
+        }
+
+        return false;
     }
     
-    checkRow() {
-        return this.#activeBoard.some(row => row.every(cell => cell === this.#currentPlayer.symbol));
+    checkRow(player) {
+        return this.#activeBoard.some(row => row.every(cell => cell === player.symbol));
     }
     
-    checkColumn() {
+    checkColumn(player) {
         return [0, 1, 2].some(col => 
-            this.#activeBoard.every(row => row[col] === this.#currentPlayer.symbol)
+            this.#activeBoard.every(row => row[col] === player.symbol)
         );
     }
     
-    checkDiagonals() {
-        const mainDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][i] === this.#currentPlayer.symbol);
-        const antiDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][2 - i] === this.#currentPlayer.symbol);
+    checkDiagonals(player) {
+        const mainDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][i] === player.symbol);
+        const antiDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][2 - i] === player.symbol);
         
         return mainDiagonalWin || antiDiagonalWin;
     }
     
     checkTie() {
-        return this.#activeBoard.every(row => row.every(cell => cell !== null));
+        const playerXwins = this.checkRow(this.#playerX) || this.checkColumn(this.#playerX);
+        const playerOwins = this.checkRow(this.#playerO) || this.checkColumn(this.#playerO);
+
+        return playerXwins && playerOwins;
     }
     
 
