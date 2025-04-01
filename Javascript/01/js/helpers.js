@@ -7,12 +7,19 @@ export function createBase() {
     let appDiv = document.createElement("div");
     let announcementDiv = document.createElement("div");
     let currentPlayerDiv = document.createElement("div");
+    let switchOpponentDiv = document.createElement("div");
+    let switchOpponentBtn = document.createElement("button");
     
     timerDiv.id = "timer";
     appDiv.id = "app";
     announcementDiv.id = "announcement";
     currentPlayerDiv.id = 'current-player';
+    switchOpponentDiv.id = 'opponent-btn-div';
+    switchOpponentBtn.id = 'opponent-btn';
+    switchOpponentBtn.innerHTML = "Switch Opponent";
     
+    document.body.appendChild(switchOpponentDiv);
+    switchOpponentDiv.appendChild(switchOpponentBtn);
     document.body.appendChild(timerDiv);
     document.body.appendChild(currentPlayerDiv);
     document.body.appendChild(announcementDiv);
