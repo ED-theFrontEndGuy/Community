@@ -27,14 +27,14 @@ export class Player {
         if (game.board[x][y] === null && this.#piecesLeft >= 0) {
             game.board[x][y] = this.#symbol;
             e.target.innerHTML = game.board[x][y] || this.#symbol;
+            console.log(this.#selectedNode);
+            
 
             if (this.#selectedNode !== null) {
                 this.#selectedNode.innerHTML = "";
                 this.#selectedNode.classList.remove("selected");
                 this.#selectedNode = null;
                 game.board[this.#selectedX][this.#selectedY] = null;
-                
-                game.handleResultValidation();
             }
 
             // for (let i = 0; i < game.board[0].length; i++) {
@@ -43,6 +43,8 @@ export class Player {
             // }
 
             this.#piecesLeft--;
+
+            game.handleResultValidation(e);
 
             game.switchActivePlayer();
 
@@ -60,6 +62,8 @@ export class Player {
         //     this.#selectedY = null;
         // }
 
+        game.handleResultValidation(e);
+        
         return false;
     }
 

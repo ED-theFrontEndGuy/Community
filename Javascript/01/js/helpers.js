@@ -12,7 +12,9 @@ export function createBase() {
     document.body.appendChild(announcementDiv);
     document.body.appendChild(appDiv);
 
-    appDiv.addEventListener("gameEnd", (e) => {
+    document.body.addEventListener("gameEnd", (e) => {
+        console.log("Im here");
+        
         showWinner(e);
     });
 }
@@ -48,9 +50,8 @@ export function createGameResetButton(game, drawBoard) {
     document.body.appendChild(div);
 }
 
-export function showWinner(e) {
-    let target = document.getElementById("announcement");
-    
+function showWinner(e) {
+    let target = document.getElementById("announcement");    
     target.innerHTML = e.detail.text
 }
 

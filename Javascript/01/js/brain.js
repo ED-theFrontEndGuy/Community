@@ -34,7 +34,7 @@ export class GameBrain {
         this.#activeBoardAnchor = [1, 1];
         this.#playerX.resetPlayerStats();
         this.#playerO.resetPlayerStats();
-        this.#currentPlayer = this.#playerO;
+        this.#currentPlayer = this.#playerX;
     }
 
     updateActiveBoard() {
@@ -87,17 +87,6 @@ export class GameBrain {
                 default:
                     console.log(`Unknown direction ${direction}`);
             }
-            
-            if (this.handleResultValidation() === "win") {
-                const resultEvent = new CustomEvent("gameEnd", {
-                    detail: {
-                        text: `Player ${this.#currentPlayer.symbol} wins!`,
-                    },
-                });
-    
-                document.getElementById("app").dispatchEvent(resultEvent); 
-            };
-
         } else {
             console.log("Not able to move active board yet.");
         }
@@ -109,13 +98,24 @@ export class GameBrain {
         }
     }
 
-    handleResultValidation() {
+    handleResultValidation(e) {
         this.updateActiveBoard();
         // this.testPrintActiveBoard();
         
-
         if (this.checkWin()) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
+
+            const resultEvent = new CustomEvent("gameEnd", {
+                detail: {
+                    text: `Player ${this.#currentPlayer.symbol} wins!`,
+                },
+                bubbles: true,
+            });
+
+            console.log(e.target);
+            
+
+            e.target.dispatchEvent(resultEvent);
 
             this.#currentPlayer.increasePlayerWinCount();
 
