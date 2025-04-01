@@ -21,16 +21,16 @@ export function drawBoard(game) {
                     let currentPlayer = game.currentPlayer;
                     currentPlayer.makeAMove(game, x, y, e);
     
-                    if (game.handleResultValidation() === "win") {
-                        const resultEvent = new CustomEvent("gameEnd", {
-                            detail: {
-                                text: `Player ${currentPlayer.symbol} wins!`,
-                            },
-                        });
+                    // if (game.handleResultValidation() === "win") {
+                    //     const resultEvent = new CustomEvent("gameEnd", {
+                    //         detail: {
+                    //             text: `Player ${currentPlayer.symbol} wins!`,
+                    //         },
+                    //     });
     
-                        cell.dispatchEvent(resultEvent);
-                    }
-                });
+                    //     cell.dispatchEvent(resultEvent);
+                    // }
+                }, {once: true});
             }
 
             row.appendChild(cell);
