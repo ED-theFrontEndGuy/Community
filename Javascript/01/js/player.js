@@ -3,7 +3,6 @@ export class Player {
     #piecesLeft = 4;
     #winCount = 0;
     #selectedNode = null;
-    #selectedCell = null;
     #selectedX = null;
     #selectedY = null;
 
@@ -35,6 +34,7 @@ export class Player {
                 this.#selectedNode.classList.remove("selected");
                 this.#selectedNode = null;
                 game.board[this.#selectedX][this.#selectedY] = null;
+                game.switchActivePlayer();
             }
 
             // for (let i = 0; i < game.board[0].length; i++) {
@@ -57,12 +57,6 @@ export class Player {
         } else {
             console.log(`Moves left ${this.#piecesLeft}`);
         }
-        // else {
-        //     this.#selectedNode.classList.remove("selected");
-        //     this.#selectedNode = null;
-        //     this.#selectedX = null;
-        //     this.#selectedY = null;
-        // }
 
         game.handleResultValidation(e);
 

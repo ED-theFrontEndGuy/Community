@@ -7,7 +7,6 @@ export class GameBrain {
     #playerX
     #playerO
     #currentPlayer
-    #moveActiveBoardAllowed = true;
 
     constructor(playerX, playerO) {
         this.#playerX = playerX;
@@ -53,7 +52,7 @@ export class GameBrain {
     }
 
     moveActiveBoard(direction) {
-        if (this.#moveActiveBoardAllowed) {
+        if (this.#currentPlayer.piecesLeft <= 2) {
             switch (direction) {
                 case DIRECTIONS.UP:
                     if (this.#activeBoardAnchor[0] > 0) {
@@ -86,6 +85,8 @@ export class GameBrain {
                 default:
                     console.log(`Unknown direction ${direction}`);
             }
+
+            this.switchActivePlayer();
         } else {
             console.log("Not able to move active board yet.");
         }
@@ -166,11 +167,6 @@ export class GameBrain {
         const playerOwins = this.checkRow(this.#playerO) || this.checkColumn(this.#playerO);
 
         return playerXwins && playerOwins;
-    }
-    
-
-    set moveActiveBoardAllowed(flag) {
-        this.#moveActiveBoardAllowed = true;
     }
 
     get activeBoard() {
