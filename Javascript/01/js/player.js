@@ -24,7 +24,7 @@ export class Player {
     }
 
     makeAMove(game, x, y, e) {
-        if (game.board[x][y] === null && this.#piecesLeft >= 0) {
+        if (game.board[x][y] === null && this.#piecesLeft >= 0 && this.#piecesLeft > 0) {
             game.board[x][y] = this.#symbol;
             e.target.innerHTML = game.board[x][y] || this.#symbol;
             console.log(this.#selectedNode);
@@ -53,7 +53,10 @@ export class Player {
             this.#selectedY = y;
             this.#selectedNode = e.target;
             this.#selectedNode.classList.add("selected");
-        } 
+            this.#piecesLeft++;
+        } else {
+            console.log(`Moves left ${this.#piecesLeft}`);
+        }
         // else {
         //     this.#selectedNode.classList.remove("selected");
         //     this.#selectedNode = null;
