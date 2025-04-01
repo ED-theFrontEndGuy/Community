@@ -25,6 +25,28 @@ export function createBase() {
     });
 }
 
+export function startTimer() {
+    let sec = 0; // Start from 0
+    const timerElement = document.getElementById("timer");
+    timerElement.innerHTML = "00:00";
+
+    // Update timer every second
+    const timer = setInterval(function () {
+        let minutes = Math.floor(sec / 60);
+        let seconds = sec % 60;
+
+        // Format as MM:SS
+        timerElement.innerHTML = 
+            (minutes < 10 ? "0" : "") + minutes + ":" + 
+            (seconds < 10 ? "0" : "") + seconds;
+
+        sec++; // Increment time
+    }, 1000);
+
+    return timer; // If you need to stop it later, return the interval ID
+}
+
+
 function clearBoard() {
     let board = document.getElementById("app");
     let stats = document.getElementsByClassName("stats")[0];

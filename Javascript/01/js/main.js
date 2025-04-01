@@ -11,5 +11,6 @@ let game = new GameBrain(playerX, playerO);
 
 helpers.createBase();
 helpers.createGameResetButton(game, drawBoard);
+helpers.startTimer();
 
 drawBoard(game);

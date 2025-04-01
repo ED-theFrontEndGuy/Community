@@ -21,6 +21,11 @@ body {
     text-align: center;
 }
 
+#timer {
+    text-align: center;
+    height: 2em;
+}
+
 .btn-container {
     text-align: center;
 }
