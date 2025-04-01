@@ -9,7 +9,6 @@ export class GameBrain {
     #currentPlayer
     #moveActiveBoardAllowed = true;
 
-
     constructor(playerX, playerO) {
         this.#playerX = playerX;
         this.#playerO = playerO;
@@ -101,6 +100,11 @@ export class GameBrain {
     handleResultValidation(e) {
         this.updateActiveBoard();
         // this.testPrintActiveBoard();
+        if (this.checkTie()) {
+            console.log("It's a tie!");
+            alert("It's a tie!");
+            return "tie";
+        }
         
         if (this.checkWin()) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
@@ -112,20 +116,10 @@ export class GameBrain {
                 bubbles: true,
             });
 
-            console.log(e.target);
-            
-
             e.target.dispatchEvent(resultEvent);
-
             this.#currentPlayer.increasePlayerWinCount();
 
             return "win";
-        }
-        
-        if (this.checkTie()) {
-            console.log("It's a tie!");
-            alert("It's a tie!");
-            return "tie";
         }
     }
     
