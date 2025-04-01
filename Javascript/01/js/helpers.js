@@ -3,12 +3,18 @@ import { drawBoard } from "./board.js";
 
 
 export function createBase() {
+    let timerDiv = document.createElement("div");
     let appDiv = document.createElement("div");
     let announcementDiv = document.createElement("div");
+    let currentPlayerDiv = document.createElement("div");
     
+    timerDiv.id = "timer";
     appDiv.id = "app";
-    announcementDiv.id = "announcement"
+    announcementDiv.id = "announcement";
+    currentPlayerDiv.id = 'current-player';
     
+    document.body.appendChild(timerDiv);
+    document.body.appendChild(currentPlayerDiv);
     document.body.appendChild(announcementDiv);
     document.body.appendChild(appDiv);
 
@@ -94,7 +100,7 @@ function playerBoardMoveButtons(game) {
 function createButton(game, DIRECTION) {
     let button = document.createElement("button");
     button.innerHTML = DIRECTIONS.toString(DIRECTION);
-    
+
     button.addEventListener("click", (e) => {
         let board = document.getElementById("app");
         let stats = document.getElementsByClassName("stats")[0];

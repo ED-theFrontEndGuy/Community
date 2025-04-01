@@ -187,6 +187,8 @@ export class GameBrain {
         } else {
             this.#currentPlayer = this.#playerX;
         }
+
+        document.getElementById("current-player").innerHTML = `Turn: ${this.#currentPlayer.symbol}`;
     }
 
     get currentPlayer() {

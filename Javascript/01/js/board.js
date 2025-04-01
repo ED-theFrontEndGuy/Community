@@ -5,6 +5,8 @@ import * as helpers from "./helpers.js";
 
 export function drawBoard(game) {
     const board = document.getElementById("app");
+    const playerDiv = document.getElementById("current-player");
+    playerDiv.innerHTML = `Turn: ${game.currentPlayer.symbol}`;
 
     for (let x = 0; x < 5; x++) {
         let row = document.createElement("div");

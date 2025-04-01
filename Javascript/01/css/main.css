@@ -17,6 +17,10 @@ body {
     display: flex;
 }
 
+#current-player {
+    text-align: center;
+}
+
 .btn-container {
     text-align: center;
 }
