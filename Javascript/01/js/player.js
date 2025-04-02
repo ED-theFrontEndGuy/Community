@@ -1,3 +1,5 @@
+import { aiMakeAMove } from "./ai.js";
+
 export class Player {
     #symbol
     #piecesLeft = 4;
@@ -5,6 +7,7 @@ export class Player {
     #selectedNode = null;
     #selectedX = null;
     #selectedY = null;
+    #isAi = false;
 
     constructor(symbol) {
         this.#symbol = symbol;
@@ -22,7 +25,26 @@ export class Player {
         return this.#winCount;
     }
 
+    get isAi() {
+        return this.#isAi;
+    }
+
+    deductPiecesLeft() {
+        this.#piecesLeft--;
+    }
+
+    toggleAI() {
+        this.#isAi = this.#isAi ? false : true;
+    }
+
     makeAMove(game, x, y, e) {
+        if (this.#isAi) {
+            aiMakeAMove(game);
+            this.deductPiecesLeft();
+
+            return true;
+        }
+
         if (game.board[x][y] === null && this.#piecesLeft >= 0 && this.#piecesLeft > 0) {
             game.board[x][y] = this.#symbol;
             e.target.innerHTML = game.board[x][y] || this.#symbol;

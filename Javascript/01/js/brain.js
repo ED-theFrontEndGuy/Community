@@ -1,4 +1,6 @@
 import { DIRECTIONS } from "./EDirections.js";
+import { drawBoard } from "./board.js";
+import { clearBoard } from "./helpers.js";
 
 export class GameBrain {
     #board = Array.from({ length: 5}, () => Array(5).fill(null));
@@ -113,7 +115,7 @@ export class GameBrain {
 
             document.getElementById("announcement").dispatchEvent(resultEvent);
 
-            
+            this.resetGame();
         } else if (this.checkWin()) {
             console.log(`${this.#currentPlayer.symbol} wins!`);
 
@@ -126,6 +128,8 @@ export class GameBrain {
 
             document.getElementById("announcement").dispatchEvent(resultEvent);
             this.#currentPlayer.increasePlayerWinCount();
+
+            this.resetGame();
         }
     }
     
@@ -189,6 +193,10 @@ export class GameBrain {
         }
 
         document.getElementById("current-player").innerHTML = `Turn: ${this.#currentPlayer.symbol}`;
+
+        if (this.#currentPlayer.isAi) {
+            this.#currentPlayer.makeAMove(this);
+        }
     }
 
     get currentPlayer() {

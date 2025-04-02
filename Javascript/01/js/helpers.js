@@ -54,7 +54,7 @@ export function startTimer() {
 }
 
 
-function clearBoard() {
+export function clearBoard() {
     let board = document.getElementById("app");
     let stats = document.getElementsByClassName("stats")[0];
     let announcement = document.getElementById("announcement");
@@ -129,6 +129,7 @@ function playerBoardMoveButtons(game) {
 function createButton(game, DIRECTION) {
     let button = document.createElement("button");
     button.innerHTML = DIRECTIONS.toString(DIRECTION);
+    button.classList.add("move-btn");
 
     button.addEventListener("click", (e) => {
         let board = document.getElementById("app");
