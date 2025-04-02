@@ -1,9 +1,12 @@
 "use strict";
 
-import { showWinner } from "./helpers.js";
+import * as helpers from "./helpers.js";
+
 
 export function drawBoard(game) {
     const board = document.getElementById("app");
+    const playerDiv = document.getElementById("current-player");
+    playerDiv.innerHTML = `Turn: ${game.currentPlayer.symbol}`;
 
     for (let x = 0; x < 5; x++) {
         let row = document.createElement("div");
@@ -12,7 +15,16 @@ export function drawBoard(game) {
         for (let y=0; y < 5; y++) {
             let cell = document.createElement("div");
             cell.classList.add("cell");
-            cell.innerHTML = game.board[x][y] || `${x}${y}`;
+            cell.innerHTML = game.board[x][y];
+
+            if (game.board[x][y] !== null) {
+                cell.addEventListener("click", (e) => {
+                    let currentPlayer = game.currentPlayer;
+                    currentPlayer.makeAMove(game, x, y, e);
+                },
+                {once: true},
+                );
+            }
 
             row.appendChild(cell);
         }
@@ -20,10 +32,13 @@ export function drawBoard(game) {
         board.appendChild(row);
     }
 
+    helpers.drawPlayerPanels(game);
+
     setListenersToActiveBoard(game, board);
 
     return board;
 }
+
 
 function setListenersToActiveBoard(game, board) {
     let [x, y] = game.activeBoardAnchor;
@@ -38,21 +53,6 @@ function setListenersToActiveBoard(game, board) {
             cellNode.addEventListener("click", (e) => {
                 let currentPlayer = game.currentPlayer;
                 currentPlayer.makeAMove(game, i, j, e);
-
-
-                if (game.handleResultValidation() === "win") {
-                    const resultEvent = new CustomEvent("gameEnd", {
-                        detail: {
-                            text: `Player ${currentPlayer.symbol} wins!`,
-                        },
-                    });
-
-                    cellNode.dispatchEvent(resultEvent);
-                }
-            });
-
-            cellNode.addEventListener("gameEnd", (e) => {
-                showWinner(e);
             });
         }
     }

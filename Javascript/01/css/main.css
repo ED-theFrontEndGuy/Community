@@ -2,6 +2,10 @@
     min-height: 100vh;
 } */
 
+body {
+    background-color: #dddbd7;
+}
+
 #app {
     display: flex;
     justify-content: center;
@@ -9,8 +13,26 @@
     flex-direction: column;
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .row {
     display: flex;
+}
+
+#current-player {
+    text-align: center;
+}
+
+#opponent-btn-div {
+    text-align: center;
+}
+
+#timer {
+    text-align: center;
+    height: 2em;
 }
 
 .btn-container {
@@ -51,3 +73,6 @@
     text-align: center;
 }
 
+.selected {
+    background-color: #fe8598;
+}
