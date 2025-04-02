@@ -107,7 +107,11 @@ function drawPlayerPanel(game, player) {
     let playerHeader = document.createElement('h1');
     let winCount = document.createElement("p");
     
-    playerHeader.innerHTML = `Player ${player.symbol}`;
+    if (player.isAi) {
+        playerHeader.innerHTML = `AI ${player.symbol}`;
+    } else {
+        playerHeader.innerHTML = `Player ${player.symbol}`;
+    }
     winCount.innerHTML = player.playerWinCount;
     
     div.appendChild(playerHeader);
@@ -130,6 +134,9 @@ function createButton(game, DIRECTION) {
     let button = document.createElement("button");
     button.innerHTML = DIRECTIONS.toString(DIRECTION);
     button.classList.add("move-btn");
+    if (game.getPlayerO.isAi) {
+        button.classList.add("disabled");
+    }
 
     button.addEventListener("click", (e) => {
         let board = document.getElementById("app");
