@@ -28,16 +28,13 @@ export function aiMakeAMove(game) {
 
         // Validate board (but don't check full game win)
         game.handleResultValidation();
-
-        // **Switch turns properly**
-        game.switchActivePlayer(); // Ensures player X can move next
+        game.switchActivePlayer();
     }
 }
 
 function checkLocalWin(game, anchorX, anchorY, playerSymbol) {
     let board = game.board;
 
-    // Check rows
     for (let row = 0; row < 3; row++) {
         if (
             board[anchorX + row][anchorY] === playerSymbol &&
@@ -48,7 +45,6 @@ function checkLocalWin(game, anchorX, anchorY, playerSymbol) {
         }
     }
 
-    // Check columns
     for (let col = 0; col < 3; col++) {
         if (
             board[anchorX][anchorY + col] === playerSymbol &&
@@ -59,7 +55,6 @@ function checkLocalWin(game, anchorX, anchorY, playerSymbol) {
         }
     }
 
-    // Check diagonals
     if (
         board[anchorX][anchorY] === playerSymbol &&
         board[anchorX + 1][anchorY + 1] === playerSymbol &&
@@ -91,11 +86,11 @@ function canWinNextMove(game, playerSymbol) {
                 
                 // Check if this move wins the board
                 if (checkLocalWin(game, anchorX, anchorY, playerSymbol)) {
-                    game.board[x][y] = null; // Reset
-                    return [x, y]; // Winning move found
+                    game.board[x][y] = null;
+                    return [x, y];
                 }
 
-                game.board[x][y] = null; // Reset
+                game.board[x][y] = null;
             }
         }
     }
