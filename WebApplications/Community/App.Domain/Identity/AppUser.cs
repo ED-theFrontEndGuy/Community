@@ -1,17 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace App.Domain;
+namespace App.Domain.Identity;
 
-public class User : IdentityUser<Guid>
+public class AppUser : IdentityUser<Guid>
 {
     [MaxLength(64)]
     [Display(Name = nameof(UserName), ResourceType = typeof(App.Resources.Domain.User))]
-    public string UserName { get; set; } = default!;
+    public string AppUserName { get; set; } = "Test";
     
     [MaxLength(128)]
     [Display(Name = nameof(Email), ResourceType = typeof(App.Resources.Domain.User))]
-    public string Email { get; set; } = default!;
+    public string AppUserEmail { get; set; } = default!;
 
     [Display(Name = nameof(UserAchievements), ResourceType = typeof(App.Resources.Domain.User))]
     public ICollection<UserAchievement>? UserAchievements { get; set; }

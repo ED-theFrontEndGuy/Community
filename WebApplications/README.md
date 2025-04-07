@@ -4,8 +4,8 @@ dotnet ef migrations add InitialCreate
 dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AdjustMessage
-dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AdjustMessage
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext ModifyIdentity
+dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext ModifyIdentity
 
 dotnet ef migrations remove --project App.DAL.EF --startup-project WebApp --context AppDbContext
 
@@ -18,7 +18,7 @@ MVC Controllers
 ~~~sh
 cd WebApp
 
-dotnet aspnet-codegenerator controller -name UsersController -actions -m App.Domain.User -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name UsersController -actions -m App.Domain.Identity.AppUser -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name AchievementsController -actions -m App.Domain.Achievement -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name UserAchievementsController -actions -m App.Domain.UserAchievement -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name DashboardsController -actions -m App.Domain.Dashboard -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f

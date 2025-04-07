@@ -48,7 +48,7 @@ namespace WebApp.Controllers
         // GET: Dashboards/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail");
             return View();
         }
 
@@ -66,7 +66,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", dashboard.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", dashboard.UserId);
             return View(dashboard);
         }
 
@@ -83,7 +83,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", dashboard.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", dashboard.UserId);
             return View(dashboard);
         }
 
@@ -119,7 +119,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", dashboard.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", dashboard.UserId);
             return View(dashboard);
         }
 

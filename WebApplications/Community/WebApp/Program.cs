@@ -1,5 +1,6 @@
 using System.Globalization;
 using App.DAL.EF;
+using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -36,15 +37,18 @@ else
     );
 }
 
-
-
-
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(
-        options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+        options.SignIn.RequireConfirmedAccount = false)
+        .AddDefaultUI()
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
+
+// builder.Services.AddDefaultIdentity<IdentityUser>(
+//         options => options.SignIn.RequireConfirmedAccount = false)
+//     .AddEntityFrameworkStores<AppDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 // add culture switching support

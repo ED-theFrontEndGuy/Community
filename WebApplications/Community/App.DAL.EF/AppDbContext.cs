@@ -1,17 +1,14 @@
 ﻿using App.Domain;
+using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF;
 
-public class AppDbContext : IdentityDbContext<User, Role, Guid>
+public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
-    {
-    }
-    
-    public DbSet<User> Users { get; set; } = default!;
+    public DbSet<AppUser> AppUsers { get; set; } = default!;
+    public DbSet<AppRole> AppRoles { get; set; } = default!;
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<Dashboard> Dashboards { get; set; }
@@ -25,6 +22,11 @@ public class AppDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<StudyGroup> StudyGroups { get; set; }
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<Message> Messages { get; set; }
+    
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
+    {
+    }
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

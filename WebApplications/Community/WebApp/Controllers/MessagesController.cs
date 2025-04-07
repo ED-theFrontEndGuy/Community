@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail");
             return View();
         }
 
@@ -69,7 +69,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", message.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", message.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", message.UserId);
             return View(message);
         }
 
@@ -87,7 +87,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", message.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", message.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", message.UserId);
             return View(message);
         }
 
@@ -124,7 +124,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", message.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", message.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", message.UserId);
             return View(message);
         }
 
