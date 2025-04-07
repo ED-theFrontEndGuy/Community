@@ -4,8 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF;
 
-public class AppDbContext : IdentityDbContext
+public class AppDbContext : IdentityDbContext<User, Role, Guid>
 {
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
+    {
+    }
+    
     public DbSet<User> Users { get; set; } = default!;
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
@@ -20,11 +25,6 @@ public class AppDbContext : IdentityDbContext
     public DbSet<StudyGroup> StudyGroups { get; set; }
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<Message> Messages { get; set; }
-    
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
-    {
-    }
     
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

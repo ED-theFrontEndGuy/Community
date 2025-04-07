@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using Base.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace App.Domain;
 
-public class User : BaseEntity
+public class User : IdentityUser<Guid>
 {
     [MaxLength(64)]
     [Display(Name = nameof(UserName), ResourceType = typeof(App.Resources.Domain.User))]
@@ -21,4 +21,4 @@ public class User : BaseEntity
     public ICollection<Declaration>? Declarations { get; set; }
     [Display(Name = nameof(Messages), ResourceType = typeof(App.Resources.Domain.User))]
     public ICollection<Message>? Messages { get; set; }
-} 
+}
