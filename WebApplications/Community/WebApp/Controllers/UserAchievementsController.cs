@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class UserAchievementsController : Controller
     {
         private readonly AppDbContext _context;
@@ -22,8 +21,17 @@ namespace WebApp.Controllers
         // GET: UserAchievements
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UserAchievements.Include(u => u.Achievement).Include(u => u.User);
-            return View(await appDbContext.ToListAsync());
+            // ask only data for current user
+            var userIdStr = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var userId = Guid.Parse(userIdStr);
+            
+            var res = await _context
+                .UserAchievements
+                .Include(u => u.Achievement)
+                .Include(u => u.User)
+                .Where(u => u.UserId == userId)
+                .ToListAsync();
+            return View(res);
         }
 
         // GET: UserAchievements/Details/5
@@ -50,7 +58,6 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
@@ -59,8 +66,12 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AchievementId,UserId,Id")] UserAchievement userAchievement)
+        public async Task<IActionResult> Create(UserAchievement userAchievement)
         {
+            var userIdStr = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var userId = Guid.Parse(userIdStr);
+            userAchievement.UserId = userId;
+            
             if (ModelState.IsValid)
             {
                 userAchievement.Id = Guid.NewGuid();
@@ -68,8 +79,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userAchievement.UserId);
+            
             return View(userAchievement);
         }
 
@@ -87,7 +97,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userAchievement.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
             return View(userAchievement);
         }
 
@@ -124,7 +134,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", userAchievement.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
             return View(userAchievement);
         }
 

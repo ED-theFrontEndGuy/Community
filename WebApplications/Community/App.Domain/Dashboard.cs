@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using App.Domain.Identity;
 using Base.Domain;
 
 namespace App.Domain;
@@ -11,5 +12,5 @@ public class Dashboard : BaseEntity
 
     public Guid UserId { get; set; }
     [Display(Name = nameof(User), Prompt = nameof(User), ResourceType = typeof(App.Resources.Domain.Dashboard))]
-    public User? User { get; set; }
+    public AppUser? User { get; set; }
 }

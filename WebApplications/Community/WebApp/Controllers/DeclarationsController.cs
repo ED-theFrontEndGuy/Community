@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
             return View();
         }
 
@@ -69,7 +69,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", declaration.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", declaration.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", declaration.UserId);
             return View(declaration);
         }
 
@@ -87,7 +87,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", declaration.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", declaration.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", declaration.UserId);
             return View(declaration);
         }
 
@@ -124,7 +124,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", declaration.CourseId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", declaration.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", declaration.UserId);
             return View(declaration);
         }
 

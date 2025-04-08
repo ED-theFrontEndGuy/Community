@@ -28,7 +28,7 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
@@ -42,7 +42,7 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -61,18 +61,6 @@ namespace App.DAL.EF.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Conversations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conversations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,25 +88,12 @@ namespace App.DAL.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserName = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    Email = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<string>(type: "text", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -139,7 +114,7 @@ namespace App.DAL.EF.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClaimType = table.Column<string>(type: "text", nullable: true),
                     ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
@@ -158,10 +133,10 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    ProviderKey = table.Column<string>(type: "text", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -178,8 +153,8 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    RoleId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,9 +177,9 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -230,9 +205,34 @@ namespace App.DAL.EF.Migrations
                 {
                     table.PrimaryKey("PK_Dashboards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Dashboards_Users_UserId",
+                        name: "FK_Dashboards_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAchievements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AchievementId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAchievements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAchievements_Achievements_AchievementId",
+                        column: x => x.AchievementId,
+                        principalTable: "Achievements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserAchievements_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -250,91 +250,17 @@ namespace App.DAL.EF.Migrations
                 {
                     table.PrimaryKey("PK_Declarations", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Declarations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Declarations_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Declarations_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StudyGroups",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudyGroups", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StudyGroups_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StudyGroups_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserAchievements",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AchievementId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserAchievements", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserAchievements_Achievements_AchievementId",
-                        column: x => x.AchievementId,
-                        principalTable: "Achievements",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserAchievements_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -357,27 +283,20 @@ namespace App.DAL.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookmarks",
+                name: "Attachments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Link = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     AssignmentId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bookmarks", x => x.Id);
+                    table.PrimaryKey("PK_Attachments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bookmarks_Assignments_AssignmentId",
+                        name: "FK_Attachments_Assignments_AssignmentId",
                         column: x => x.AssignmentId,
                         principalTable: "Assignments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookmarks_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -388,8 +307,7 @@ namespace App.DAL.EF.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AssignmentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoomId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StudyGroupId = table.Column<Guid>(type: "uuid", nullable: false)
+                    RoomId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -406,12 +324,6 @@ namespace App.DAL.EF.Migrations
                         principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StudySessions_StudyGroups_StudyGroupId",
-                        column: x => x.StudyGroupId,
-                        principalTable: "StudyGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -420,9 +332,8 @@ namespace App.DAL.EF.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     DeclarationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     AssignmentId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -440,10 +351,67 @@ namespace App.DAL.EF.Migrations
                         principalTable: "Declarations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudyGroups",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudySessionId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudyGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Timelogs_Users_UserId",
+                        name: "FK_StudyGroups_StudySessions_StudySessionId",
+                        column: x => x.StudySessionId,
+                        principalTable: "StudySessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    StudyGroupId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Conversations_StudyGroups_StudyGroupId",
+                        column: x => x.StudyGroupId,
+                        principalTable: "StudyGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserMessage = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ConversationId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -491,14 +459,14 @@ namespace App.DAL.EF.Migrations
                 column: "DeclarationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookmarks_AssignmentId",
-                table: "Bookmarks",
+                name: "IX_Attachments_AssignmentId",
+                table: "Attachments",
                 column: "AssignmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookmarks_UserId",
-                table: "Bookmarks",
-                column: "UserId");
+                name: "IX_Conversations_StudyGroupId",
+                table: "Conversations",
+                column: "StudyGroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dashboards_UserId",
@@ -526,14 +494,9 @@ namespace App.DAL.EF.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudyGroups_ConversationId",
+                name: "IX_StudyGroups_StudySessionId",
                 table: "StudyGroups",
-                column: "ConversationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudyGroups_UserId",
-                table: "StudyGroups",
-                column: "UserId");
+                column: "StudySessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudySessions_AssignmentId",
@@ -546,11 +509,6 @@ namespace App.DAL.EF.Migrations
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudySessions_StudyGroupId",
-                table: "StudySessions",
-                column: "StudyGroupId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Timelogs_AssignmentId",
                 table: "Timelogs",
                 column: "AssignmentId");
@@ -559,11 +517,6 @@ namespace App.DAL.EF.Migrations
                 name: "IX_Timelogs_DeclarationId",
                 table: "Timelogs",
                 column: "DeclarationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Timelogs_UserId",
-                table: "Timelogs",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAchievements_AchievementId",
@@ -595,16 +548,13 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Bookmarks");
+                name: "Attachments");
 
             migrationBuilder.DropTable(
                 name: "Dashboards");
 
             migrationBuilder.DropTable(
                 name: "Messages");
-
-            migrationBuilder.DropTable(
-                name: "StudySessions");
 
             migrationBuilder.DropTable(
                 name: "Timelogs");
@@ -616,31 +566,31 @@ namespace App.DAL.EF.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
-
-            migrationBuilder.DropTable(
-                name: "StudyGroups");
-
-            migrationBuilder.DropTable(
-                name: "Assignments");
+                name: "Conversations");
 
             migrationBuilder.DropTable(
                 name: "Achievements");
 
             migrationBuilder.DropTable(
-                name: "Conversations");
+                name: "StudyGroups");
+
+            migrationBuilder.DropTable(
+                name: "StudySessions");
+
+            migrationBuilder.DropTable(
+                name: "Assignments");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Declarations");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Courses");
         }
     }
 }

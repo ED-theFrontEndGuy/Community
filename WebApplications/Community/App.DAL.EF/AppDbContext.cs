@@ -1,12 +1,14 @@
 ﻿using App.Domain;
+using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF;
 
-public class AppDbContext : IdentityDbContext
+public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
-    public DbSet<User> Users { get; set; } = default!;
+    public DbSet<AppUser> AppUsers { get; set; } = default!;
+    public DbSet<AppRole> AppRoles { get; set; } = default!;
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<Dashboard> Dashboards { get; set; }

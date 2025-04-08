@@ -1,17 +1,17 @@
 using System.ComponentModel.DataAnnotations;
-using Base.Domain;
+using Microsoft.AspNetCore.Identity;
 
-namespace App.Domain;
+namespace App.Domain.Identity;
 
-public class User : BaseEntity
+public class AppUser : IdentityUser<Guid>
 {
-    [MaxLength(64)]
-    [Display(Name = nameof(UserName), ResourceType = typeof(App.Resources.Domain.User))]
-    public string UserName { get; set; } = default!;
-    
-    [MaxLength(128)]
-    [Display(Name = nameof(Email), ResourceType = typeof(App.Resources.Domain.User))]
-    public string Email { get; set; } = default!;
+    // [MaxLength(64)]
+    // [Display(Name = nameof(UserName), ResourceType = typeof(App.Resources.Domain.User))]
+    // public string AppUserName { get; set; } = default!;
+    //
+    // [MaxLength(128)]
+    // [Display(Name = nameof(Email), ResourceType = typeof(App.Resources.Domain.User))]
+    // public string AppUserEmail { get; set; } = default!;
 
     [Display(Name = nameof(UserAchievements), ResourceType = typeof(App.Resources.Domain.User))]
     public ICollection<UserAchievement>? UserAchievements { get; set; }
@@ -21,4 +21,4 @@ public class User : BaseEntity
     public ICollection<Declaration>? Declarations { get; set; }
     [Display(Name = nameof(Messages), ResourceType = typeof(App.Resources.Domain.User))]
     public ICollection<Message>? Messages { get; set; }
-} 
+}

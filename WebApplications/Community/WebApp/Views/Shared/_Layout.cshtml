@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using App.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject SignInManager<AppUser> SignInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -25,14 +29,18 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="AppUsers" asp-action="Index">Users</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Achievements" asp-action="Index">Achievements</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="UserAchievements" asp-action="Index">UserAchievements</a>
-                    </li>
+                    
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="UserAchievements" asp-action="Index">UserAchievements</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Dashboards" asp-action="Index">Dashboards</a>
                     </li>
