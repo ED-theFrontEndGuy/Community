@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail");
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
             return View();
         }
 
@@ -69,7 +69,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", userAchievement.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
             return View(userAchievement);
         }
 
@@ -87,7 +87,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", userAchievement.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
             return View(userAchievement);
         }
 
@@ -124,7 +124,7 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "AppUserEmail", userAchievement.UserId);
+            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
             return View(userAchievement);
         }
 

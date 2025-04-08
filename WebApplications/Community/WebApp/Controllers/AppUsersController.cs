@@ -6,27 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
-using App.Domain;
+using App.Domain.Identity;
 
 namespace WebApp.Controllers
 {
-    public class DashboardsController : Controller
+    public class AppUsersController : Controller
     {
         private readonly AppDbContext _context;
 
-        public DashboardsController(AppDbContext context)
+        public AppUsersController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Dashboards
+        // GET: AppUsers
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Dashboards.Include(d => d.User);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.AppUsers.ToListAsync());
         }
 
-        // GET: Dashboards/Details/5
+        // GET: AppUsers/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -34,43 +33,40 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _context.Dashboards
-                .Include(d => d.User)
+            var appUser = await _context.AppUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (dashboard == null)
+            if (appUser == null)
             {
                 return NotFound();
             }
 
-            return View(dashboard);
+            return View(appUser);
         }
 
-        // GET: Dashboards/Create
+        // GET: AppUsers/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
             return View();
         }
 
-        // POST: Dashboards/Create
+        // POST: AppUsers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ConfigJson,UserId,Id")] Dashboard dashboard)
+        public async Task<IActionResult> Create([Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] AppUser appUser)
         {
             if (ModelState.IsValid)
             {
-                dashboard.Id = Guid.NewGuid();
-                _context.Add(dashboard);
+                appUser.Id = Guid.NewGuid();
+                _context.Add(appUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", dashboard.UserId);
-            return View(dashboard);
+            return View(appUser);
         }
 
-        // GET: Dashboards/Edit/5
+        // GET: AppUsers/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -78,23 +74,22 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _context.Dashboards.FindAsync(id);
-            if (dashboard == null)
+            var appUser = await _context.AppUsers.FindAsync(id);
+            if (appUser == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", dashboard.UserId);
-            return View(dashboard);
+            return View(appUser);
         }
 
-        // POST: Dashboards/Edit/5
+        // POST: AppUsers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ConfigJson,UserId,Id")] Dashboard dashboard)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] AppUser appUser)
         {
-            if (id != dashboard.Id)
+            if (id != appUser.Id)
             {
                 return NotFound();
             }
@@ -103,12 +98,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(dashboard);
+                    _context.Update(appUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DashboardExists(dashboard.Id))
+                    if (!AppUserExists(appUser.Id))
                     {
                         return NotFound();
                     }
@@ -119,11 +114,10 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", dashboard.UserId);
-            return View(dashboard);
+            return View(appUser);
         }
 
-        // GET: Dashboards/Delete/5
+        // GET: AppUsers/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -131,35 +125,34 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _context.Dashboards
-                .Include(d => d.User)
+            var appUser = await _context.AppUsers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (dashboard == null)
+            if (appUser == null)
             {
                 return NotFound();
             }
 
-            return View(dashboard);
+            return View(appUser);
         }
 
-        // POST: Dashboards/Delete/5
+        // POST: AppUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var dashboard = await _context.Dashboards.FindAsync(id);
-            if (dashboard != null)
+            var appUser = await _context.AppUsers.FindAsync(id);
+            if (appUser != null)
             {
-                _context.Dashboards.Remove(dashboard);
+                _context.AppUsers.Remove(appUser);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DashboardExists(Guid id)
+        private bool AppUserExists(Guid id)
         {
-            return _context.Dashboards.Any(e => e.Id == id);
+            return _context.AppUsers.Any(e => e.Id == id);
         }
     }
 }

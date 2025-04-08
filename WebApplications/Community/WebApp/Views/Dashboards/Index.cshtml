@@ -28,7 +28,7 @@
                 @Html.DisplayFor(modelItem => item.ConfigJson)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User!.AppUserEmail)
+                @Html.DisplayFor(modelItem => item.User!.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
