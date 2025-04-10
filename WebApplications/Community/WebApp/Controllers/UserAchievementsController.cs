@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.EF.Repositories;
 using App.Domain;
 using Microsoft.AspNetCore.Authorization;
 
@@ -12,10 +13,12 @@ namespace WebApp.Controllers
     public class UserAchievementsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserAchievementRepository _userAchievementRepository;
 
         public UserAchievementsController(AppDbContext context)
         {
             _context = context;
+            _userAchievementRepository = new UserAchievementRepository(context);
         }
 
         // GET: UserAchievements
