@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.EF.Repositories;
 using App.Domain;
+using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
@@ -25,10 +26,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index()
         {
             // ask only data for current user
-            var userIdStr = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var userId = Guid.Parse(userIdStr);
-            
-            var res = await _userAchievementRepository.AllAsync(userId); 
+            var res = await _userAchievementRepository.AllAsync(User.GetUserId()); 
                 
             return View(res);
         }
