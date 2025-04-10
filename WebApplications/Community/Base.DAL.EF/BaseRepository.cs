@@ -31,10 +31,11 @@ public class BaseRepository<TEntity, TKey> : IRepository<TEntity, TKey>
         RepositoryDbSet = RepositoryDbContext.Set<TEntity>();
     }
 
-    private IQueryable<TEntity> GetQuery(TKey? userId)
+    private IQueryable<TEntity> GetQuery(TKey? userId = default!)
     {
         var query = RepositoryDbSet.AsQueryable();
         
+        // todo check userId for null/default
         if (typeof(IDomainUser<TKey, IdentityUser<TKey>>).IsAssignableFrom(typeof(TEntity)))
         {
             query = query.Where(e => ((IDomainUser<TKey, IdentityUser<TKey>>)e).UserId.Equals(userId));
@@ -50,7 +51,7 @@ public class BaseRepository<TEntity, TKey> : IRepository<TEntity, TKey>
             .ToList(); 
     }
 
-    public async Task<IEnumerable<TEntity>> AllAsync(TKey? userId)
+    public async Task<IEnumerable<TEntity>> AllAsync(TKey? userId = default!)
     {
         return await GetQuery(userId)
             .ToListAsync(); 

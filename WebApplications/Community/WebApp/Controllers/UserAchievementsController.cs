@@ -28,12 +28,8 @@ namespace WebApp.Controllers
             var userIdStr = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var userId = Guid.Parse(userIdStr);
             
-            var res = await _context
-                .UserAchievements
-                .Include(u => u.Achievement)
-                .Include(u => u.User)
-                .Where(u => u.UserId == userId)
-                .ToListAsync();
+            var res = await _userAchievementRepository.AllAsync(userId); 
+                
             return View(res);
         }
 
