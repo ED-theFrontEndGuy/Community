@@ -14,8 +14,8 @@ public interface IRepository<TEntity, TKey>
     IEnumerable<TEntity> All(TKey? userId);
     Task<IEnumerable<TEntity>> AllAsync(TKey? userId);
 
-    TEntity Find(TKey id, TKey? userId);
-    Task<TEntity> FindAsync(TKey id, TKey? userId);
+    TEntity? Find(TKey id, TKey? userId);
+    Task<TEntity?> FindAsync(TKey id, TKey? userId);
 
     void Add(TEntity entity);
 
@@ -24,4 +24,5 @@ public interface IRepository<TEntity, TKey>
     void Remove(TEntity entity, TKey? userId);
 
     void Remove(TKey id, TKey? userId);
+    void RemoveAsync(TKey id, TKey? userId);
 }
