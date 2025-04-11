@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.EF.Repositories;
 using App.Domain;
+using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
@@ -12,25 +14,20 @@ namespace WebApp.Controllers
     public class UserAchievementsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserAchievementRepository _userAchievementRepository;
 
         public UserAchievementsController(AppDbContext context)
         {
             _context = context;
+            _userAchievementRepository = new UserAchievementRepository(context);
         }
 
         // GET: UserAchievements
         public async Task<IActionResult> Index()
         {
             // ask only data for current user
-            var userIdStr = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var userId = Guid.Parse(userIdStr);
-            
-            var res = await _context
-                .UserAchievements
-                .Include(u => u.Achievement)
-                .Include(u => u.User)
-                .Where(u => u.UserId == userId)
-                .ToListAsync();
+            var res = await _userAchievementRepository.AllAsync(User.GetUserId()); 
+                
             return View(res);
         }
 

@@ -12,7 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\App.DAL.Interfaces\App.DAL.Interfaces.csproj" />
       <ProjectReference Include="..\App.Domain\App.Domain.csproj" />
+      <ProjectReference Include="..\Base.DAL.EF\Base.DAL.EF.csproj" />
     </ItemGroup>
 
 </Project>
