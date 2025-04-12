@@ -46,6 +46,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // scoped - get created once per web client request (same as dbcontext)
 // ToDo add the rest repositories.
 builder.Services.AddScoped<IUserAchievementRepository, UserAchievementRepository>();
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)
