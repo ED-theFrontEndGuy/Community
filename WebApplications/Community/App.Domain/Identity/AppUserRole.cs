@@ -2,6 +2,6 @@ using Base.Domain.Identity;
 
 namespace App.Domain.Identity;
 
-public class AppRole : BaseRole<AppUserRole>
+public class AppUserRole : BaseUserRole<AppUser, AppRole>
 {
 }

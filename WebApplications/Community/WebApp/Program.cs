@@ -1,5 +1,7 @@
 using System.Globalization;
 using App.DAL.EF;
+using App.DAL.EF.Repositories;
+using App.DAL.Interfaces;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -34,10 +36,16 @@ else
             .ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))
             .EnableDetailedErrors()
             .EnableSensitiveDataLogging()
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution)
     );
 }
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+// register all the repo interfaces and their implementations, use scoped lifetime
+// scoped - get created once per web client request (same as dbcontext)
+// ToDo add the rest repositories.
+builder.Services.AddScoped<IUserAchievementRepository, UserAchievementRepository>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)

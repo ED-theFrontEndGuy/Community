@@ -7,7 +7,7 @@ namespace App.DAL.EF.Repositories;
 
 public class UserAchievementRepository : BaseRepository<UserAchievement>, IUserAchievementRepository
 {
-    public UserAchievementRepository(DbContext repositoryDbContext) : base(repositoryDbContext)
+    public UserAchievementRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
     {
     }
 }

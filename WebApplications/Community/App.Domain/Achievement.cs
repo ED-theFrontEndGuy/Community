@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using App.Domain.Identity;
 using Base.Domain;
 
 namespace App.Domain;
 
-public class Achievement : BaseEntity
+public class Achievement : BaseEntityUser<AppUser, AppRole>
 {
     [MaxLength(128)]
     [Display(Name = nameof(Name), Prompt = nameof(Name), ResourceType = typeof(App.Resources.Domain.Achievement))]
