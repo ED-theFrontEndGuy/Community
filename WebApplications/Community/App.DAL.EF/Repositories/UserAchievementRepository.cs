@@ -15,6 +15,7 @@ public class UserAchievementRepository : BaseRepository<UserAchievement>, IUserA
     {
         return await RepositoryDbSet
             .Include(ua => ua.Achievement)             // Include related Achievement data
+            .Include(ua => ua.User)                    // Include related User data
             .Where(ua => ua.UserId == userId)          // Filter by the current user's ID
             .ToListAsync();
     }
