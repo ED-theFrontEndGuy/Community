@@ -7,7 +7,6 @@ using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -16,17 +15,14 @@ namespace WebApp.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IUserAchievementRepository _repository;
-        private readonly IAchievementRepository _achievementRepository;
 
         public UserAchievementsController(
                 AppDbContext context,
-                IUserAchievementRepository repository,
-                IAchievementRepository achievementRepository
+                IUserAchievementRepository repository
             )
         {
             _context = context;
             _repository = repository;
-            _achievementRepository = achievementRepository;
         }
 
         // GET: UserAchievements
