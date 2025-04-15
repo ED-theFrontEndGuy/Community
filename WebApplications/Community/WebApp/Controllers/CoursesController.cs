@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
 
 namespace WebApp.Controllers
@@ -13,16 +9,18 @@ namespace WebApp.Controllers
     public class CoursesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly ICourseRepository _repository;
 
-        public CoursesController(AppDbContext context)
+        public CoursesController(AppDbContext context, ICourseRepository courseRepository)
         {
             _context = context;
+            _repository = courseRepository;
         }
 
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Courses.ToListAsync());
+            return View(await _repository.AllAsync());
         }
 
         // GET: Courses/Details/5
@@ -33,14 +31,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
+            var entity = await _repository.FindAsync(id.Value);
+
+            if (entity == null)
             {
                 return NotFound();
             }
-
-            return View(course);
+            
+            return View(entity);
         }
 
         // GET: Courses/Create
@@ -54,16 +52,16 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id")] Course course)
+        public async Task<IActionResult> Create(Course entity)
         {
             if (ModelState.IsValid)
             {
-                course.Id = Guid.NewGuid();
-                _context.Add(course);
+                _repository.Add(entity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(course);
+            
+            return View(entity);
         }
 
         // GET: Courses/Edit/5
@@ -87,7 +85,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Id")] Course course)
+        public async Task<IActionResult> Edit(Guid id, Course course)
         {
             if (id != course.Id)
             {
@@ -96,24 +94,12 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(course);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CourseExists(course.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _repository.Update(course);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
+            
             return View(course);
         }
 
@@ -140,13 +126,9 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            if (course != null)
-            {
-                _context.Courses.Remove(course);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
 
