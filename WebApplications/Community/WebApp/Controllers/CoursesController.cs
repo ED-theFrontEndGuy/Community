@@ -131,10 +131,5 @@ namespace WebApp.Controllers
             
             return RedirectToAction(nameof(Index));
         }
-
-        private bool CourseExists(Guid id)
-        {
-            return _context.Courses.Any(e => e.Id == id);
-        }
     }
 }
