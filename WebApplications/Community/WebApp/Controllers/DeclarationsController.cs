@@ -1,7 +1,5 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
@@ -147,14 +145,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var declaration = await _context.Declarations.FindAsync(id);
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
                 
-            if (declaration == null)
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(declaration);
+            return View(entity);
         }
 
         // POST: Declarations/Delete/5

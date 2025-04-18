@@ -19,4 +19,13 @@ public class DeclarationRepository : BaseRepository<Declaration>, IDeclarationRe
             .Where(ua => ua.UserId == userId)
             .ToListAsync();
     }
+    
+    public override async Task<Declaration?> FindAsync(Guid id, Guid userId = default)
+    {
+        return await RepositoryDbSet
+            .Include(d => d.Course)
+            .Include(d => d.User)
+            .Where(d => d.Id == id && d.UserId == userId)
+            .FirstOrDefaultAsync();
+    }
 }
