@@ -1,29 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using WebApp.ViewModels;
+using Course = App.Resources.Domain.Course;
+using Declaration = App.Domain.Declaration;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class AssignmentsController : Controller
     {
         private readonly AppDbContext _context;
-
-        public AssignmentsController(AppDbContext context)
+        private readonly IAssignmentRepository _repository;
+        private readonly IDeclarationRepository _declarationRepository;
+        
+        public AssignmentsController(AppDbContext context, IAssignmentRepository repository, IDeclarationRepository declarationRepository)
         {
             _context = context;
+            _repository = repository;
+            _declarationRepository = declarationRepository;
         }
 
         // GET: Assignments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Assignments.Include(a => a.Declaration);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            return View(res);
         }
 
         // GET: Assignments/Details/5
@@ -34,22 +41,36 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _context.Assignments
-                .Include(a => a.Declaration)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (assignment == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(assignment);
+            return View(entity);
         }
 
         // GET: Assignments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id");
-            return View();
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            
+            var vm = new AssignmentCreateEditViewModel
+            {
+                DeclarationSelectList = new SelectList(
+                    declarations.Select(d => new {
+                        Id = d.Id,
+                        CourseName = d.Course?.Name ?? "Unknown" // Safeguard if Name is null
+                    }),
+                    "Id",        // This is the value field
+                    "CourseName" // This is the display text
+                )
+            };
+
+
+            
+            return View(vm);
         }
 
         // POST: Assignments/Create
@@ -57,17 +78,17 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,DeclarationId,Id")] Assignment assignment)
+        public async Task<IActionResult> Create(AssignmentCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                assignment.Id = Guid.NewGuid();
-                _context.Add(assignment);
+                _repository.Add(vm.Assignment);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
-            return View(assignment);
+            
+            return View(vm);
         }
 
         // GET: Assignments/Edit/5
@@ -78,13 +99,30 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _context.Assignments.FindAsync(id);
+            var assignment = await _repository.FindAsync(id.Value, User.GetUserId());
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            
             if (assignment == null)
             {
                 return NotFound();
             }
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
-            return View(assignment);
+            
+            
+            var vm = new AssignmentCreateEditViewModel
+            {
+                DeclarationSelectList = new SelectList(
+                    declarations.Select(d => new {
+                        Id = d.Id,
+                        CourseName = d.Course!.Name ?? "Unknown"
+                    }),
+                    "Id",        // This is the value field
+                    "CourseName" // This is the display text
+                ),
+                Assignment = assignment
+            };
+            
+            
+            return View(vm);
         }
 
         // POST: Assignments/Edit/5
@@ -92,35 +130,35 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,DeclarationId,Id")] Assignment assignment)
+        public async Task<IActionResult> Edit(Guid id,AssignmentCreateEditViewModel vm)
         {
-            if (id != assignment.Id)
+            if (id != vm.Assignment.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(assignment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AssignmentExists(assignment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                vm.Assignment.Declaration!.UserId = User.GetUserId();
+             
+                _repository.Update(vm.Assignment);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", assignment.DeclarationId);
-            return View(assignment);
+            
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            
+            vm.DeclarationSelectList = new SelectList(
+                declarations.Select(d => new {
+                    Id = d.Id,
+                    CourseName = d.Course!.Name ?? "Unknown"
+                }),
+                "Id",        // This is the value field
+                "CourseName", // This is the display text
+            vm.Assignment.Id);
+            
+            return View(vm);
         }
 
         // GET: Assignments/Delete/5
