@@ -1,14 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
-using App.Domain;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.ViewModels;
-using Course = App.Resources.Domain.Course;
-using Declaration = App.Domain.Declaration;
 
 namespace WebApp.Controllers
 {
@@ -139,8 +135,6 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                vm.Assignment.Declaration!.UserId = User.GetUserId();
-             
                 _repository.Update(vm.Assignment);
                 await _context.SaveChangesAsync();
                 
@@ -168,16 +162,15 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-
-            var assignment = await _context.Assignments
-                .Include(a => a.Declaration)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (assignment == null)
+            
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(assignment);
+            return View(entity);
         }
 
         // POST: Assignments/Delete/5
@@ -185,19 +178,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var assignment = await _context.Assignments.FindAsync(id);
-            if (assignment != null)
-            {
-                _context.Assignments.Remove(assignment);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AssignmentExists(Guid id)
-        {
-            return _context.Assignments.Any(e => e.Id == id);
         }
     }
 }
