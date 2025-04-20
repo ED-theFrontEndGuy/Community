@@ -50,6 +50,7 @@ builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IDeclarationRepository, DeclarationRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)

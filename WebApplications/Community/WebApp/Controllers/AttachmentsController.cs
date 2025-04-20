@@ -1,29 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
-using App.Domain;
+using App.DAL.Interfaces;
+using Base.Helpers;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     public class AttachmentsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IAttachmentRepository _repository;
+        private readonly IAssignmentRepository _assignmentRepository;
 
-        public AttachmentsController(AppDbContext context)
+        public AttachmentsController(AppDbContext context, IAttachmentRepository repository, IAssignmentRepository assignmentRepository)
         {
             _context = context;
+            _repository = repository;
+            _assignmentRepository = assignmentRepository;
         }
 
         // GET: Attachments
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Attachments.Include(a => a.Assignment);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: Attachments/Details/5
@@ -34,22 +36,35 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var attachment = await _context.Attachments
-                .Include(a => a.Assignment)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (attachment == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(attachment);
+            return View(entity);
         }
 
         // GET: Attachments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
-            return View();
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            
+            var vm = new AttachmentCreateEditViewModel()
+            {
+                AssignmentSelectList = new SelectList(
+                    assignments.Select(a => new {
+                        Id = a.Id,
+                        AssignmentName = a.Name
+                    }),
+                    "Id",        // This is the value field
+                    "AssignmentName" // This is the display text
+                )
+                
+            };
+            
+            return View(vm);
         }
 
         // POST: Attachments/Create
@@ -57,17 +72,17 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Link,AssignmentId,Id")] Attachment attachment)
+        public async Task<IActionResult> Create(AttachmentCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                attachment.Id = Guid.NewGuid();
-                _context.Add(attachment);
+                _repository.Add(vm.Attachment);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
-            return View(attachment);
+            
+            return View(vm);
         }
 
         // GET: Attachments/Edit/5
@@ -78,13 +93,29 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var attachment = await _context.Attachments.FindAsync(id);
+            var attachment = await _repository.FindAsync(id.Value, User.GetUserId());
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            
             if (attachment == null)
             {
                 return NotFound();
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
-            return View(attachment);
+            
+            var vm = new AttachmentCreateEditViewModel()
+            {
+                AssignmentSelectList = new SelectList(
+                    assignments.Select(a => new {
+                        Id = a.Id,
+                        AssignmentName = a.Name
+                    }),
+                    "Id",        // This is the value field
+                    "AssignmentName" // This is the display text
+                ),
+                Attachment = attachment
+            };
+            
+            
+            return View(vm);
         }
 
         // POST: Attachments/Edit/5
@@ -92,35 +123,34 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Link,AssignmentId,Id")] Attachment attachment)
+        public async Task<IActionResult> Edit(Guid id, AttachmentCreateEditViewModel vm)
         {
-            if (id != attachment.Id)
+            if (id != vm.Attachment.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(attachment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AttachmentExists(attachment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _repository.Update(vm.Attachment);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", attachment.AssignmentId);
-            return View(attachment);
+            
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+
+            vm.AssignmentSelectList = new SelectList(
+                assignments.Select(a => new
+                {
+                    Id = a.Id,
+                    AssignmentName = a.Name
+                }),
+                "Id",
+                "AssignmentName",
+                vm.Attachment.Id);
+            
+            return View(vm);
         }
 
         // GET: Attachments/Delete/5
@@ -131,15 +161,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var attachment = await _context.Attachments
-                .Include(a => a.Assignment)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (attachment == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(attachment);
+            return View(entity);
         }
 
         // POST: Attachments/Delete/5
@@ -147,19 +176,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var attachment = await _context.Attachments.FindAsync(id);
-            if (attachment != null)
-            {
-                _context.Attachments.Remove(attachment);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AttachmentExists(Guid id)
-        {
-            return _context.Attachments.Any(e => e.Id == id);
         }
     }
 }
