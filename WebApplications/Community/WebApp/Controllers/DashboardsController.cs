@@ -1,29 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
 
 namespace WebApp.Controllers
 {
     public class DashboardsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IDashboardRepository _repository;
 
-        public DashboardsController(AppDbContext context)
+        public DashboardsController(AppDbContext context, IDashboardRepository repository)
         {
             _context = context;
+            _repository = repository;
         }
 
         // GET: Dashboards
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Dashboards.Include(d => d.User);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: Dashboards/Details/5
@@ -34,21 +33,19 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _context.Dashboards
-                .Include(d => d.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dashboard == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(dashboard);
+            return View(entity);
         }
 
         // GET: Dashboards/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
             return View();
         }
 
@@ -57,16 +54,18 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ConfigJson,UserId,Id")] Dashboard dashboard)
+        public async Task<IActionResult> Create(Dashboard dashboard)
         {
+            dashboard.UserId = User.GetUserId();
+            
             if (ModelState.IsValid)
             {
-                dashboard.Id = Guid.NewGuid();
-                _context.Add(dashboard);
+                _repository.Add(dashboard);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", dashboard.UserId);
+            
             return View(dashboard);
         }
 
@@ -78,12 +77,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _context.Dashboards.FindAsync(id);
+            var dashboard = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (dashboard == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", dashboard.UserId);
+            
             return View(dashboard);
         }
 
@@ -92,34 +92,23 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ConfigJson,UserId,Id")] Dashboard dashboard)
+        public async Task<IActionResult> Edit(Guid id, Dashboard dashboard)
         {
             if (id != dashboard.Id)
             {
                 return NotFound();
             }
+            
+            dashboard.UserId = User.GetUserId();
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(dashboard);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DashboardExists(dashboard.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _repository.Update(dashboard);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", dashboard.UserId);
+            
             return View(dashboard);
         }
 
@@ -131,15 +120,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _context.Dashboards
-                .Include(d => d.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dashboard == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(dashboard);
+            return View(entity);
         }
 
         // POST: Dashboards/Delete/5
@@ -147,19 +135,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var dashboard = await _context.Dashboards.FindAsync(id);
-            if (dashboard != null)
-            {
-                _context.Dashboards.Remove(dashboard);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DashboardExists(Guid id)
-        {
-            return _context.Dashboards.Any(e => e.Id == id);
         }
     }
 }

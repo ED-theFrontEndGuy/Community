@@ -52,6 +52,7 @@ builder.Services.AddScoped<IDeclarationRepository, DeclarationRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)

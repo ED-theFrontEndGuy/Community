@@ -62,6 +62,7 @@ namespace WebApp.Controllers
             {
                 _repository.Add(room);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(room);
