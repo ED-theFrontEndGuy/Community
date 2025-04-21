@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
@@ -33,7 +33,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value);
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
 
             if (entity == null)
             {
@@ -74,11 +74,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var achievement = await _context.Achievements.FindAsync(id);
+            var achievement = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (achievement == null)
             {
                 return NotFound();
             }
+            
             return View(achievement);
         }
 
@@ -112,8 +114,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var achievement = await _context.Achievements
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var achievement = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (achievement == null)
             {
                 return NotFound();
@@ -131,11 +133,6 @@ namespace WebApp.Controllers
             await _context.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AchievementExists(Guid id)
-        {
-            return _context.Achievements.Any(e => e.Id == id);
         }
     }
 }
