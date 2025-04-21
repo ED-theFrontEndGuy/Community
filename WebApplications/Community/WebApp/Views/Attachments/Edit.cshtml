@@ -1,4 +1,4 @@
-@model App.Domain.Attachment
+@model WebApp.ViewModels.AttachmentCreateEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,16 +13,16 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Link" class="control-label"></label>
-                <input asp-for="Link" class="form-control" />
-                <span asp-validation-for="Link" class="text-danger"></span>
+                <label asp-for="Attachment.Link" class="control-label"></label>
+                <input asp-for="Attachment.Link" class="form-control" />
+                <span asp-validation-for="Attachment.Link" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AssignmentId" class="control-label"></label>
-                <select asp-for="AssignmentId" class="form-control" asp-items="ViewBag.AssignmentId"></select>
-                <span asp-validation-for="AssignmentId" class="text-danger"></span>
+                <label asp-for="Attachment.AssignmentId" class="control-label"></label>
+                <select asp-for="Attachment.AssignmentId" class="form-control" asp-items="Model.AssignmentSelectList"></select>
+                <span asp-validation-for="Attachment.AssignmentId" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Attachment.Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

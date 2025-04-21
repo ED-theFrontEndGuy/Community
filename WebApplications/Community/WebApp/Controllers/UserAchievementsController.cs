@@ -1,12 +1,11 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
-using App.DAL.EF.Repositories;
+using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -14,19 +13,23 @@ namespace WebApp.Controllers
     public class UserAchievementsController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly UserAchievementRepository _userAchievementRepository;
+        private readonly IUserAchievementRepository _repository;
+        private readonly IAchievementRepository _achievementRepository;
 
-        public UserAchievementsController(AppDbContext context)
+        public UserAchievementsController(
+                AppDbContext context,
+                IUserAchievementRepository repository,
+                IAchievementRepository achievementRepository)
         {
             _context = context;
-            _userAchievementRepository = new UserAchievementRepository(context);
+            _repository = repository;
+            _achievementRepository = achievementRepository;
         }
 
         // GET: UserAchievements
         public async Task<IActionResult> Index()
         {
-            // ask only data for current user
-            var res = await _userAchievementRepository.AllAsync(User.GetUserId()); 
+            var res = await _repository.AllAsync(User.GetUserId()); 
                 
             return View(res);
         }
@@ -39,23 +42,27 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userAchievement = await _context.UserAchievements
-                .Include(u => u.Achievement)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (userAchievement == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(userAchievement);
+            return View(entity);
         }
 
         // GET: UserAchievements/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name");
-            return View();
+            var vm = new UserAchievementsCreateEditViewModel()
+            {
+                AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                    nameof(Achievement.Id),
+                    nameof(Achievement.Name))
+            };
+            
+            return View(vm);
         }
 
         // POST: UserAchievements/Create
@@ -63,21 +70,18 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserAchievement userAchievement)
+        public async Task<IActionResult> Create(UserAchievementsCreateEditViewModel vm)
         {
-            var userIdStr = User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var userId = Guid.Parse(userIdStr);
-            userAchievement.UserId = userId;
-            
             if (ModelState.IsValid)
             {
-                userAchievement.Id = Guid.NewGuid();
-                _context.Add(userAchievement);
+                vm.UserAchievement.UserId = User.GetUserId();
+                _repository.Add(vm.UserAchievement);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
-            return View(userAchievement);
+            return View(vm);
         }
 
         // GET: UserAchievements/Edit/5
@@ -88,14 +92,23 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userAchievement = await _context.UserAchievements.FindAsync(id);
+            var userAchievement = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (userAchievement == null)
             {
                 return NotFound();
             }
-            ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
-            return View(userAchievement);
+
+            var vm = new UserAchievementsCreateEditViewModel()
+            {
+                AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                    nameof(Achievement.Id),
+                    nameof(Achievement.Name),
+                    userAchievement.Id),
+                UserAchievement = userAchievement
+            };
+                
+            return View(vm);
         }
 
         // POST: UserAchievements/Edit/5
@@ -103,36 +116,28 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("AchievementId,UserId,Id")] UserAchievement userAchievement)
+        public async Task<IActionResult> Edit(Guid id, UserAchievementsCreateEditViewModel vm)
         {
-            if (id != userAchievement.Id)
+            if (id != vm.UserAchievement.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(userAchievement);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserAchievementExists(userAchievement.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                vm.UserAchievement.UserId = User.GetUserId();
+                _repository.Update(vm.UserAchievement);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AchievementId"] = new SelectList(_context.Achievements, "Id", "Name", userAchievement.AchievementId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", userAchievement.UserId);
-            return View(userAchievement);
+
+            vm.AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                nameof(Achievement.Id),
+                nameof(Achievement.Name),
+                vm.UserAchievement.Id);
+            
+            return View(vm);
         }
 
         // GET: UserAchievements/Delete/5
@@ -143,16 +148,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userAchievement = await _context.UserAchievements
-                .Include(u => u.Achievement)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (userAchievement == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(userAchievement);
+            return View(entity);
         }
 
         // POST: UserAchievements/Delete/5
@@ -160,19 +163,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var userAchievement = await _context.UserAchievements.FindAsync(id);
-            if (userAchievement != null)
-            {
-                _context.UserAchievements.Remove(userAchievement);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserAchievementExists(Guid id)
-        {
-            return _context.UserAchievements.Any(e => e.Id == id);
         }
     }
 }
