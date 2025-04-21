@@ -3,9 +3,11 @@ using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class DashboardsController : Controller
     {
         private readonly AppDbContext _context;

@@ -14,10 +14,18 @@ public class UserAchievementRepository : BaseRepository<UserAchievement>, IUserA
     public override async Task<IEnumerable<UserAchievement>> AllAsync(Guid userId = default)
     {
         return await RepositoryDbSet
-            .Include(ua => ua.Achievement)             // Include related Achievement data
-            .Include(ua => ua.User)                    // Include related User data
-            .Where(ua => ua.UserId == userId)          // Filter by the current user's ID
+            .Include(ua => ua.Achievement)
+            .Include(ua => ua.User)
+            .Where(ua => ua.UserId == userId)
             .ToListAsync();
     }
 
+    public override async Task<UserAchievement?> FindAsync(Guid id, Guid userId = default)
+    {
+        return await RepositoryDbSet
+            .Include(ua => ua.Achievement)
+            .Include(ua => ua.User)
+            .Where(ua => ua.Id == id && ua.UserId == userId)
+            .FirstOrDefaultAsync();
+    }
 }
