@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class CoursesController : Controller
     {
         private readonly AppDbContext _context;
@@ -79,6 +80,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            
             return View(course);
         }
 
