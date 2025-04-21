@@ -5,6 +5,9 @@ namespace App.Domain;
 
 public class StudySession : BaseEntity
 {
+    [MaxLength(256)]
+    public string Description { get; set; } = default!;
+    
     public Guid AssignmentId { get; set; }
     [Display(Name = nameof(Assignment), Prompt = nameof(Assignment), ResourceType = typeof(App.Resources.Domain.StudySession))]
     public Assignment? Assignment { get; set; }

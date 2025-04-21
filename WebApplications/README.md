@@ -4,8 +4,8 @@ dotnet ef migrations add InitialCreate
 dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext FixForAchievement
-dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext Test1
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AddDescriptionToStudySession
+dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AddDescriptionToStudySession
 
 dotnet ef migrations remove --project App.DAL.EF --startup-project WebApp --context AppDbContext
 
