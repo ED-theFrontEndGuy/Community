@@ -89,7 +89,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var declaration = await _context.Declarations.FindAsync(id);
+            var declaration = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (declaration == null)
             {
                 return NotFound();
