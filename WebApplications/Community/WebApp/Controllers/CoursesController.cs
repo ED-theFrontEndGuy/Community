@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
 
 namespace WebApp.Controllers
 {
@@ -31,7 +32,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value);
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
 
             if (entity == null)
             {
@@ -72,7 +73,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses.FindAsync(id);
+            var course = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (course == null)
             {
                 return NotFound();
@@ -111,8 +113,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var course = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (course == null)
             {
                 return NotFound();
