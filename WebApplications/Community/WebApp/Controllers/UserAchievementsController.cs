@@ -93,7 +93,6 @@ namespace WebApp.Controllers
             }
 
             var userAchievement = await _repository.FindAsync(id.Value, User.GetUserId());
-            var achievements = await _achievementRepository.AllAsync(User.GetUserId());
             
             if (userAchievement == null)
             {
@@ -102,15 +101,10 @@ namespace WebApp.Controllers
 
             var vm = new UserAchievementsCreateEditViewModel()
             {
-                AchievementSelectList = new SelectList(
-                    achievements.Select(a => new
-                    {
-                        Id = a.Id,
-                        AchievementName = a.Name,
-                    }),
-                    "Id",
-                    "AchievementName"
-                ),
+                AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                    nameof(Achievement.Id),
+                    nameof(Achievement.Name),
+                    userAchievement.Id),
                 UserAchievement = userAchievement
             };
                 
@@ -137,17 +131,10 @@ namespace WebApp.Controllers
                 
                 return RedirectToAction(nameof(Index));
             }
-            
-            var achievements = await _achievementRepository.AllAsync(User.GetUserId());
 
-            vm.AchievementSelectList = new SelectList(
-                achievements.Select(a => new
-                {
-                    Id = a.Id,
-                    AchievementName = a.Name
-                }),
-                "Id",
-                "AchievementName",
+            vm.AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                nameof(Achievement.Id),
+                nameof(Achievement.Name),
                 vm.UserAchievement.Id);
             
             return View(vm);
