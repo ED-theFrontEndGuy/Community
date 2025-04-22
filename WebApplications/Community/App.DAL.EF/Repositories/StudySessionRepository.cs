@@ -24,6 +24,7 @@ public class StudySessionRepository : BaseRepository<StudySession>, IStudySessio
         return await RepositoryDbSet
             .Include(s => s.Assignment)
             .Include(s => s.Room)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .Where(s => s.Id == id)
+            .FirstOrDefaultAsync();
     }
 }
