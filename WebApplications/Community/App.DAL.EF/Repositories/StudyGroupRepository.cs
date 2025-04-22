@@ -16,7 +16,7 @@ public class StudyGroupRepository : BaseRepository<StudyGroup>, IStudyGroupRepos
         return await RepositoryDbSet
             .Include(s => s.StudySession)
             .Include(s => s.User)
-            .Where(s => s.UserId == userId)
+            // .Where(s => s.UserId == userId) -> Others must see members of the groups for collaboration
             .ToListAsync();
     }
 
