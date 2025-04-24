@@ -1,29 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     public class TimelogsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly ITimelogRepository _repository;
+        private readonly IDeclarationRepository _declarationRepository;
+        private readonly IAssignmentRepository _assignmentRepository;
 
-        public TimelogsController(AppDbContext context)
+        public TimelogsController(AppDbContext context, ITimelogRepository repository, IDeclarationRepository declarationRepository, IAssignmentRepository assignmentRepository)
         {
             _context = context;
+            _repository = repository;
+            _declarationRepository = declarationRepository;
+            _assignmentRepository = assignmentRepository;
         }
 
         // GET: Timelogs
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Timelogs.Include(t => t.Assignment).Include(t => t.Declaration);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: Timelogs/Details/5
@@ -34,24 +40,38 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var timelog = await _context.Timelogs
-                .Include(t => t.Assignment)
-                .Include(t => t.Declaration)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (timelog == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId()); 
+                
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(timelog);
+            return View(entity);
         }
 
         // GET: Timelogs/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id");
-            return View();
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+
+            var vm = new TimelogCreateEditViewModel()
+            {
+                AssignmentSelectList = new SelectList(assignments,
+                    nameof(Assignment.Id),
+                    nameof(Assignment.Name)),
+                DeclarationSelectList = new SelectList(declarations.Select(
+                        d => new 
+                        { 
+                            d.Id, 
+                            CourseName = d.Course?.Name ?? "[No Course]" 
+                        }), 
+                    "Id",
+                    "CourseName")
+            };
+            
+            return View(vm);
         }
 
         // POST: Timelogs/Create
@@ -59,18 +79,35 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StartTime,EndTime,DeclarationId,AssignmentId,Id")] Timelog timelog)
+        public async Task<IActionResult> Create(TimelogCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                timelog.Id = Guid.NewGuid();
-                _context.Add(timelog);
+                _repository.Add(vm.Timelog);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", timelog.AssignmentId);
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", timelog.DeclarationId);
-            return View(timelog);
+            
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            
+            vm.AssignmentSelectList = new SelectList(assignments,
+                nameof(Assignment.Id),
+                nameof(Assignment.Name),
+                vm.Timelog.AssignmentId);
+            
+            vm.DeclarationSelectList = new SelectList(declarations.Select(
+                    d => new 
+                    { 
+                        d.Id, 
+                        CourseName = d.Course?.Name ?? "[No Course]" 
+                    }), 
+                "Id",
+                "CourseName",
+                vm.Timelog.DeclarationId);
+            
+            return View(vm);
         }
 
         // GET: Timelogs/Edit/5
@@ -81,14 +118,36 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var timelog = await _context.Timelogs.FindAsync(id);
+            var timelog = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (timelog == null)
             {
                 return NotFound();
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", timelog.AssignmentId);
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", timelog.DeclarationId);
-            return View(timelog);
+            
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+
+            var vm = new TimelogCreateEditViewModel()
+            {
+                DeclarationSelectList = new SelectList(declarations
+                        .Select(
+                            d => new
+                            {
+                                d.Id,
+                                CourseName = d.Course?.Name ?? "[No Course]"
+                            }),
+                    "Id",
+                    "CourseName",
+                    timelog.DeclarationId),
+                AssignmentSelectList = new SelectList(assignments,
+                    nameof(Assignment.Id),
+                    nameof(Assignment.Name),
+                    timelog.AssignmentId),
+                Timelog = timelog
+            };
+            
+            return View(vm);
         }
 
         // POST: Timelogs/Edit/5
@@ -96,36 +155,40 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("StartTime,EndTime,DeclarationId,AssignmentId,Id")] Timelog timelog)
+        public async Task<IActionResult> Edit(Guid id, TimelogCreateEditViewModel vm)
         {
-            if (id != timelog.Id)
+            if (id != vm.Timelog.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(timelog);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TimelogExists(timelog.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _repository.Update(vm.Timelog);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", timelog.AssignmentId);
-            ViewData["DeclarationId"] = new SelectList(_context.Declarations, "Id", "Id", timelog.DeclarationId);
-            return View(timelog);
+            
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+
+            vm.DeclarationSelectList = new SelectList(declarations.Select(
+                    d => new
+                    {
+                        d.Id,
+                        CourseName = d.Course?.Name ?? "[No Course]"
+                    }),
+                "Id",
+                "CourseName",
+                vm.Timelog.DeclarationId);
+            
+            vm.AssignmentSelectList = new SelectList(assignments,
+                nameof(Assignment.Id),
+                nameof(Assignment.Name),
+                vm.Timelog.AssignmentId);
+            
+            return View(vm);
         }
 
         // GET: Timelogs/Delete/5
@@ -136,16 +199,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var timelog = await _context.Timelogs
-                .Include(t => t.Assignment)
-                .Include(t => t.Declaration)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (timelog == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(timelog);
+            return View(entity);
         }
 
         // POST: Timelogs/Delete/5
@@ -153,19 +214,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var timelog = await _context.Timelogs.FindAsync(id);
-            if (timelog != null)
-            {
-                _context.Timelogs.Remove(timelog);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TimelogExists(Guid id)
-        {
-            return _context.Timelogs.Any(e => e.Id == id);
         }
     }
 }

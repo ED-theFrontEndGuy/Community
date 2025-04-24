@@ -1,4 +1,4 @@
-@model App.Domain.StudyGroup
+@model WebApp.ViewModels.StudyGroupCreateEditViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,8 +13,13 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="StudySessionId" class="control-label"></label>
-                <select asp-for="StudySessionId" class ="form-control" asp-items="ViewBag.StudySessionId"></select>
+                <label asp-for="StudyGroup.Name" class="control-label"></label>
+                <input asp-for="StudyGroup.Name" class="form-control" />
+                <span asp-validation-for="StudyGroup.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudyGroup.StudySessionId" class="control-label"></label>
+                <select asp-for="StudyGroup.StudySessionId" class ="form-control" asp-items="Model.StudySessionSelectList"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

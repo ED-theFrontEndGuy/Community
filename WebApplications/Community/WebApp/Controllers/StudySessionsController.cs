@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
@@ -110,7 +109,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studySession = await _context.StudySessions.FindAsync(id);
+            var studySession = await _repository.FindAsync(id.Value, User.GetUserId());
             
             if (studySession == null)
             {
