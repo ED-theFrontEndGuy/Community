@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
+using Base.Domain.Identity;
 
 namespace App.Domain.Identity;
 
-public class AppUser : IdentityUser<Guid>
+public class AppUser : BaseUser<AppUserRole>
 {
     [Display(Name = nameof(UserAchievements), ResourceType = typeof(App.Resources.Domain.User))]
     public ICollection<UserAchievement>? UserAchievements { get; set; }

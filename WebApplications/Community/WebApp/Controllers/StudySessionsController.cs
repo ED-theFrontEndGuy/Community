@@ -1,29 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class StudySessionsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IStudySessionRepository _repository;
+        private readonly IAssignmentRepository _assignmentRepository;
+        private readonly IRoomRepository _roomRepository;
 
-        public StudySessionsController(AppDbContext context)
+        public StudySessionsController(AppDbContext context, IStudySessionRepository repository, IAssignmentRepository assignmentRepository, IRoomRepository roomRepository)
         {
             _context = context;
+            _repository = repository;
+            _assignmentRepository = assignmentRepository;
+            _roomRepository = roomRepository;
         }
 
         // GET: StudySessions
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.StudySessions.Include(s => s.Assignment).Include(s => s.Room);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: StudySessions/Details/5
@@ -34,24 +41,33 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studySession = await _context.StudySessions
-                .Include(s => s.Assignment)
-                .Include(s => s.Room)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (studySession == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(studySession);
+            return View(entity);
         }
 
         // GET: StudySessions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name");
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name");
-            return View();
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            var rooms = await _roomRepository.AllAsync(User.GetUserId());
+
+            var vm = new StudySessionCreateEditViewModel()
+            {
+                AssignmentSelectList = new SelectList(assignments,
+                    nameof(Assignment.Id),
+                    nameof(Assignment.Name)),
+                RoomSelectList = new SelectList(rooms,
+                    nameof(Room.Id),
+                    nameof(Room.Name))
+            };
+            
+            return View(vm);
         }
 
         // POST: StudySessions/Create
@@ -59,18 +75,30 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AssignmentId,RoomId,Id")] StudySession studySession)
+        public async Task<IActionResult> Create(StudySessionCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                studySession.Id = Guid.NewGuid();
-                _context.Add(studySession);
+                _repository.Add(vm.StudySession);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", studySession.AssignmentId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", studySession.RoomId);
-            return View(studySession);
+            
+            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
+            var rooms = await _roomRepository.AllAsync(User.GetUserId());
+            
+            vm.AssignmentSelectList = new SelectList(assignments,
+                nameof(Assignment.Id),
+                nameof(Assignment.Name),
+                vm.StudySession.AssignmentId);
+            
+            vm.RoomSelectList = new SelectList(rooms,
+                nameof(Room.Id),
+                nameof(Room.Name),
+                vm.StudySession.RoomId);
+            
+            return View(vm);
         }
 
         // GET: StudySessions/Edit/5
@@ -81,14 +109,27 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studySession = await _context.StudySessions.FindAsync(id);
+            var studySession = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (studySession == null)
             {
                 return NotFound();
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", studySession.AssignmentId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", studySession.RoomId);
-            return View(studySession);
+
+            var vm = new StudySessionCreateEditViewModel()
+            {
+                AssignmentSelectList = new SelectList(await _assignmentRepository.AllAsync(User.GetUserId()),
+                    nameof(Assignment.Id),
+                    nameof(Assignment.Name),
+                    studySession.AssignmentId),
+                RoomSelectList = new SelectList(await _roomRepository.AllAsync(User.GetUserId()),
+                    nameof(Room.Id),
+                    nameof(Room.Name),
+                    studySession.RoomId),
+                StudySession = studySession
+            };
+            
+            return View(vm);
         }
 
         // POST: StudySessions/Edit/5
@@ -96,36 +137,31 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("AssignmentId,RoomId,Id")] StudySession studySession)
+        public async Task<IActionResult> Edit(Guid id, StudySessionCreateEditViewModel vm)
         {
-            if (id != studySession.Id)
+            if (id != vm.StudySession.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(studySession);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudySessionExists(studySession.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _repository.Update(vm.StudySession);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AssignmentId"] = new SelectList(_context.Assignments, "Id", "Name", studySession.AssignmentId);
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Name", studySession.RoomId);
-            return View(studySession);
+            
+            vm.AssignmentSelectList = new SelectList(await _assignmentRepository.AllAsync(User.GetUserId()),
+                nameof(Assignment.Id),
+                nameof(Assignment.Name),
+                vm.StudySession.AssignmentId);
+            vm.RoomSelectList = new SelectList(await _roomRepository.AllAsync(User.GetUserId()),
+                nameof(Room.Id),
+                nameof(Room.Name),
+                vm.StudySession.RoomId);
+            
+            return View(vm);
         }
 
         // GET: StudySessions/Delete/5
@@ -136,16 +172,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studySession = await _context.StudySessions
-                .Include(s => s.Assignment)
-                .Include(s => s.Room)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (studySession == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(studySession);
+            return View(entity);
         }
 
         // POST: StudySessions/Delete/5
@@ -153,19 +187,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var studySession = await _context.StudySessions.FindAsync(id);
-            if (studySession != null)
-            {
-                _context.StudySessions.Remove(studySession);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool StudySessionExists(Guid id)
-        {
-            return _context.StudySessions.Any(e => e.Id == id);
         }
     }
 }

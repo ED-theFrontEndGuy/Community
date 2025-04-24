@@ -1,29 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class DeclarationsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IDeclarationRepository _repository;
+        private readonly ICourseRepository _courseRepository;
 
-        public DeclarationsController(AppDbContext context)
+        public DeclarationsController(AppDbContext context, IDeclarationRepository repository, ICourseRepository courseRepository)
         {
             _context = context;
+            _repository = repository;
+            _courseRepository = courseRepository;
         }
 
         // GET: Declarations
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Declarations.Include(d => d.Course).Include(d => d.User);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: Declarations/Details/5
@@ -34,24 +39,27 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var declaration = await _context.Declarations
-                .Include(d => d.Course)
-                .Include(d => d.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (declaration == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(declaration);
+            return View(entity);
         }
 
         // GET: Declarations/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
-            return View();
+            var vm = new DeclarationCreateEditViewModel()
+            {
+                CourseSelectList = new SelectList(await _courseRepository.AllAsync(User.GetUserId()),
+                    nameof(Course.Id),
+                    nameof(Course.Name))
+            };
+            
+            return View(vm);
         }
 
         // POST: Declarations/Create
@@ -59,18 +67,18 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Active,UserId,CourseId,Id")] Declaration declaration)
+        public async Task<IActionResult> Create(DeclarationCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                declaration.Id = Guid.NewGuid();
-                _context.Add(declaration);
+                vm.Declaration.UserId = User.GetUserId();
+                _repository.Add(vm.Declaration);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", declaration.CourseId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", declaration.UserId);
-            return View(declaration);
+            
+            return View(vm);
         }
 
         // GET: Declarations/Edit/5
@@ -81,14 +89,23 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var declaration = await _context.Declarations.FindAsync(id);
+            var declaration = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (declaration == null)
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", declaration.CourseId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", declaration.UserId);
-            return View(declaration);
+
+            var vm = new DeclarationCreateEditViewModel()
+            {
+                CourseSelectList = new SelectList(await _courseRepository.AllAsync(User.GetUserId()),
+                    nameof(Course.Id),
+                    nameof(Course.Name),
+                    declaration.CourseId),
+                Declaration = declaration
+            };
+            
+            return View(vm);
         }
 
         // POST: Declarations/Edit/5
@@ -96,36 +113,29 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Active,UserId,CourseId,Id")] Declaration declaration)
+        public async Task<IActionResult> Edit(Guid id, DeclarationCreateEditViewModel vm)
         {
-            if (id != declaration.Id)
+            if (id != vm.Declaration.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(declaration);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DeclarationExists(declaration.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                vm.Declaration.UserId = User.GetUserId();
+                
+                _repository.Update(vm.Declaration);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", declaration.CourseId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", declaration.UserId);
-            return View(declaration);
+
+            vm.CourseSelectList = new SelectList(await _courseRepository.AllAsync(User.GetUserId()),
+                nameof(Course.Id),
+                nameof(Course.Name),
+                vm.Declaration.CourseId);
+            
+            return View(vm);
         }
 
         // GET: Declarations/Delete/5
@@ -136,16 +146,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var declaration = await _context.Declarations
-                .Include(d => d.Course)
-                .Include(d => d.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (declaration == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+                
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(declaration);
+            return View(entity);
         }
 
         // POST: Declarations/Delete/5
@@ -153,19 +161,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var declaration = await _context.Declarations.FindAsync(id);
-            if (declaration != null)
-            {
-                _context.Declarations.Remove(declaration);
-            }
-
+            await _repository.RemoveAsync(id, User.GetUserId());
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool DeclarationExists(Guid id)
-        {
-            return _context.Declarations.Any(e => e.Id == id);
         }
     }
 }

@@ -1,28 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class RoomsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IRoomRepository _repository;
 
-        public RoomsController(AppDbContext context)
+        public RoomsController(AppDbContext context, IRoomRepository repository)
         {
             _context = context;
+            _repository = repository;
         }
 
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rooms.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: Rooms/Details/5
@@ -33,8 +35,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var room = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (room == null)
             {
                 return NotFound();
@@ -54,13 +56,13 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id")] Room room)
+        public async Task<IActionResult> Create(Room room)
         {
             if (ModelState.IsValid)
             {
-                room.Id = Guid.NewGuid();
-                _context.Add(room);
+                _repository.Add(room);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(room);
@@ -74,11 +76,13 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (room == null)
             {
                 return NotFound();
             }
+            
             return View(room);
         }
 
@@ -87,7 +91,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Id")] Room room)
+        public async Task<IActionResult> Edit(Guid id, Room room)
         {
             if (id != room.Id)
             {
@@ -96,24 +100,12 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(room);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RoomExists(room.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _repository.Update(room);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
+            
             return View(room);
         }
 
@@ -125,14 +117,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(entity);
         }
 
         // POST: Rooms/Delete/5
@@ -140,19 +132,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var room = await _context.Rooms.FindAsync(id);
-            if (room != null)
-            {
-                _context.Rooms.Remove(room);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool RoomExists(Guid id)
-        {
-            return _context.Rooms.Any(e => e.Id == id);
         }
     }
 }
