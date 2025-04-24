@@ -1,29 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
+using App.DAL.Interfaces;
 using App.Domain;
+using Base.Helpers;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     public class MessagesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IMessageRepository _repository;
+        private readonly IConversationRepository _conversationRepository;
 
-        public MessagesController(AppDbContext context)
+        public MessagesController(AppDbContext context, IMessageRepository repository, IConversationRepository conversationRepository)
         {
             _context = context;
+            _repository = repository;
+            _conversationRepository = conversationRepository;
         }
 
         // GET: Messages
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Messages.Include(m => m.Conversation).Include(m => m.User);
-            return View(await appDbContext.ToListAsync());
+            var res = await _repository.AllAsync(User.GetUserId());
+            
+            return View(res);
         }
 
         // GET: Messages/Details/5
@@ -34,24 +37,27 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var message = await _context.Messages
-                .Include(m => m.Conversation)
-                .Include(m => m.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(message);
+            return View(entity);
         }
 
         // GET: Messages/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id");
-            return View();
+            var vm = new MessageCreateEditViewModel()
+            {
+                ConversationSelectList = new SelectList(await _conversationRepository.AllAsync(User.GetUserId()),
+                    nameof(Conversation.Id),
+                    nameof(Conversation.Name)),
+            };
+            
+            return View(vm);
         }
 
         // POST: Messages/Create
@@ -59,18 +65,18 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserMessage,UserId,ConversationId,Id")] Message message)
+        public async Task<IActionResult> Create(MessageCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                message.Id = Guid.NewGuid();
-                _context.Add(message);
+                vm.Message.UserId = User.GetUserId();
+                _repository.Add(vm.Message);
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", message.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", message.UserId);
-            return View(message);
+            
+            return View(vm);
         }
 
         // GET: Messages/Edit/5
@@ -81,14 +87,22 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var message = await _context.Messages.FindAsync(id);
+            var message = await _repository.FindAsync(id.Value, User.GetUserId());
+            
             if (message == null)
             {
                 return NotFound();
             }
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", message.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", message.UserId);
-            return View(message);
+
+            var vm = new MessageCreateEditViewModel()
+            {
+                ConversationSelectList = new SelectList(await _conversationRepository.AllAsync(User.GetUserId()),
+                    nameof(Conversation.Id),
+                    nameof(Conversation.Name)),
+                Message = message
+            };
+            
+            return View(vm);
         }
 
         // POST: Messages/Edit/5
@@ -96,36 +110,28 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("UserMessage,UserId,ConversationId,Id")] Message message)
+        public async Task<IActionResult> Edit(Guid id, MessageCreateEditViewModel vm)
         {
-            if (id != message.Id)
+            if (id != vm.Message.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(message);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MessageExists(message.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                vm.Message.UserId = User.GetUserId();
+                _repository.Update(vm.Message);
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ConversationId"] = new SelectList(_context.Conversations, "Id", "Name", message.ConversationId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "Id", message.UserId);
-            return View(message);
+
+            vm.ConversationSelectList = new SelectList(await _conversationRepository.AllAsync(User.GetUserId()),
+                nameof(Conversation.Id),
+                nameof(Conversation.Name),
+                vm.Message.Id);
+            
+            return View(vm);
         }
 
         // GET: Messages/Delete/5
@@ -136,16 +142,14 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var message = await _context.Messages
-                .Include(m => m.Conversation)
-                .Include(m => m.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (message == null)
+            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            
+            if (entity == null)
             {
                 return NotFound();
             }
 
-            return View(message);
+            return View(entity);
         }
 
         // POST: Messages/Delete/5
@@ -153,19 +157,10 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var message = await _context.Messages.FindAsync(id);
-            if (message != null)
-            {
-                _context.Messages.Remove(message);
-            }
-
+            await _repository.RemoveAsync(id);
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool MessageExists(Guid id)
-        {
-            return _context.Messages.Any(e => e.Id == id);
         }
     }
 }

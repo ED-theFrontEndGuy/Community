@@ -15,7 +15,7 @@ public class ConversationRepository : BaseRepository<Conversation>, IConversatio
     {
         return await RepositoryDbSet
             .Include(c => c.StudyGroup)
-            .Where(c => c.StudyGroup!.UserId == userId)
+            // .Where(c => c.StudyGroup!.UserId == userId)
             .ToListAsync();
     }
 

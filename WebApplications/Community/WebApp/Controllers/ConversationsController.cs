@@ -69,7 +69,7 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vm.Conversation);
+                _repository.Add(vm.Conversation);
                 await _context.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
