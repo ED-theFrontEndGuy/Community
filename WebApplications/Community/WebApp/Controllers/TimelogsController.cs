@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class TimelogsController : Controller
     {
         private readonly AppDbContext _context;
