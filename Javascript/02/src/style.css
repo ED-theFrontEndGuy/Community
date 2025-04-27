@@ -1,0 +1,78 @@
+/* html {
+    min-height: 100vh;
+} */
+
+body {
+  background-color: #dddbd7;
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.row {
+  display: flex;
+}
+
+#current-player {
+  text-align: center;
+}
+
+#opponent-btn-div {
+  text-align: center;
+}
+
+#timer {
+  text-align: center;
+  height: 2em;
+}
+
+.btn-container {
+  text-align: center;
+}
+
+.cell {
+  border: 1px solid #000;
+  border-radius: 15%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1px;
+}
+
+.active {
+  background-color: aqua;
+}
+
+.btn-reset {
+  margin: 10px 0;
+  text-align: center;
+}
+
+#announcement {
+  color: #000;
+  font-weight: bold;
+  height: 50px;
+  width: auto;
+  text-align: center;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.selected {
+  background-color: #fe8598;
+}
