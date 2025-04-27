@@ -4,7 +4,7 @@ export const DIRECTIONS = Object.freeze({
     LEFT: "LEFT",
     RIGHT: "RIGHT",
 
-    toString(direction) {
+    toString(direction: string) {
         return direction.toLowerCase();
     }
 });
