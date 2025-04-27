@@ -1,7 +1,7 @@
-export function aiMakeAMove(game) {
-    console.log("AI is making a move...");
+import { GameBrain } from "./brain";
 
-    console.log(game.currentPlayer.piecesLeft);
+export function aiMakeAMove(game: GameBrain): void {
+    console.log("AI is making a move...");
     
     if (game.currentPlayer.piecesLeft <= 0) {
         console.log("AI has no more pieces left to place.");
@@ -12,7 +12,7 @@ export function aiMakeAMove(game) {
             bubbles: true,
         });
 
-        document.getElementById("announcement").dispatchEvent(resultEvent);
+        document.getElementById("announcement")!.dispatchEvent(resultEvent);
 
         
         return;
@@ -23,7 +23,7 @@ export function aiMakeAMove(game) {
         let [x, y] = move;
         game.board[x][y] = game.currentPlayer.symbol;
 
-        let cell = document.getElementById("app").childNodes[x].childNodes[y];
+        let cell = document.getElementById("app")!.childNodes[x].childNodes[y] as HTMLElement;
         cell.innerHTML = game.currentPlayer.symbol;
         game.currentPlayer.deductPiecesLeft();
 
@@ -35,7 +35,7 @@ export function aiMakeAMove(game) {
     }
 }
 
-function checkLocalWin(game, anchorX, anchorY, playerSymbol) {
+function checkLocalWin(game: GameBrain, anchorX: number, anchorY: number, playerSymbol: string): boolean {
     let board = game.board;
 
     // Check rows
@@ -81,7 +81,7 @@ function checkLocalWin(game, anchorX, anchorY, playerSymbol) {
 }
 
 
-function canWinNextMove(game, playerSymbol) {
+function canWinNextMove(game: GameBrain, playerSymbol: string): [number, number] | null {
     let [anchorX, anchorY] = game.activeBoardAnchor;
 
     for (let x = anchorX; x < anchorX + 3; x++) {
@@ -104,7 +104,7 @@ function canWinNextMove(game, playerSymbol) {
 }
 
 
-function findBestMove(game) {
+function findBestMove(game: GameBrain): [number, number] | null {
     let availableMoves = [];
 
     let [anchorX, anchorY] = game.activeBoardAnchor;
@@ -126,13 +126,13 @@ function findBestMove(game) {
     if (blockingMove) return blockingMove;
 
     // 3. Prefer center
-    let center = [anchorX + 1, anchorY + 1];
+    let center: [number, number] = [anchorX + 1, anchorY + 1];
     if (game.board[center[0]][center[1]] === null) {
         return center;
     }
 
     // 4. Prefer strategic corners
-    let strategicMoves = [
+    let strategicMoves: [number, number][] = [
         [anchorX, anchorY], [anchorX, anchorY + 2],
         [anchorX + 2, anchorY], [anchorX + 2, anchorY + 2]
     ];
