@@ -4,8 +4,8 @@ import { aiMakeAMove } from "./ai";
 
 
 export class GameBrain {
-    #board: string[][] = Array.from({ length: 5}, () => Array(5).fill(null));
-    #activeBoard: string[][] = Array.from({ length: 3}, () => Array(3).fill(null));
+    #board: (string | null)[][] = Array.from({ length: 5}, () => Array(5).fill(null));
+    #activeBoard: (string | null)[][] = Array.from({ length: 3}, () => Array(3).fill(null));
     #activeBoardAnchor: [number, number] = [1, 1];
     #playerX: Player
     #playerO: Player
@@ -38,7 +38,7 @@ export class GameBrain {
         this.#currentPlayer = this.#playerX;
     }
 
-    updateActiveBoard(): string[][] {
+    updateActiveBoard(): (string | null)[][] {
         let [x, y] = this.#activeBoardAnchor;
 
         for (let i = 0; i < 3; i++) {
@@ -167,15 +167,15 @@ export class GameBrain {
         return playerXwins && playerOwins;
     }
 
-    get activeBoard(): string[][] {
+    get activeBoard(): (string | null)[][] {
         return this.#activeBoard;
     }
 
-    get board(): string[][] {
+    get board(): (string | null)[][] {
         return this.#board;
     }
 
-    getCell(x: number, y: number): string {
+    getCell(x: number, y: number): string | null {
         return this.#board[x][y];
     }
 

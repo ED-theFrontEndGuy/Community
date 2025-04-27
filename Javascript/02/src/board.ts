@@ -14,7 +14,7 @@ export function drawBoard(game: GameBrain): HTMLElement {
         for (let y=0; y < 5; y++) {
             let cell = document.createElement("div");
             cell.classList.add("cell");
-            cell.innerHTML = game.board[x][y];
+            cell.innerHTML = game.board[x][y] || "";
 
             if (game.board[x][y] !== null) {
                 cell.addEventListener("click", (e: MouseEvent) => {

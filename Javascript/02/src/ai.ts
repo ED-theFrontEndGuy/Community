@@ -105,7 +105,7 @@ function canWinNextMove(game: GameBrain, playerSymbol: string): [number, number]
 
 
 function findBestMove(game: GameBrain): [number, number] | null {
-    let availableMoves = [];
+    let availableMoves: [number, number][] = [];
 
     let [anchorX, anchorY] = game.activeBoardAnchor;
 
