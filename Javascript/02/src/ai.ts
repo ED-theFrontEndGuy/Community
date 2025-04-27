@@ -25,6 +25,7 @@ export function aiMakeAMove(game) {
 
         let cell = document.getElementById("app").childNodes[x].childNodes[y];
         cell.innerHTML = game.currentPlayer.symbol;
+        game.currentPlayer.deductPiecesLeft();
 
         // Validate board (but don't check full game win)
         game.handleResultValidation();

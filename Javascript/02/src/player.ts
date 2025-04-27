@@ -1,4 +1,4 @@
-import { aiMakeAMove } from "./ai";
+// import { aiMakeAMove } from "./ai";
 
 export class Player {
     #symbol
@@ -38,12 +38,12 @@ export class Player {
     }
 
     makeAMove(game, x, y, e) {
-        if (this.#isAi) {
-            aiMakeAMove(game);
-            this.deductPiecesLeft();
+        // if (this.#isAi) {
+        //     aiMakeAMove(game);
+        //     this.deductPiecesLeft();
 
-            return true;
-        }
+        //     return true;
+        // }
 
         if (game.board[x][y] === null && this.#piecesLeft >= 0 && this.#piecesLeft > 0) {
             game.board[x][y] = this.#symbol;

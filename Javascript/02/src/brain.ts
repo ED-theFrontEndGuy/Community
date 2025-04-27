@@ -1,33 +1,35 @@
 import { DIRECTIONS } from "./EDirections";
+import { Player } from "./player";
+import { aiMakeAMove } from "./ai";
 
 
 export class GameBrain {
-    #board = Array.from({ length: 5}, () => Array(5).fill(null));
-    #activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
-    #activeBoardAnchor = [1, 1];
-    #playerX
-    #playerO
-    #currentPlayer
+    #board: string[][] = Array.from({ length: 5}, () => Array(5).fill(null));
+    #activeBoard: string[][] = Array.from({ length: 3}, () => Array(3).fill(null));
+    #activeBoardAnchor: [number, number] = [1, 1];
+    #playerX: Player
+    #playerO: Player
+    #currentPlayer: Player
 
-    constructor(playerX, playerO) {
+    constructor(playerX: Player, playerO: Player) {
         this.#playerX = playerX;
         this.#playerO = playerO;
         this.#currentPlayer = this.#playerX;
     }
 
-    get activeBoardAnchor() {
+    get activeBoardAnchor(): [number, number] {
         return this.#activeBoardAnchor;
     }
 
-    get getPlayerX() {
+    get getPlayerX(): Player {
         return this.#playerX;
     }
 
-    get getPlayerO() {
+    get getPlayerO(): Player {
         return this.#playerO;
     }
 
-    resetGame() {
+    resetGame(): void {
         this.#board = Array.from({ length: 5}, () => Array(5).fill(null));
         this.#activeBoard = Array.from({ length: 3}, () => Array(3).fill(null));
         this.#activeBoardAnchor = [1, 1];
@@ -36,7 +38,7 @@ export class GameBrain {
         this.#currentPlayer = this.#playerX;
     }
 
-    updateActiveBoard() {
+    updateActiveBoard(): string[][] {
         let [x, y] = this.#activeBoardAnchor;
 
         for (let i = 0; i < 3; i++) {
@@ -48,11 +50,11 @@ export class GameBrain {
         return this.#activeBoard;
     }
 
-    displayError(direction) {
+    displayError(direction: string): void {
         console.log(`Not allowed move. Move ${direction} out of bounds.`);
     }
 
-    moveActiveBoard(direction) {
+    moveActiveBoard(direction: string): void {
         if (this.#currentPlayer.piecesLeft <= 2) {
             switch (direction) {
                 case DIRECTIONS.UP:
@@ -93,15 +95,8 @@ export class GameBrain {
         }
     }
 
-    testPrintActiveBoard() {
-        for (let i = 0; i < 3; i++) {
-            console.log(this.#activeBoard[i]);
-        }
-    }
-
-    handleResultValidation() {
+    handleResultValidation(): void {
         this.updateActiveBoard();
-        // this.testPrintActiveBoard();
 
         if (this.checkTie()) {
             console.log("It's a tie!");
@@ -112,7 +107,7 @@ export class GameBrain {
                 bubbles: true,
             });
 
-            document.getElementById("announcement").dispatchEvent(resultEvent);
+            document.getElementById("announcement")?.dispatchEvent(resultEvent);
 
             this.resetGame();
         } else if (this.checkWin()) {
@@ -125,14 +120,14 @@ export class GameBrain {
                 bubbles: true,
             });
 
-            document.getElementById("announcement").dispatchEvent(resultEvent);
+            document.getElementById("announcement")?.dispatchEvent(resultEvent);
             this.#currentPlayer.increasePlayerWinCount();
 
             this.resetGame();
         }
     }
     
-    checkWin() {
+    checkWin(): boolean {
         const players = [this.#playerX, this.#playerO];
 
         for (let player of players) {
@@ -148,57 +143,57 @@ export class GameBrain {
         return false;
     }
     
-    checkRow(player) {
+    checkRow(player: Player): boolean {
         return this.#activeBoard.some(row => row.every(cell => cell === player.symbol));
     }
     
-    checkColumn(player) {
+    checkColumn(player: Player): boolean {
         return [0, 1, 2].some(col => 
             this.#activeBoard.every(row => row[col] === player.symbol)
         );
     }
     
-    checkDiagonals(player) {
+    checkDiagonals(player: Player): boolean {
         const mainDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][i] === player.symbol);
         const antiDiagonalWin = [0, 1, 2].every(i => this.#activeBoard[i][2 - i] === player.symbol);
         
         return mainDiagonalWin || antiDiagonalWin;
     }
     
-    checkTie() {
+    checkTie(): boolean {
         const playerXwins = this.checkRow(this.#playerX) || this.checkColumn(this.#playerX);
         const playerOwins = this.checkRow(this.#playerO) || this.checkColumn(this.#playerO);
 
         return playerXwins && playerOwins;
     }
 
-    get activeBoard() {
+    get activeBoard(): string[][] {
         return this.#activeBoard;
     }
 
-    get board() {
+    get board(): string[][] {
         return this.#board;
     }
 
-    getCell(x, y) {
+    getCell(x: number, y: number): string {
         return this.#board[x][y];
     }
 
-    switchActivePlayer() {
+    switchActivePlayer(): void {
         if (this.#currentPlayer === this.#playerX) {
             this.#currentPlayer = this.#playerO;
         } else {
             this.#currentPlayer = this.#playerX;
         }
 
-        document.getElementById("current-player").innerHTML = `Turn: ${this.#currentPlayer.symbol}`;
+        document.getElementById("current-player")!.innerHTML = `Turn: ${this.#currentPlayer.symbol}`;
 
         if (this.#currentPlayer.isAi) {
-            this.#currentPlayer.makeAMove(this);
+            aiMakeAMove(this);
         }
     }
 
-    get currentPlayer() {
+    get currentPlayer(): Player {
         return this.#currentPlayer;
     }
 }
