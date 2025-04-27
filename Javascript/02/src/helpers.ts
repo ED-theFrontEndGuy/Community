@@ -1,8 +1,10 @@
 import { DIRECTIONS } from "./EDirections";
 import { drawBoard } from "./board";
+import { GameBrain } from "./brain";
+import { Player } from "./player";
 
 
-export function createBase() {
+export function createBase(): void {
     let timerDiv = document.createElement("div");
     let appDiv = document.createElement("div");
     let announcementDiv = document.createElement("div");
@@ -25,46 +27,42 @@ export function createBase() {
     document.body.appendChild(announcementDiv);
     document.body.appendChild(appDiv);
 
-    document.body.addEventListener("gameEnd", (e) => {
-        console.log("Im here");
-        
-        showWinner(e);
+    document.body.addEventListener("gameEnd", (e: Event) => {
+        showWinner(e as CustomEvent);
     });
 }
 
-export function startTimer() {
+export function startTimer(): number {
     let sec = 0; // Start from 0
     const timerElement = document.getElementById("timer");
-    timerElement.innerHTML = "00:00";
+    timerElement!.innerHTML = "00:00";
 
-    // Update timer every second
     const timer = setInterval(function () {
         let minutes = Math.floor(sec / 60);
         let seconds = sec % 60;
 
-        // Format as MM:SS
-        timerElement.innerHTML = 
+        timerElement!.innerHTML = 
             (minutes < 10 ? "0" : "") + minutes + ":" + 
             (seconds < 10 ? "0" : "") + seconds;
 
-        sec++; // Increment time
+        sec++;
     }, 1000);
 
-    return timer; // If you need to stop it later, return the interval ID
+    return timer;
 }
 
 
-export function clearBoard() {
+export function clearBoard(): void {
     let board = document.getElementById("app");
     let stats = document.getElementsByClassName("stats")[0];
     let announcement = document.getElementById("announcement");
         
-    announcement.innerHTML = "";
-    board.innerHTML = "";
+    announcement!.innerHTML = "";
+    board!.innerHTML = "";
     stats.innerHTML = "";
 }
 
-export function createGameResetButton(game, drawBoard) {
+export function createGameResetButton(game: GameBrain, drawBoard: Function): void {
     let div = document.createElement("div");
     let button = document.createElement("button");
 
@@ -85,14 +83,15 @@ export function createGameResetButton(game, drawBoard) {
     document.body.appendChild(div);
 }
 
-function showWinner(e) {
+function showWinner(e: CustomEvent): void {
     let target = document.getElementById("announcement");    
-    target.innerHTML = e.detail.text
+    target!.innerHTML = e.detail.text
 }
 
-export function drawPlayerPanels(game) {
+export function drawPlayerPanels(game: GameBrain): void {
     let div = document.createElement("div");
     div.classList.add("stats");
+    
     let player1Panel = drawPlayerPanel(game, game.getPlayerX);
     let player2Panel = drawPlayerPanel(game, game.getPlayerO);
     
@@ -102,7 +101,7 @@ export function drawPlayerPanels(game) {
     document.body.prepend(div);
 }
 
-function drawPlayerPanel(game, player) {    
+function drawPlayerPanel(game: GameBrain, player: Player): HTMLElement {    
     let div = document.createElement("div");
     let playerHeader = document.createElement('h1');
     let winCount = document.createElement("p");
@@ -112,7 +111,7 @@ function drawPlayerPanel(game, player) {
     } else {
         playerHeader.innerHTML = `Player ${player.symbol}`;
     }
-    winCount.innerHTML = player.playerWinCount;
+    winCount.innerHTML = player.playerWinCount.toString();
     
     div.appendChild(playerHeader);
     div.appendChild(winCount);
@@ -121,7 +120,7 @@ function drawPlayerPanel(game, player) {
     return div;
 }
 
-function playerBoardMoveButtons(game) {
+function playerBoardMoveButtons(game: GameBrain): HTMLElement[] {
     let upBtn = createButton(game, DIRECTIONS.UP);
     let downBtn = createButton(game, DIRECTIONS.DOWN);
     let leftBtn = createButton(game, DIRECTIONS.LEFT);
@@ -130,7 +129,7 @@ function playerBoardMoveButtons(game) {
     return new Array(upBtn, leftBtn, rightBtn, downBtn);
 }
 
-function createButton(game, DIRECTION) {
+function createButton(game: GameBrain, DIRECTION: string): HTMLElement {
     let button = document.createElement("button");
     button.innerHTML = DIRECTIONS.toString(DIRECTION);
     button.classList.add("move-btn");
@@ -138,11 +137,11 @@ function createButton(game, DIRECTION) {
         button.classList.add("disabled");
     }
 
-    button.addEventListener("click", (e) => {
+    button.addEventListener("click", () => {
         let board = document.getElementById("app");
         let stats = document.getElementsByClassName("stats")[0];
         
-        board.innerHTML = "";
+        board!.innerHTML = "";
         stats.innerHTML = "";
         game.moveActiveBoard(DIRECTION);
         game.handleResultValidation();
