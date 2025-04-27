@@ -1,6 +1,5 @@
-import { DIRECTIONS } from "./EDirections.js";
-import { drawBoard } from "./board.js";
-import { clearBoard } from "./helpers.js";
+import { DIRECTIONS } from "./EDirections";
+
 
 export class GameBrain {
     #board = Array.from({ length: 5}, () => Array(5).fill(null));

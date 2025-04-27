@@ -1,4 +1,4 @@
-import { aiMakeAMove } from "./ai.js";
+import { aiMakeAMove } from "./ai";
 
 export class Player {
     #symbol

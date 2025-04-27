@@ -1,6 +1,4 @@
-"use strict";
-
-import * as helpers from "./helpers.js";
+import * as helpers from "./helpers";
 
 
 export function drawBoard(game) {

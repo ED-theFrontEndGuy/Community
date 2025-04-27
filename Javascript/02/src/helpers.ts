@@ -1,5 +1,5 @@
-import { DIRECTIONS } from "./EDirections.js";
-import { drawBoard } from "./board.js";
+import { DIRECTIONS } from "./EDirections";
+import { drawBoard } from "./board";
 
 
 export function createBase() {
