@@ -26,6 +26,6 @@ public interface IRepository<TEntity, TKey>
     void Remove(TKey id, TKey? userId);
     Task RemoveAsync(TKey id, TKey? userId = default!);
 
-    bool Exists(Guid id, TKey? userId = default!);
-    Task<bool> ExistsAsync(Guid id, TKey? userId = default!);
+    bool Exists(TKey id, TKey? userId = default!);
+    Task<bool> ExistsAsync(TKey id, TKey? userId = default!);
 }
