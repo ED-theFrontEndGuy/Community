@@ -42,7 +42,7 @@ public class BaseRepository<TEntity, TKey> : IRepository<TEntity, TKey>
     }
     
     
-    public virtual IEnumerable<TEntity> All(TKey? userId)
+    public virtual IEnumerable<TEntity> All(TKey? userId = default!)
     {
         return GetQuery(userId)
             .ToList(); 
