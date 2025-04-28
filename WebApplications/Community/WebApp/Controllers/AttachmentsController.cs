@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using App.DAL.EF;
 using App.DAL.Interfaces;
 using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class AttachmentsController : Controller
     {
         private readonly AppDbContext _context;
