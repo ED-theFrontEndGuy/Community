@@ -40,8 +40,13 @@ public class BaseRepository<TEntity, TKey> : IRepository<TEntity, TKey>
 
         return query;
     }
-    
-    
+
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await RepositoryDbContext.SaveChangesAsync(); 
+    }
+
     public virtual IEnumerable<TEntity> All(TKey? userId = default!)
     {
         return GetQuery(userId)

@@ -11,6 +11,8 @@ public interface IRepository<TEntity, TKey>
     where TEntity : IDomainId<TKey>
     where TKey : IEquatable<TKey>
 {
+    Task<int> SaveChangesAsync();
+    
     // TODO: Implement UOW, remove SaveChangesAsync from repository
     IEnumerable<TEntity> All(TKey? userId = default!);
     Task<IEnumerable<TEntity>> AllAsync(TKey? userId = default!);
