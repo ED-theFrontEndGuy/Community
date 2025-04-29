@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IDeclarationRepository : IRepository<Declaration>
+public interface IDeclarationRepository : IBaseRepository<Declaration>
 {
     
 }

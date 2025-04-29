@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IUserAchievementRepository : IRepository<UserAchievement>
+public interface IUserAchievementRepository : IBaseRepository<UserAchievement>
 {
     //ToDO write custom methods here
 }

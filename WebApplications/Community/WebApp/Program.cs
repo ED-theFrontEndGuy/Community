@@ -42,11 +42,12 @@ else
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddScoped<IAppUOW, AppUOW>();
 // register all the repo interfaces and their implementations, use scoped lifetime
 // scoped - get created once per web client request (same as dbcontext)
-// ToDo add the rest repositories.
-builder.Services.AddScoped<IUserAchievementRepository, UserAchievementRepository>();
-builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
+// TODO delete rest after injecting the rest repos to AppBaseUOW
+// builder.Services.AddScoped<IUserAchievementRepository, UserAchievementRepository>();
+// builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IDeclarationRepository, DeclarationRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();

@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IRoomRepository : IRepository<Room> 
+public interface IRoomRepository : IBaseRepository<Room> 
 {
     
 }

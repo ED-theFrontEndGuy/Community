@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Base.DAL.EF;
 
-public class BaseRepository<TEntity> : BaseRepository<TEntity, Guid>, IRepository<TEntity>
+public class BaseRepository<TEntity> : BaseRepository<TEntity, Guid>, IBaseRepository<TEntity>
     where TEntity : class, IDomainId
 {
     public BaseRepository(DbContext repositoryDbContext) : base(repositoryDbContext)
