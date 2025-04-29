@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -10,12 +9,10 @@ namespace WebApp.Controllers
     [Authorize]
     public class CoursesController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly ICourseRepository _repository;
 
-        public CoursesController(AppDbContext context, ICourseRepository courseRepository)
+        public CoursesController(ICourseRepository courseRepository)
         {
-            _context = context;
             _repository = courseRepository;
         }
 
@@ -59,7 +56,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Add(entity);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -99,7 +96,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Update(course);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -131,7 +128,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

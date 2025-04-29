@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -10,12 +9,10 @@ namespace WebApp.Controllers
     [Authorize]
     public class RoomsController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IRoomRepository _repository;
 
-        public RoomsController(AppDbContext context, IRoomRepository repository)
+        public RoomsController(IRoomRepository repository)
         {
-            _context = context;
             _repository = repository;
         }
 
@@ -61,7 +58,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Add(room);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -101,7 +98,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Update(room);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -133,7 +130,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

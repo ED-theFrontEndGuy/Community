@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -11,13 +10,11 @@ namespace WebApp.Controllers
     [Authorize]
     public class AssignmentsController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IAssignmentRepository _repository;
         private readonly IDeclarationRepository _declarationRepository;
         
-        public AssignmentsController(AppDbContext context, IAssignmentRepository repository, IDeclarationRepository declarationRepository)
+        public AssignmentsController(IAssignmentRepository repository, IDeclarationRepository declarationRepository)
         {
-            _context = context;
             _repository = repository;
             _declarationRepository = declarationRepository;
         }
@@ -80,7 +77,7 @@ namespace WebApp.Controllers
             {
                 _repository.Add(vm.Assignment);
                 
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -136,7 +133,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Update(vm.Assignment);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -179,7 +176,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

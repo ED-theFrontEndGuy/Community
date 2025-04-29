@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -12,13 +11,11 @@ namespace WebApp.Controllers
     [Authorize]
     public class DeclarationsController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IDeclarationRepository _repository;
         private readonly ICourseRepository _courseRepository;
 
-        public DeclarationsController(AppDbContext context, IDeclarationRepository repository, ICourseRepository courseRepository)
+        public DeclarationsController(IDeclarationRepository repository, ICourseRepository courseRepository)
         {
-            _context = context;
             _repository = repository;
             _courseRepository = courseRepository;
         }
@@ -74,7 +71,7 @@ namespace WebApp.Controllers
                 vm.Declaration.UserId = User.GetUserId();
                 _repository.Add(vm.Declaration);
                 
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -125,7 +122,7 @@ namespace WebApp.Controllers
                 vm.Declaration.UserId = User.GetUserId();
                 
                 _repository.Update(vm.Declaration);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -162,7 +159,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id, User.GetUserId());
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

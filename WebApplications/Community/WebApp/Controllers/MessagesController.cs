@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -12,13 +11,11 @@ namespace WebApp.Controllers
     [Authorize]
     public class MessagesController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IMessageRepository _repository;
         private readonly IConversationRepository _conversationRepository;
 
-        public MessagesController(AppDbContext context, IMessageRepository repository, IConversationRepository conversationRepository)
+        public MessagesController(IMessageRepository repository, IConversationRepository conversationRepository)
         {
-            _context = context;
             _repository = repository;
             _conversationRepository = conversationRepository;
         }
@@ -74,7 +71,7 @@ namespace WebApp.Controllers
                 vm.Message.UserId = User.GetUserId();
                 _repository.Add(vm.Message);
                 
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -123,7 +120,7 @@ namespace WebApp.Controllers
             {
                 vm.Message.UserId = User.GetUserId();
                 _repository.Update(vm.Message);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -160,7 +157,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

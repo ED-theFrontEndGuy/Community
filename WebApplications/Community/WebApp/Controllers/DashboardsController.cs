@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -10,12 +9,10 @@ namespace WebApp.Controllers
     [Authorize]
     public class DashboardsController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IDashboardRepository _repository;
 
-        public DashboardsController(AppDbContext context, IDashboardRepository repository)
+        public DashboardsController(IDashboardRepository repository)
         {
-            _context = context;
             _repository = repository;
         }
 
@@ -63,7 +60,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Add(dashboard);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -106,7 +103,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Update(dashboard);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -138,7 +135,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

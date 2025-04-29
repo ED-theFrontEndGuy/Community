@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -12,14 +11,12 @@ namespace WebApp.Controllers
     [Authorize]
     public class TimelogsController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly ITimelogRepository _repository;
         private readonly IDeclarationRepository _declarationRepository;
         private readonly IAssignmentRepository _assignmentRepository;
 
-        public TimelogsController(AppDbContext context, ITimelogRepository repository, IDeclarationRepository declarationRepository, IAssignmentRepository assignmentRepository)
+        public TimelogsController(ITimelogRepository repository, IDeclarationRepository declarationRepository, IAssignmentRepository assignmentRepository)
         {
-            _context = context;
             _repository = repository;
             _declarationRepository = declarationRepository;
             _assignmentRepository = assignmentRepository;
@@ -85,7 +82,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Add(vm.Timelog);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -166,7 +163,7 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _repository.Update(vm.Timelog);
-                await _context.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -216,7 +213,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }
