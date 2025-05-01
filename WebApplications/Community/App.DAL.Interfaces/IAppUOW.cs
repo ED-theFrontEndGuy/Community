@@ -14,6 +14,7 @@ public interface IAppUOW : IBaseUOW
     IMessageRepository MessageRepository { get; }
     IRoomRepository RoomRepository { get; }
     IStudyGroupRepository StudyGroupRepository { get; }
+    IStudySessionRepository StudySessionRepository { get; }
     ITimelogRepository TimelogRepository { get; }
     IUserAchievementRepository UserAchievementRepository { get; }
 }

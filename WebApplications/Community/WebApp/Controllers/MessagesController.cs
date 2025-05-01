@@ -11,19 +11,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class MessagesController : Controller
     {
-        private readonly IMessageRepository _repository;
-        private readonly IConversationRepository _conversationRepository;
+        private readonly IAppUOW _uow;
 
-        public MessagesController(IMessageRepository repository, IConversationRepository conversationRepository)
+        public MessagesController(IAppUOW uow)
         {
-            _repository = repository;
-            _conversationRepository = conversationRepository;
+            _uow = uow;
         }
 
         // GET: Messages
         public async Task<IActionResult> Index()
         {
-            var res = await _repository.AllAsync(User.GetUserId());
+            var res = await _uow.MessageRepository.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -36,7 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.MessageRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -51,7 +49,7 @@ namespace WebApp.Controllers
         {
             var vm = new MessageCreateEditViewModel()
             {
-                ConversationSelectList = new SelectList(await _conversationRepository.AllAsync(User.GetUserId()),
+                ConversationSelectList = new SelectList(await _uow.ConversationRepository.AllAsync(User.GetUserId()),
                     nameof(Conversation.Id),
                     nameof(Conversation.Name)),
             };
@@ -69,9 +67,9 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 vm.Message.UserId = User.GetUserId();
-                _repository.Add(vm.Message);
+                _uow.MessageRepository.Add(vm.Message);
                 
-                await _repository.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -86,7 +84,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var message = await _repository.FindAsync(id.Value, User.GetUserId());
+            var message = await _uow.MessageRepository.FindAsync(id.Value, User.GetUserId());
             
             if (message == null)
             {
@@ -95,7 +93,7 @@ namespace WebApp.Controllers
 
             var vm = new MessageCreateEditViewModel()
             {
-                ConversationSelectList = new SelectList(await _conversationRepository.AllAsync(User.GetUserId()),
+                ConversationSelectList = new SelectList(await _uow.ConversationRepository.AllAsync(User.GetUserId()),
                     nameof(Conversation.Id),
                     nameof(Conversation.Name)),
                 Message = message
@@ -119,13 +117,13 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 vm.Message.UserId = User.GetUserId();
-                _repository.Update(vm.Message);
-                await _repository.SaveChangesAsync();
+                _uow.MessageRepository.Update(vm.Message);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
 
-            vm.ConversationSelectList = new SelectList(await _conversationRepository.AllAsync(User.GetUserId()),
+            vm.ConversationSelectList = new SelectList(await _uow.ConversationRepository.AllAsync(User.GetUserId()),
                 nameof(Conversation.Id),
                 nameof(Conversation.Name),
                 vm.Message.Id);
@@ -141,7 +139,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.MessageRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -156,8 +154,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _repository.SaveChangesAsync();
+            await _uow.MessageRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

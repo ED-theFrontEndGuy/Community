@@ -9,17 +9,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class CoursesController : Controller
     {
-        private readonly ICourseRepository _repository;
+        private readonly IAppUOW _uow;
 
-        public CoursesController(ICourseRepository courseRepository)
+        public CoursesController(IAppUOW uow)
         {
-            _repository = courseRepository;
+            _uow = uow;
         }
 
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _repository.AllAsync());
+            return View(await _uow.CourseRepository.AllAsync());
         }
 
         // GET: Courses/Details/5
@@ -30,7 +30,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.CourseRepository.FindAsync(id.Value, User.GetUserId());
 
             if (entity == null)
             {
@@ -55,8 +55,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(entity);
-                await _repository.SaveChangesAsync();
+                _uow.CourseRepository.Add(entity);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -71,7 +71,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _repository.FindAsync(id.Value, User.GetUserId());
+            var course = await _uow.CourseRepository.FindAsync(id.Value, User.GetUserId());
             
             if (course == null)
             {
@@ -95,8 +95,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _repository.Update(course);
-                await _repository.SaveChangesAsync();
+                _uow.CourseRepository.Update(course);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -112,7 +112,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _repository.FindAsync(id.Value, User.GetUserId());
+            var course = await _uow.CourseRepository.FindAsync(id.Value, User.GetUserId());
             
             if (course == null)
             {
@@ -127,8 +127,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _repository.SaveChangesAsync();
+            await _uow.CourseRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

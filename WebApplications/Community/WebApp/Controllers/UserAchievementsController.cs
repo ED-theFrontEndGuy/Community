@@ -11,19 +11,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class UserAchievementsController : Controller
     {
-        private readonly IUserAchievementRepository _repository;
-        private readonly IAchievementRepository _achievementRepository;
+        private readonly IAppUOW _uow;
 
-        public UserAchievementsController(IUserAchievementRepository repository, IAchievementRepository achievementRepository)
+        public UserAchievementsController(IAppUOW uow)
         {
-            _repository = repository;
-            _achievementRepository = achievementRepository;
+            _uow = uow;
         }
 
         // GET: UserAchievements
         public async Task<IActionResult> Index()
         {
-            var res = await _repository.AllAsync(User.GetUserId()); 
+            var res = await _uow.UserAchievementRepository.AllAsync(User.GetUserId()); 
                 
             return View(res);
         }
@@ -36,7 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.UserAchievementRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -51,7 +49,7 @@ namespace WebApp.Controllers
         {
             var vm = new UserAchievementsCreateEditViewModel()
             {
-                AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                AchievementSelectList = new SelectList(await _uow.AchievementRepository.AllAsync(User.GetUserId()),
                     nameof(Achievement.Id),
                     nameof(Achievement.Name))
             };
@@ -69,9 +67,9 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 vm.UserAchievement.UserId = User.GetUserId();
-                _repository.Add(vm.UserAchievement);
+                _uow.UserAchievementRepository.Add(vm.UserAchievement);
                 
-                await _repository.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -86,7 +84,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var userAchievement = await _repository.FindAsync(id.Value, User.GetUserId());
+            var userAchievement = await _uow.UserAchievementRepository.FindAsync(id.Value, User.GetUserId());
             
             if (userAchievement == null)
             {
@@ -95,7 +93,7 @@ namespace WebApp.Controllers
 
             var vm = new UserAchievementsCreateEditViewModel()
             {
-                AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+                AchievementSelectList = new SelectList(await _uow.AchievementRepository.AllAsync(User.GetUserId()),
                     nameof(Achievement.Id),
                     nameof(Achievement.Name),
                     userAchievement.Id),
@@ -120,13 +118,13 @@ namespace WebApp.Controllers
             if (ModelState.IsValid)
             {
                 vm.UserAchievement.UserId = User.GetUserId();
-                _repository.Update(vm.UserAchievement);
-                await _repository.SaveChangesAsync();
+                _uow.UserAchievementRepository.Update(vm.UserAchievement);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
 
-            vm.AchievementSelectList = new SelectList(await _achievementRepository.AllAsync(User.GetUserId()),
+            vm.AchievementSelectList = new SelectList(await _uow.AchievementRepository.AllAsync(User.GetUserId()),
                 nameof(Achievement.Id),
                 nameof(Achievement.Name),
                 vm.UserAchievement.Id);
@@ -142,7 +140,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.UserAchievementRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -157,8 +155,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _repository.SaveChangesAsync();
+            await _uow.UserAchievementRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }
