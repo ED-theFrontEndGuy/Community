@@ -51,7 +51,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
 
-// builder.Services.AddDefaultIdentity<IdentityUser>(
+// builder.Services.AddDefaultIdentity<AppUser>(
 //         options => options.SignIn.RequireConfirmedAccount = false)
 //     .AddEntityFrameworkStores<AppDbContext>();
 
