@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IStudyGroupRepository : IRepository<StudyGroup>
+public interface IStudyGroupRepository : IBaseRepository<StudyGroup>
 {
     
 }

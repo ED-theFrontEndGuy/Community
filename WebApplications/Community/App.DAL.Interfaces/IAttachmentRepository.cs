@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IAttachmentRepository : IRepository<Attachment>
+public interface IAttachmentRepository : IBaseRepository<Attachment>
 {
     
 }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -10,19 +9,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class DashboardsController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly IDashboardRepository _repository;
+        private readonly IAppUOW _uow;
 
-        public DashboardsController(AppDbContext context, IDashboardRepository repository)
+        public DashboardsController(IAppUOW uow)
         {
-            _context = context;
-            _repository = repository;
+            _uow = uow;
         }
 
         // GET: Dashboards
         public async Task<IActionResult> Index()
         {
-            var res = await _repository.AllAsync(User.GetUserId());
+            var res = await _uow.DashboardRepository.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -35,7 +32,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.DashboardRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -62,8 +59,8 @@ namespace WebApp.Controllers
             
             if (ModelState.IsValid)
             {
-                _repository.Add(dashboard);
-                await _context.SaveChangesAsync();
+                _uow.DashboardRepository.Add(dashboard);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -79,7 +76,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var dashboard = await _repository.FindAsync(id.Value, User.GetUserId());
+            var dashboard = await _uow.DashboardRepository.FindAsync(id.Value, User.GetUserId());
             
             if (dashboard == null)
             {
@@ -105,8 +102,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _repository.Update(dashboard);
-                await _context.SaveChangesAsync();
+                _uow.DashboardRepository.Update(dashboard);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -122,7 +119,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.DashboardRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -137,8 +134,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _uow.DashboardRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

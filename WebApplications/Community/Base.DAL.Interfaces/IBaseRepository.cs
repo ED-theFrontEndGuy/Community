@@ -2,7 +2,7 @@
 
 namespace Base.DAL.Interfaces;
 
-public interface IRepository<TEntity> : IRepository<TEntity, Guid>
+public interface IBaseRepository<TEntity> : IRepository<TEntity, Guid>
     where TEntity : IDomainId
 {
 }

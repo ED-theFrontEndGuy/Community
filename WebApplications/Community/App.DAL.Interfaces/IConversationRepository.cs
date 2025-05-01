@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IConversationRepository : IRepository<Conversation>
+public interface IConversationRepository : IBaseRepository<Conversation>
 {
     
 }

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -12,23 +11,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class StudySessionsController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly IStudySessionRepository _repository;
-        private readonly IAssignmentRepository _assignmentRepository;
-        private readonly IRoomRepository _roomRepository;
+        private readonly IAppUOW _uow;
 
-        public StudySessionsController(AppDbContext context, IStudySessionRepository repository, IAssignmentRepository assignmentRepository, IRoomRepository roomRepository)
+        public StudySessionsController(IAppUOW uow)
         {
-            _context = context;
-            _repository = repository;
-            _assignmentRepository = assignmentRepository;
-            _roomRepository = roomRepository;
+            _uow = uow;
         }
 
         // GET: StudySessions
         public async Task<IActionResult> Index()
         {
-            var res = await _repository.AllAsync(User.GetUserId());
+            var res = await _uow.StudySessionRepository.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -41,7 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.StudySessionRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -54,8 +47,8 @@ namespace WebApp.Controllers
         // GET: StudySessions/Create
         public async Task<IActionResult> Create()
         {
-            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
-            var rooms = await _roomRepository.AllAsync(User.GetUserId());
+            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
+            var rooms = await _uow.RoomRepository.AllAsync(User.GetUserId());
 
             var vm = new StudySessionCreateEditViewModel()
             {
@@ -79,14 +72,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(vm.StudySession);
-                await _context.SaveChangesAsync();
+                _uow.StudySessionRepository.Add(vm.StudySession);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            var assignments = await _assignmentRepository.AllAsync(User.GetUserId());
-            var rooms = await _roomRepository.AllAsync(User.GetUserId());
+            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
+            var rooms = await _uow.RoomRepository.AllAsync(User.GetUserId());
             
             vm.AssignmentSelectList = new SelectList(assignments,
                 nameof(Assignment.Id),
@@ -109,7 +102,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studySession = await _repository.FindAsync(id.Value, User.GetUserId());
+            var studySession = await _uow.StudySessionRepository.FindAsync(id.Value, User.GetUserId());
             
             if (studySession == null)
             {
@@ -118,11 +111,11 @@ namespace WebApp.Controllers
 
             var vm = new StudySessionCreateEditViewModel()
             {
-                AssignmentSelectList = new SelectList(await _assignmentRepository.AllAsync(User.GetUserId()),
+                AssignmentSelectList = new SelectList(await _uow.AssignmentRepository.AllAsync(User.GetUserId()),
                     nameof(Assignment.Id),
                     nameof(Assignment.Name),
                     studySession.AssignmentId),
-                RoomSelectList = new SelectList(await _roomRepository.AllAsync(User.GetUserId()),
+                RoomSelectList = new SelectList(await _uow.RoomRepository.AllAsync(User.GetUserId()),
                     nameof(Room.Id),
                     nameof(Room.Name),
                     studySession.RoomId),
@@ -146,17 +139,17 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _repository.Update(vm.StudySession);
-                await _context.SaveChangesAsync();
+                _uow.StudySessionRepository.Update(vm.StudySession);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AssignmentSelectList = new SelectList(await _assignmentRepository.AllAsync(User.GetUserId()),
+            vm.AssignmentSelectList = new SelectList(await _uow.AssignmentRepository.AllAsync(User.GetUserId()),
                 nameof(Assignment.Id),
                 nameof(Assignment.Name),
                 vm.StudySession.AssignmentId);
-            vm.RoomSelectList = new SelectList(await _roomRepository.AllAsync(User.GetUserId()),
+            vm.RoomSelectList = new SelectList(await _uow.RoomRepository.AllAsync(User.GetUserId()),
                 nameof(Room.Id),
                 nameof(Room.Name),
                 vm.StudySession.RoomId);
@@ -172,7 +165,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.StudySessionRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -187,8 +180,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _uow.StudySessionRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

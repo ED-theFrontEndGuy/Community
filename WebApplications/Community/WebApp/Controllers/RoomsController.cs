@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
@@ -10,19 +9,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class RoomsController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly IRoomRepository _repository;
+        private readonly IAppUOW _uow;
 
-        public RoomsController(AppDbContext context, IRoomRepository repository)
+        public RoomsController(IAppUOW uow)
         {
-            _context = context;
-            _repository = repository;
+            _uow = uow;
         }
 
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            var res = await _repository.AllAsync(User.GetUserId());
+            var res = await _uow.RoomRepository.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -35,7 +32,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _repository.FindAsync(id.Value, User.GetUserId());
+            var room = await _uow.RoomRepository.FindAsync(id.Value, User.GetUserId());
             
             if (room == null)
             {
@@ -60,8 +57,8 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(room);
-                await _context.SaveChangesAsync();
+                _uow.RoomRepository.Add(room);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -76,7 +73,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _repository.FindAsync(id.Value, User.GetUserId());
+            var room = await _uow.RoomRepository.FindAsync(id.Value, User.GetUserId());
             
             if (room == null)
             {
@@ -100,8 +97,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _repository.Update(room);
-                await _context.SaveChangesAsync();
+                _uow.RoomRepository.Update(room);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -117,7 +114,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.RoomRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -132,8 +129,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _uow.RoomRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.EF;
 using App.DAL.Interfaces;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -11,21 +10,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class AssignmentsController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly IAssignmentRepository _repository;
-        private readonly IDeclarationRepository _declarationRepository;
+        private readonly IAppUOW _uow;
         
-        public AssignmentsController(AppDbContext context, IAssignmentRepository repository, IDeclarationRepository declarationRepository)
+        public AssignmentsController(IAppUOW uow)
         {
-            _context = context;
-            _repository = repository;
-            _declarationRepository = declarationRepository;
+            _uow = uow;
         }
 
         // GET: Assignments
         public async Task<IActionResult> Index()
         {
-            var res = await _repository.AllAsync(User.GetUserId());
+            var res = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
             return View(res);
         }
 
@@ -37,7 +32,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.AssignmentRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -50,7 +45,7 @@ namespace WebApp.Controllers
         // GET: Assignments/Create
         public async Task<IActionResult> Create()
         {
-            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
             
             var vm = new AssignmentCreateEditViewModel
             {
@@ -78,9 +73,9 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repository.Add(vm.Assignment);
+                _uow.AssignmentRepository.Add(vm.Assignment);
                 
-                await _context.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -95,8 +90,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _repository.FindAsync(id.Value, User.GetUserId());
-            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            var assignment = await _uow.AssignmentRepository.FindAsync(id.Value, User.GetUserId());
+            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
             
             if (assignment == null)
             {
@@ -135,13 +130,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _repository.Update(vm.Assignment);
-                await _context.SaveChangesAsync();
+                _uow.AssignmentRepository.Update(vm.Assignment);
+                await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            var declarations = await _declarationRepository.AllAsync(User.GetUserId());
+            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
             
             vm.DeclarationSelectList = new SelectList(
                 declarations.Select(d => new {
@@ -163,7 +158,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             
-            var entity = await _repository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _uow.AssignmentRepository.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -178,8 +173,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _repository.RemoveAsync(id);
-            await _context.SaveChangesAsync();
+            await _uow.AssignmentRepository.RemoveAsync(id);
+            await _uow.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

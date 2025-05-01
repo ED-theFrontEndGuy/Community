@@ -3,7 +3,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IMessageRepository : IRepository<Message>
+public interface IMessageRepository : IBaseRepository<Message>
 {
     
 }

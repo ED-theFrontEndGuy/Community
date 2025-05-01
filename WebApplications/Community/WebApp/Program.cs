@@ -42,22 +42,8 @@ else
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// register all the repo interfaces and their implementations, use scoped lifetime
 // scoped - get created once per web client request (same as dbcontext)
-// ToDo add the rest repositories.
-builder.Services.AddScoped<IUserAchievementRepository, UserAchievementRepository>();
-builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<IDeclarationRepository, DeclarationRepository>();
-builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
-builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
-builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
-builder.Services.AddScoped<IStudySessionRepository, StudySessionRepository>();
-builder.Services.AddScoped<IStudyGroupRepository, StudyGroupRepository>();
-builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
-builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddScoped<ITimelogRepository, TimelogRepository>();
+builder.Services.AddScoped<IAppUOW, AppUOW>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)

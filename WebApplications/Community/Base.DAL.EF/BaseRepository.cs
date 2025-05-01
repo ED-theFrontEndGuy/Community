@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Base.DAL.EF;
 
-public class BaseRepository<TEntity> : BaseRepository<TEntity, Guid>, IRepository<TEntity>
+public class BaseRepository<TEntity> : BaseRepository<TEntity, Guid>, IBaseRepository<TEntity>
     where TEntity : class, IDomainId
 {
     public BaseRepository(DbContext repositoryDbContext) : base(repositoryDbContext)
@@ -40,9 +40,14 @@ public class BaseRepository<TEntity, TKey> : IRepository<TEntity, TKey>
 
         return query;
     }
-    
-    
-    public virtual IEnumerable<TEntity> All(TKey? userId)
+
+    // TODO: Implement UOW, remove SaveChangesAsync from repository
+    public async Task<int> SaveChangesAsync()
+    {
+        return await RepositoryDbContext.SaveChangesAsync(); 
+    }
+
+    public virtual IEnumerable<TEntity> All(TKey? userId = default!)
     {
         return GetQuery(userId)
             .ToList(); 
