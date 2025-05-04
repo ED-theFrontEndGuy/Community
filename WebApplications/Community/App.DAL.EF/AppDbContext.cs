@@ -34,6 +34,7 @@ public class AppDbContext :
     public DbSet<StudyGroup> StudyGroups { get; set; }
     public DbSet<Conversation> Conversations { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
     
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

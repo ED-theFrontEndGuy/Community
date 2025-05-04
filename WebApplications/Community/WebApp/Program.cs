@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using App.DAL.EF;
 using App.DAL.EF.Repositories;
 using App.DAL.Interfaces;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +54,28 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
 
-// builder.Services.AddDefaultIdentity<IdentityUser>(
+// remove default claim mapping
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+builder.Services
+    .AddAuthentication()
+    .AddCookie(options => { options.SlidingExpiration = true; })
+    .AddJwtBearer(options =>
+        {
+            // for dev environment without https
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = false;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = builder.Configuration["JWTSecurity:Issuer"],
+                ValidAudience = builder.Configuration["JWTSecurity:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["JWTSecurity:Key"]!)),
+                ClockSkew = TimeSpan.Zero
+            };
+        }
+    );
+
+// builder.Services.AddDefaultIdentity<AppUser>(
 //         options => options.SignIn.RequireConfirmedAccount = false)
 //     .AddEntityFrameworkStores<AppDbContext>();
 
@@ -87,6 +111,17 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     };
 });
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsAllowAll", policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+        policy.SetIsOriginAllowed(host => true);
+    });
+});
 
 var app = builder.Build();
 
@@ -107,6 +142,9 @@ app.UseHttpsRedirection();
 app.UseRequestLocalization(options: app.Services.GetService<IOptions<RequestLocalizationOptions>>()!.Value);
 
 app.UseRouting();
+
+// CORS
+app.UseCors("CorsAllowAll");
 
 app.UseAuthorization();
 
