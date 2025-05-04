@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using App.DAL.EF;
 using App.DAL.EF.Repositories;
 using App.DAL.Interfaces;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +53,27 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
         .AddDefaultUI()
         .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
+
+// remove default claim mapping
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+builder.Services
+    .AddAuthentication()
+    .AddCookie(options => { options.SlidingExpiration = true; })
+    .AddJwtBearer(options =>
+        {
+            // for dev environment without https
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = false;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = builder.Configuration["JWTSecurity:Issuer"],
+                ValidAudience = builder.Configuration["JWTSecurity:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["JWTSecurity:Key"]!)),
+                ClockSkew = TimeSpan.Zero
+            };
+        }
+    );
 
 // builder.Services.AddDefaultIdentity<AppUser>(
 //         options => options.SignIn.RequireConfirmedAccount = false)

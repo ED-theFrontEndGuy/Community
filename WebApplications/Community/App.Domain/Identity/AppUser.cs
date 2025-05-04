@@ -24,4 +24,6 @@ public class AppUser : BaseUser<AppUserRole>
     
     [Display(Name = nameof(Messages), ResourceType = typeof(App.Resources.Domain.User))]
     public ICollection<Message>? Messages { get; set; }
+
+    public ICollection<AppRefreshToken>? AppRefreshTokens { get; set; }
 }
