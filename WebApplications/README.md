@@ -4,7 +4,7 @@ dotnet ef migrations add InitialCreate
 dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext ExtenedUserIdentity
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AddJWT
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AddDescriptionToStudySession
 
 dotnet ef migrations remove --project App.DAL.EF --startup-project WebApp --context AppDbContext
@@ -44,6 +44,8 @@ ApiControllers
 dotnet aspnet-codegenerator controller -name PersonsController -m App.Domain.Person -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 dotnet aspnet-codegenerator controller -name ContactTypesController -m App.Domain.ContactType -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 dotnet aspnet-codegenerator controller -name ContactsController -m App.Domain.Contact -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+
+dotnet aspnet-codegenerator controller -name CoursesController -m App.Domain.Course -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 ~~~
 
 Kaver compose

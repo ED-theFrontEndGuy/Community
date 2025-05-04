@@ -111,6 +111,17 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     };
 });
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsAllowAll", policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+        policy.SetIsOriginAllowed(host => true);
+    });
+});
 
 var app = builder.Build();
 
@@ -131,6 +142,9 @@ app.UseHttpsRedirection();
 app.UseRequestLocalization(options: app.Services.GetService<IOptions<RequestLocalizationOptions>>()!.Value);
 
 app.UseRouting();
+
+// CORS
+app.UseCors("CorsAllowAll");
 
 app.UseAuthorization();
 
