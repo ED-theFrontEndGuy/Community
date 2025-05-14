@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Domain\Achievement.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Achievement.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
       <EmbeddedResource Update="Domain\Assignment.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Assignment.Designer.cs</LastGenOutput>
@@ -19,25 +15,13 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Attachment.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Domain\Conversation.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Conversation.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
       <EmbeddedResource Update="Domain\Course.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Course.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Domain\Dashboard.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Dashboard.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
       <EmbeddedResource Update="Domain\Declaration.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Declaration.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Domain\Message.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Message.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Update="Domain\Room.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
@@ -59,18 +43,9 @@
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>User.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Domain\UserAchievement.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>UserAchievement.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Domain\Achievement.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Achievement.resx</DependentUpon>
-      </Compile>
       <Compile Update="Domain\Assignment.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -81,30 +56,15 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Attachment.resx</DependentUpon>
       </Compile>
-      <Compile Update="Domain\Conversation.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Conversation.resx</DependentUpon>
-      </Compile>
       <Compile Update="Domain\Course.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Course.resx</DependentUpon>
       </Compile>
-      <Compile Update="Domain\Dashboard.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Dashboard.resx</DependentUpon>
-      </Compile>
       <Compile Update="Domain\Declaration.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Declaration.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Domain\Message.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Message.resx</DependentUpon>
       </Compile>
       <Compile Update="Domain\Room.Designer.cs">
         <DesignTime>True</DesignTime>
@@ -130,11 +90,6 @@
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>User.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Domain\UserAchievement.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>UserAchievement.resx</DependentUpon>
       </Compile>
     </ItemGroup>
 

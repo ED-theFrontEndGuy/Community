@@ -1,3 +1,4 @@
+using App.DAL.DTO;
 using App.Domain;
 using Base.Domain;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -7,7 +8,7 @@ namespace WebApp.ViewModels;
 
 public class TimelogCreateEditViewModel : BaseEntity
 {
-    public Timelog Timelog { get; set; } = default!;
+    public TimelogDto Timelog { get; set; } = default!;
 
     [ValidateNever]
     public SelectList DeclarationSelectList { get; set; } = default!;

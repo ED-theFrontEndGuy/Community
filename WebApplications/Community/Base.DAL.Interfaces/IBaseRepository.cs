@@ -17,7 +17,7 @@ public interface IRepository<TEntity, TKey>
     TEntity? Find(TKey id, TKey? userId = default!);
     Task<TEntity?> FindAsync(TKey id, TKey? userId = default!);
 
-    void Add(TEntity entity);
+    void Add(TEntity entity, TKey? userId = default!);
 
     TEntity Update(TEntity entity);
 

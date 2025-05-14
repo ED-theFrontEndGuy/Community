@@ -10,7 +10,6 @@ public class Attachment : BaseEntity
     public string Link { get; set; } = default!;
 
     public Guid AssignmentId { get; set; }
-    
     [Display(Name = nameof(Assignment), Prompt = nameof(Assignment), ResourceType = typeof(App.Resources.Domain.Attachment))]
     public Assignment? Assignment { get; set; }
 }

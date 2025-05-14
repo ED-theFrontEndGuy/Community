@@ -1,3 +1,4 @@
+using App.DAL.DTO;
 using Microsoft.AspNetCore.Mvc;
 using App.DAL.Interfaces;
 using App.Domain;
@@ -51,7 +52,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Course entity)
+        public async Task<IActionResult> Create(CourseDto entity)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +87,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Course course)
+        public async Task<IActionResult> Edit(Guid id, CourseDto course)
         {
             if (id != course.Id)
             {

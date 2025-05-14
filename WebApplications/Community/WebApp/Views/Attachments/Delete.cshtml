@@ -1,4 +1,4 @@
-@model App.Domain.Attachment
+@model App.DAL.DTO.AttachmentDto
 
 @{
     ViewData["Title"] = "Delete";
@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.Assignment)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Assignment!.Name)
+            @Html.DisplayFor(model => model.Assignment)
         </dd>
     </dl>
     

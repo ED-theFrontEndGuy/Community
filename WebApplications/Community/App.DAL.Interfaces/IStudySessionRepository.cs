@@ -1,9 +1,9 @@
-using App.Domain;
+using App.DAL.DTO;
 using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IStudySessionRepository : IBaseRepository<StudySession>
+public interface IStudySessionRepository : IBaseRepository<StudySessionDto>
 {
     
 }

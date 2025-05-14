@@ -66,9 +66,7 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                vm.StudyGroup.UserId = User.GetUserId();
-                
-                _uow.StudyGroupRepository.Add(vm.StudyGroup);
+                _uow.StudyGroupRepository.Add(vm.StudyGroup, User.GetUserId());
                 await _uow.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
@@ -122,8 +120,6 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                vm.StudyGroup.UserId = User.GetUserId();
-                
                 _uow.StudyGroupRepository.Update(vm.StudyGroup);
                 await _uow.SaveChangesAsync();
                 

@@ -1,9 +1,9 @@
-using App.Domain;
+using App.DAL.DTO;
 using Base.DAL.Interfaces;
 
 namespace App.DAL.Interfaces;
 
-public interface IRoomRepository : IBaseRepository<Room> 
+public interface IRoomRepository : IBaseRepository<RoomDto> 
 {
     
 }

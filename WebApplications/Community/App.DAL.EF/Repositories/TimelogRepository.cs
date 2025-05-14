@@ -1,3 +1,5 @@
+using App.DAL.DTO;
+using App.DAL.EF.Mappers;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.DAL.EF;
@@ -5,29 +7,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories;
 
-public class TimelogRepository : BaseRepository<Timelog>, ITimelogRepository
+public class TimelogRepository : BaseRepository<TimelogDto, Timelog>, ITimelogRepository
 {
-    public TimelogRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+    public TimelogRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new TimelogMapper())
     {
     }
     
-    public override async Task<IEnumerable<Timelog>> AllAsync(Guid userId = default)
+    public override async Task<IEnumerable<TimelogDto>> AllAsync(Guid userId = default)
     {
-        return await RepositoryDbSet
+        return (await RepositoryDbSet
             .Include(t => t.Declaration)
             .ThenInclude(d => d!.Course)
             .Include(t => t.Assignment)
             .Where(t => t.Declaration!.UserId == userId)
-            .ToListAsync();
+            .ToListAsync())
+            .Select(e => Mapper.Map(e)!);
     }
 
-    public override async Task<Timelog?> FindAsync(Guid id, Guid userId = default)
+    public override async Task<TimelogDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(t => t.Declaration)
             .ThenInclude(d => d!.Course)
             .Include(t => t.Assignment)
             .Where(t => t.Id == id && t.Declaration!.UserId == userId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync());
     }
 }

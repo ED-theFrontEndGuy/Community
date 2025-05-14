@@ -1,3 +1,5 @@
+using App.DAL.DTO;
+using App.DAL.EF.Mappers;
 using App.DAL.Interfaces;
 using App.Domain;
 using Base.DAL.EF;
@@ -5,27 +7,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.DAL.EF.Repositories;
 
-public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepository
+public class AssignmentRepository : BaseRepository<AssignmentDto, Assignment>, IAssignmentRepository
 {
-    public AssignmentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext)
+    public AssignmentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new AssignmentMapper())
     {
     }
 
-    public override async Task<IEnumerable<Assignment>> AllAsync(Guid userId = default)
+    public override async Task<IEnumerable<AssignmentDto>> AllAsync(Guid userId = default)
     {
-        return await RepositoryDbSet
+        return (await RepositoryDbSet
             .Include(a => a.Declaration)
                 .ThenInclude(d => d!.Course)
             .Where(a => a.Declaration!.UserId == userId)
-            .ToListAsync();
+            .ToListAsync())
+            .Select(e => Mapper.Map(e)!);
     }
 
-    public override async Task<Assignment?> FindAsync(Guid id, Guid userId = default)
+    public override async Task<AssignmentDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(a => a.Declaration)
                 .ThenInclude(d => d!.Course)
             .Where(a => a.Id == id && a.Declaration!.UserId == userId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync());
     }
 }

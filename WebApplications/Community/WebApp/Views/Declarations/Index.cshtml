@@ -1,4 +1,4 @@
-@model IEnumerable<App.Domain.Declaration>
+@model IEnumerable<App.DAL.DTO.DeclarationDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,9 +16,6 @@
                 @Html.DisplayNameFor(model => model.Active)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Course)
             </th>
             <th></th>
@@ -29,9 +26,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User!.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Course!.Name)

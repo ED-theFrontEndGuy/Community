@@ -15,7 +15,9 @@ public class StudySession : BaseEntity
     public Guid RoomId { get; set; }
     [Display(Name = nameof(Room), Prompt = nameof(Room), ResourceType = typeof(App.Resources.Domain.StudySession))]
     public Room? Room { get; set; }
-
-    [Display(Name = nameof(StudyGroups), Prompt = nameof(StudyGroups), ResourceType = typeof(App.Resources.Domain.StudySession))]
-    public ICollection<StudyGroup>? StudyGroups { get; set; }
+    
+    public StudyGroup? StudyGroup { get; set; }
+    
+    // [Display(Name = nameof(StudyGroups), Prompt = nameof(StudyGroups), ResourceType = typeof(App.Resources.Domain.StudySession))]
+    // public ICollection<StudyGroup>? StudyGroups { get; set; }
 }

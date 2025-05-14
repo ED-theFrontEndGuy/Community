@@ -66,8 +66,7 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                vm.Declaration.UserId = User.GetUserId();
-                _uow.DeclarationRepository.Add(vm.Declaration);
+                _uow.DeclarationRepository.Add(vm.Declaration, User.GetUserId());
                 
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -117,8 +116,6 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                vm.Declaration.UserId = User.GetUserId();
-                
                 _uow.DeclarationRepository.Update(vm.Declaration);
                 await _uow.SaveChangesAsync();
                 
