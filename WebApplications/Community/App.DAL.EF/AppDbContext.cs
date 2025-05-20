@@ -1,5 +1,6 @@
 ﻿using App.Domain;
 using App.Domain.Identity;
+using Base.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,19 +22,14 @@ public class AppDbContext :
 {
     public DbSet<AppUser> AppUsers { get; set; } = default!;
     public DbSet<AppRole> AppRoles { get; set; } = default!;
-    public DbSet<Achievement> Achievements { get; set; }
-    public DbSet<UserAchievement> UserAchievements { get; set; }
-    public DbSet<Dashboard> Dashboards { get; set; }
     public DbSet<Declaration> Declarations { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Timelog> Timelogs { get; set; }
-    public DbSet<Attachment> Attachments { get; set; }
+    public DbSet<Attachment> Attachments { get; set; } 
     public DbSet<Assignment> Assignments { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<StudySession> StudySessions { get; set; }
     public DbSet<StudyGroup> StudyGroups { get; set; }
-    public DbSet<Conversation> Conversations { get; set; }
-    public DbSet<Message> Messages { get; set; }
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
     
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -71,21 +67,48 @@ public class AppDbContext :
 
     }
     
+    // my old working solution
+    // public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    // {
+    //     foreach (var entity in ChangeTracker.Entries().Where(e => e.State != EntityState.Deleted))
+    //     {
+    //         foreach (var prop in entity.Properties)
+    //         {
+    //             if (prop.CurrentValue is DateTime dateTimeValue)
+    //             {
+    //                 // todo: find all datetime props, change to utc.
+    //                 if (dateTimeValue.Kind == DateTimeKind.Unspecified)
+    //                 {
+    //                     prop.CurrentValue = DateTime.SpecifyKind(dateTimeValue, DateTimeKind.Utc);
+    //                     prop.CurrentValue = dateTimeValue.ToUniversalTime();
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     
+    //     return base.SaveChangesAsync(cancellationToken);
+    // }
+    
+    // Kaver lecture solution
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        foreach (var entity in ChangeTracker.Entries().Where(e => e.State != EntityState.Deleted))
+        var addedEntries = ChangeTracker.Entries()
+            .Where(e => e is { Entity: IDomainMeta });
+        
+        foreach (var entry in addedEntries)
         {
-            foreach (var prop in entity.Properties)
+            if (entry.State == EntityState.Added)
             {
-                if (prop.CurrentValue is DateTime dateTimeValue)
-                {
-                    // todo: find all datetime props, change to utc.
-                    if (dateTimeValue.Kind == DateTimeKind.Unspecified)
-                    {
-                        prop.CurrentValue = DateTime.SpecifyKind(dateTimeValue, DateTimeKind.Utc);
-                        prop.CurrentValue = dateTimeValue.ToUniversalTime();
-                    }
-                }
+                (entry.Entity as IDomainMeta)!.CreatedAt = DateTime.UtcNow;
+                (entry.Entity as IDomainMeta)!.CreatedBy = "system";
+            } else if (entry.State == EntityState.Modified)
+            {
+                (entry.Entity as IDomainMeta)!.ModifiedAt = DateTime.UtcNow;
+                (entry.Entity as IDomainMeta)!.ModifiedBy = "system";
+                
+                entry.Property(nameof(IDomainMeta.CreatedBy)).IsModified = false;
+                entry.Property(nameof(IDomainMeta.CreatedAt)).IsModified = false;
+                entry.Property(nameof(IDomainUserId.UserId)).IsModified = false;
             }
         }
         

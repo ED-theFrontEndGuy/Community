@@ -4,14 +4,10 @@ using Base.Domain;
 
 namespace App.Domain;
 
-public class Declaration : BaseEntity
+public class Declaration : BaseEntityUser<AppUser>
 {
     [Display(Name = nameof(Active), Prompt = nameof(Active), ResourceType = typeof(App.Resources.Domain.Declaration))]
     public Boolean Active { get; set; }
-    
-    public Guid UserId { get; set; }
-    [Display(Name = nameof(User), Prompt = nameof(User), ResourceType = typeof(App.Resources.Domain.Declaration))]
-    public AppUser? User { get; set; }
     
     public Guid CourseId { get; set; }
     [Display(Name = nameof(Course), Prompt = nameof(Course), ResourceType = typeof(App.Resources.Domain.Declaration))]

@@ -1,3 +1,4 @@
+using App.DAL.DTO;
 using Microsoft.AspNetCore.Mvc;
 using App.DAL.Interfaces;
 using App.Domain;
@@ -53,7 +54,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Room room)
+        public async Task<IActionResult> Create(RoomDto room)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +89,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Room room)
+        public async Task<IActionResult> Edit(Guid id, RoomDto room)
         {
             if (id != room.Id)
             {

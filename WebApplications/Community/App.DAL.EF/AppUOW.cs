@@ -11,10 +11,6 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
     }
     
     // simple caching
-    private IAchievementRepository? _achievementRepository;
-    public IAchievementRepository AchievementRepository =>
-        _achievementRepository ??= new AchievementRepository(UOWDbContext);
-
     private IAssignmentRepository? _assignmentRepository;
     public IAssignmentRepository AssignmentRepository =>
         _assignmentRepository ??= new AssignmentRepository(UOWDbContext);
@@ -23,25 +19,13 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
     public IAttachmentRepository AttachmentRepository =>
         _attachmentRepository ??= new AttachmentRepository(UOWDbContext);
     
-    private IConversationRepository? _conversationRepository;
-    public IConversationRepository ConversationRepository =>
-        _conversationRepository ??= new ConversationRepository(UOWDbContext);
-    
     private ICourseRepository? _courseRepository;
     public ICourseRepository CourseRepository =>
         _courseRepository ??= new CourseRepository(UOWDbContext);
     
-    private IDashboardRepository? _dashboardRepository;
-    public IDashboardRepository DashboardRepository =>
-        _dashboardRepository ??= new DashboardRepository(UOWDbContext);
-    
     private IDeclarationRepository? _declarationRepository;
     public IDeclarationRepository DeclarationRepository =>
         _declarationRepository ??= new DeclarationRepository(UOWDbContext);
-
-    private IMessageRepository? _messageRepository;
-    public IMessageRepository MessageRepository =>
-        _messageRepository ??= new MessageRepository(UOWDbContext);
     
     private IRoomRepository? _roomRepository;
     public IRoomRepository RoomRepository =>
@@ -58,8 +42,4 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
     private ITimelogRepository? _timelogRepository;
     public ITimelogRepository TimelogRepository =>
         _timelogRepository ??= new TimelogRepository(UOWDbContext);
-    
-    private IUserAchievementRepository? _userAchievementRepository;
-    public IUserAchievementRepository UserAchievementRepository =>
-        _userAchievementRepository ??= new UserAchievementRepository(UOWDbContext);
 }

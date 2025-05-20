@@ -198,6 +198,21 @@
       <UpToDateCheckInput Remove="Views\UserAchievements\Details.cshtml" />
       <UpToDateCheckInput Remove="Views\UserAchievements\Edit.cshtml" />
       <UpToDateCheckInput Remove="Views\UserAchievements\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Achievements\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Achievements\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Achievements\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Achievements\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Achievements\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Dashboards\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Dashboards\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Dashboards\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Dashboards\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Dashboards\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Messages\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Messages\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Messages\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Messages\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Messages\Index.cshtml" />
     </ItemGroup>
 
 </Project>

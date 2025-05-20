@@ -22,35 +22,37 @@ namespace App.DAL.EF.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("App.Domain.Achievement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Achievements");
-                });
-
             modelBuilder.Entity("App.Domain.Assignment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<Guid>("DeclarationId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -68,10 +70,33 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("AssignmentId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -80,62 +105,38 @@ namespace App.DAL.EF.Migrations
                     b.ToTable("Attachments");
                 });
 
-            modelBuilder.Entity("App.Domain.Conversation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<Guid>("StudyGroupId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudyGroupId");
-
-                    b.ToTable("Conversations");
-                });
-
             modelBuilder.Entity("App.Domain.Course", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("App.Domain.Dashboard", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ConfigJson")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Dashboards");
                 });
 
             modelBuilder.Entity("App.Domain.Declaration", b =>
@@ -149,6 +150,24 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -168,8 +187,23 @@ namespace App.DAL.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTime>("PreviousExpiration")
                         .HasColumnType("timestamp with time zone");
@@ -179,6 +213,9 @@ namespace App.DAL.EF.Migrations
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SysNotes")
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
@@ -315,42 +352,39 @@ namespace App.DAL.EF.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("App.Domain.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("UserMessage")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("App.Domain.Room", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -363,6 +397,21 @@ namespace App.DAL.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Name")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
@@ -370,16 +419,57 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("StudySessionId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudySessionId");
+                    b.HasIndex("StudySessionId")
+                        .IsUnique();
+
+                    b.ToTable("StudyGroups");
+                });
+
+            modelBuilder.Entity("App.Domain.StudyGroupUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<Guid>("StudyGroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("isOwner")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyGroupId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("StudyGroups");
+                    b.ToTable("StudyGroupUser");
                 });
 
             modelBuilder.Entity("App.Domain.StudySession", b =>
@@ -388,16 +478,37 @@ namespace App.DAL.EF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("AssignmentId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -417,14 +528,35 @@ namespace App.DAL.EF.Migrations
                     b.Property<Guid>("AssignmentId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<Guid>("DeclarationId")
                         .HasColumnType("uuid");
+
+                    b.Property<TimeSpan?>("Duration")
+                        .HasColumnType("interval");
 
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SysNotes")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -433,27 +565,6 @@ namespace App.DAL.EF.Migrations
                     b.HasIndex("DeclarationId");
 
                     b.ToTable("Timelogs");
-                });
-
-            modelBuilder.Entity("App.Domain.UserAchievement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AchievementId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AchievementId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAchievements");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -566,28 +677,6 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("Assignment");
                 });
 
-            modelBuilder.Entity("App.Domain.Conversation", b =>
-                {
-                    b.HasOne("App.Domain.StudyGroup", "StudyGroup")
-                        .WithMany("Conversations")
-                        .HasForeignKey("StudyGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("StudyGroup");
-                });
-
-            modelBuilder.Entity("App.Domain.Dashboard", b =>
-                {
-                    b.HasOne("App.Domain.Identity.AppUser", "User")
-                        .WithMany("Dashboards")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("App.Domain.Declaration", b =>
                 {
                     b.HasOne("App.Domain.Course", "Course")
@@ -637,40 +726,32 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.Message", b =>
-                {
-                    b.HasOne("App.Domain.Conversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("App.Domain.Identity.AppUser", "User")
-                        .WithMany("Messages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("App.Domain.StudyGroup", b =>
                 {
                     b.HasOne("App.Domain.StudySession", "StudySession")
-                        .WithMany("StudyGroups")
-                        .HasForeignKey("StudySessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("App.Domain.Identity.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("StudyGroup")
+                        .HasForeignKey("App.Domain.StudyGroup", "StudySessionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("StudySession");
+                });
+
+            modelBuilder.Entity("App.Domain.StudyGroupUser", b =>
+                {
+                    b.HasOne("App.Domain.StudyGroup", "StudyGroup")
+                        .WithMany("StudyGroupUsers")
+                        .HasForeignKey("StudyGroupId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("App.Domain.Identity.AppUser", "User")
+                        .WithMany("StudyGroupUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("StudyGroup");
 
                     b.Navigation("User");
                 });
@@ -713,25 +794,6 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("Declaration");
                 });
 
-            modelBuilder.Entity("App.Domain.UserAchievement", b =>
-                {
-                    b.HasOne("App.Domain.Achievement", "Achievement")
-                        .WithMany("UserAchievements")
-                        .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("App.Domain.Identity.AppUser", "User")
-                        .WithMany("UserAchievements")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Achievement");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("App.Domain.Identity.AppRole", null)
@@ -768,11 +830,6 @@ namespace App.DAL.EF.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("App.Domain.Achievement", b =>
-                {
-                    b.Navigation("UserAchievements");
-                });
-
             modelBuilder.Entity("App.Domain.Assignment", b =>
                 {
                     b.Navigation("Attachments");
@@ -780,11 +837,6 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("StudySessions");
 
                     b.Navigation("Timelogs");
-                });
-
-            modelBuilder.Entity("App.Domain.Conversation", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("App.Domain.Course", b =>
@@ -808,13 +860,9 @@ namespace App.DAL.EF.Migrations
                 {
                     b.Navigation("AppRefreshTokens");
 
-                    b.Navigation("Dashboards");
-
                     b.Navigation("Declarations");
 
-                    b.Navigation("Messages");
-
-                    b.Navigation("UserAchievements");
+                    b.Navigation("StudyGroupUsers");
 
                     b.Navigation("UserRoles");
                 });
@@ -826,12 +874,12 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.StudyGroup", b =>
                 {
-                    b.Navigation("Conversations");
+                    b.Navigation("StudyGroupUsers");
                 });
 
             modelBuilder.Entity("App.Domain.StudySession", b =>
                 {
-                    b.Navigation("StudyGroups");
+                    b.Navigation("StudyGroup");
                 });
 #pragma warning restore 612, 618
         }

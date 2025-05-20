@@ -73,7 +73,7 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.AssignmentRepository.Add(vm.Assignment);
+                _uow.AssignmentRepository.Add(vm.Assignment, User.GetUserId());
                 
                 await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
