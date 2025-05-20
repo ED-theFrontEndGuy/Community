@@ -8,11 +8,38 @@ public class AttachmentMapper : IMapper<AttachmentDto, Attachment>
 {
     public AttachmentDto? Map(Attachment? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new AttachmentDto()
+        {
+            Id = entity.Id,
+            Link = entity.Link,
+            Description = entity.Description,
+            AssignmentId = entity.AssignmentId,
+            Assignment = entity.Assignment == null
+                ? null
+                : new AssignmentDto()
+                {
+                    Id = entity.Assignment.Id,
+                    Name = entity.Assignment.Name,
+                }
+        };
+
+        return res;
     }
 
     public Attachment? Map(AttachmentDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new Attachment()
+        {
+            Id = entity.Id,
+            Link = entity.Link,
+            Description = entity.Description,
+            AssignmentId = entity.AssignmentId,
+        };
+        
+        return res;
     }
 }

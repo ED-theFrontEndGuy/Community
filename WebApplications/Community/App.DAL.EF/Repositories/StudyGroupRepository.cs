@@ -17,6 +17,9 @@ public class StudyGroupRepository : BaseRepository<StudyGroupDto, StudyGroup>, I
     {
         return (await RepositoryDbSet
             .Include(s => s.StudySession)
+            .Include(s => s.StudyGroupUsers)
+            .ThenInclude(sgu => sgu.User)
+            .Where(s => s.StudyGroupUsers!.Any(sgu => sgu.UserId == userId))
             .ToListAsync())
             .Select(e => Mapper.Map(e)!);
     }
@@ -25,7 +28,9 @@ public class StudyGroupRepository : BaseRepository<StudyGroupDto, StudyGroup>, I
     {
         return Mapper.Map(await RepositoryDbSet
             .Include(s => s.StudySession)
-            .Where(s => s.Id == id)
+            .Include(s => s.StudyGroupUsers)
+            .ThenInclude(sgu => sgu.User)
+            .Where(s => s.Id == id && s.StudyGroupUsers!.Any(sgu => sgu.UserId == userId))
             .FirstOrDefaultAsync());
     }
 }

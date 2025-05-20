@@ -7,6 +7,8 @@ public class StudySession : BaseEntity
 {
     [MaxLength(256)]
     public string Description { get; set; } = default!;
+
+    public bool Active { get; set; } = true;
     
     public Guid AssignmentId { get; set; }
     [Display(Name = nameof(Assignment), Prompt = nameof(Assignment), ResourceType = typeof(App.Resources.Domain.StudySession))]
@@ -17,7 +19,4 @@ public class StudySession : BaseEntity
     public Room? Room { get; set; }
     
     public StudyGroup? StudyGroup { get; set; }
-    
-    // [Display(Name = nameof(StudyGroups), Prompt = nameof(StudyGroups), ResourceType = typeof(App.Resources.Domain.StudySession))]
-    // public ICollection<StudyGroup>? StudyGroups { get; set; }
 }

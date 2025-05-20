@@ -12,6 +12,5 @@ public class StudyGroup : BaseEntity
     [Display(Name = nameof(StudySession), Prompt = nameof(StudySession), ResourceType = typeof(App.Resources.Domain.StudyGroup))]
     public StudySession? StudySession { get; set; }
     
-    public Guid StudyGroupUserId { get; set; }
-    public ICollection<StudyGroupUser>? StudyGroupUsers { get; set; }
+    public ICollection<StudyGroupUser> StudyGroupUsers { get; set; } = new List<StudyGroupUser>();
 }

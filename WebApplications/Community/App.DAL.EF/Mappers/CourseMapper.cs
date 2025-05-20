@@ -13,8 +13,7 @@ public class CourseMapper : IMapper<CourseDto, Course>
         var res = new CourseDto()
         {
             Id = entity.Id,
-            Name = entity.Name,
-            Declarations = null,
+            Name = entity.Name
         };
 
         return res;
@@ -22,6 +21,14 @@ public class CourseMapper : IMapper<CourseDto, Course>
 
     public Course? Map(CourseDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+
+        var res = new Course()
+        {
+            Id = entity.Id,
+            Name = entity.Name
+        };
+
+        return res;
     }
 }

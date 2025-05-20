@@ -10,6 +10,8 @@ public class StudySessionDto : IDomainId
     [MaxLength(256)]
     public string Description { get; set; } = default!;
     
+    public bool Active { get; set; } = true;
+    
     public Guid AssignmentId { get; set; }
     [Display(Name = nameof(Assignment), Prompt = nameof(Assignment), ResourceType = typeof(App.Resources.Domain.StudySession))]
     public AssignmentDto? Assignment { get; set; }

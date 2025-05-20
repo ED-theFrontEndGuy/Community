@@ -15,6 +15,5 @@ public class StudyGroupDto : IDomainId
     [Display(Name = nameof(StudySession), Prompt = nameof(StudySession), ResourceType = typeof(App.Resources.Domain.StudyGroup))]
     public StudySessionDto? StudySession { get; set; }
     
-    public Guid StudyGroupUserId { get; set; }
     public ICollection<StudyGroupUserDto>? StudyGroupUsers { get; set; }
 }

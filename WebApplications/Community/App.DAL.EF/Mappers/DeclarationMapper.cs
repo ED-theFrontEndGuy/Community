@@ -8,11 +8,36 @@ public class DeclarationMapper : IMapper<DeclarationDto, Declaration>
 {
     public DeclarationDto? Map(Declaration? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new DeclarationDto()
+        {
+            Id = entity.Id,
+            Active = entity.Active,
+            CourseId = entity.CourseId,
+            Course = entity.Course == null
+                ? null
+                : new CourseDto()
+                {
+                    Id = entity.Course.Id,
+                    Name = entity.Course.Name,
+                }
+        };
+
+        return res;
     }
 
     public Declaration? Map(DeclarationDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new Declaration()
+        {
+            Id = entity.Id,
+            Active = entity.Active,
+            CourseId = entity.CourseId,
+        };
+        
+        return res;
     }
 }

@@ -11,6 +11,8 @@ public class TimelogDto : IDomainId
     public DateTime StartTime { get; set; }
     [Display(Name = nameof(EndTime), ResourceType = typeof(App.Resources.Domain.TimeLog))]
     public DateTime? EndTime { get; set; }
+    
+    public TimeSpan? Duration { get; set; }
 
     public Guid DeclarationId { get; set; }
     [Display(Name = nameof(Declaration), Prompt = nameof(Declaration), ResourceType = typeof(App.Resources.Domain.TimeLog))]

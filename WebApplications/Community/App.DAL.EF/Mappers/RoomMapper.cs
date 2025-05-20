@@ -8,11 +8,29 @@ public class RoomMapper : IMapper<RoomDto, Room>
 {
     public RoomDto? Map(Room? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new RoomDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+        };
+        
+        return res;
     }
 
     public Room? Map(RoomDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new Room()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+        };
+
+        return res;
     }
 }
