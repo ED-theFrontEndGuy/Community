@@ -22,11 +22,11 @@ public static class IdentityExtensions
         string key,
         string issuer,
         string audience,
-        int expiresInSeconds)
+        DateTime expires)
     {
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddSeconds(expiresInSeconds);
+        
         var token = new JwtSecurityToken(
             issuer: issuer,
             audience: audience,
