@@ -1,3 +1,5 @@
+using App.BLL.DTO;
+using App.BLL.Interfaces;
 using App.DAL.DTO;
 using Microsoft.AspNetCore.Mvc;
 using App.DAL.Interfaces;
@@ -10,17 +12,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class CoursesController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public CoursesController(IAppUOW uow)
+        public CoursesController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _uow.CourseRepository.AllAsync());
+            return View(await _bll.CourseService.AllAsync());
         }
 
         // GET: Courses/Details/5
@@ -31,7 +33,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.CourseRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.CourseService.FindAsync(id.Value, User.GetUserId());
 
             if (entity == null)
             {
@@ -52,12 +54,12 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CourseDto entity)
+        public async Task<IActionResult> Create(CourseBLLDto entity)
         {
             if (ModelState.IsValid)
             {
-                _uow.CourseRepository.Add(entity);
-                await _uow.SaveChangesAsync();
+                _bll.CourseService.Add(entity);
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -72,7 +74,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _uow.CourseRepository.FindAsync(id.Value, User.GetUserId());
+            var course = await _bll.CourseService.FindAsync(id.Value, User.GetUserId());
             
             if (course == null)
             {
@@ -87,7 +89,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, CourseDto course)
+        public async Task<IActionResult> Edit(Guid id, CourseBLLDto course)
         {
             if (id != course.Id)
             {
@@ -96,8 +98,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.CourseRepository.Update(course);
-                await _uow.SaveChangesAsync();
+                _bll.CourseService.Update(course);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -113,7 +115,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var course = await _uow.CourseRepository.FindAsync(id.Value, User.GetUserId());
+            var course = await _bll.CourseService.FindAsync(id.Value, User.GetUserId());
             
             if (course == null)
             {
@@ -128,8 +130,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.CourseRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.CourseService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

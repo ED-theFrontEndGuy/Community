@@ -1,3 +1,4 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
 using App.Domain;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -7,7 +8,7 @@ namespace WebApp.ViewModels;
 
 public class AssignmentCreateEditViewModel
 {
-    public AssignmentDto Assignment { get; set; } = default!;
+    public AssignmentBLLDto Assignment { get; set; } = default!;
 
     [ValidateNever]
     public SelectList DeclarationSelectList { get; set; } = default!;

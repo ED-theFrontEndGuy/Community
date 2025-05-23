@@ -1,6 +1,6 @@
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.Interfaces;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.ViewModels;
@@ -10,17 +10,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class AssignmentsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
         
-        public AssignmentsController(IAppUOW uow)
+        public AssignmentsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Assignments
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
+            var res = await _bll.AssignmentService.AllAsync(User.GetUserId());
             return View(res);
         }
 
@@ -32,7 +32,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.AssignmentRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.AssignmentService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -45,7 +45,7 @@ namespace WebApp.Controllers
         // GET: Assignments/Create
         public async Task<IActionResult> Create()
         {
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
             
             var vm = new AssignmentCreateEditViewModel
             {
@@ -73,9 +73,9 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.AssignmentRepository.Add(vm.Assignment, User.GetUserId());
+                _bll.AssignmentService.Add(vm.Assignment, User.GetUserId());
                 
-                await _uow.SaveChangesAsync();
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -90,8 +90,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var assignment = await _uow.AssignmentRepository.FindAsync(id.Value, User.GetUserId());
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var assignment = await _bll.AssignmentService.FindAsync(id.Value, User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
             
             if (assignment == null)
             {
@@ -130,13 +130,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.AssignmentRepository.Update(vm.Assignment);
-                await _uow.SaveChangesAsync();
+                _bll.AssignmentService.Update(vm.Assignment);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
             
             vm.DeclarationSelectList = new SelectList(
                 declarations.Select(d => new {
@@ -158,7 +158,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
             
-            var entity = await _uow.AssignmentRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.AssignmentService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -173,8 +173,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.AssignmentRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.AssignmentService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }
