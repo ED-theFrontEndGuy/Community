@@ -4,7 +4,7 @@ using App.Domain;
 
 namespace App.DAL.EF.Mappers;
 
-public class AssignmentMapper : IMapper<AssignmentDto, Assignment>
+public class AssignmentUOWMapper : IUOWMapper<AssignmentDto, Assignment>
 {
     public AssignmentDto? Map(Assignment? entity)
     {

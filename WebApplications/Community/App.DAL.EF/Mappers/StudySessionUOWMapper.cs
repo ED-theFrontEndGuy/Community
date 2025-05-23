@@ -4,7 +4,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class StudySessionMapper : IMapper<StudySessionDto, StudySession>
+public class StudySessionUOWMapper : IUOWMapper<StudySessionDto, StudySession>
 {
     public StudySessionDto? Map(StudySession? entity)
     {

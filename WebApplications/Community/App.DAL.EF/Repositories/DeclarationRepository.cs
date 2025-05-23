@@ -9,7 +9,7 @@ namespace App.DAL.EF.Repositories;
 
 public class DeclarationRepository : BaseRepository<DeclarationDto, Declaration>, IDeclarationRepository
 {
-    public DeclarationRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new DeclarationMapper())
+    public DeclarationRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new DeclarationUOWMapper())
     {
     }
 
@@ -20,12 +20,12 @@ public class DeclarationRepository : BaseRepository<DeclarationDto, Declaration>
             .Include(ua => ua.User)
             .Where(ua => ua.UserId == userId)
             .ToListAsync())
-            .Select(e => Mapper.Map(e)!);
+            .Select(e => UOWMapper.Map(e)!);
     }
     
     public override async Task<DeclarationDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return Mapper.Map(await RepositoryDbSet
+        return UOWMapper.Map(await RepositoryDbSet
             .Include(d => d.Course)
             .Include(d => d.User)
             .Where(d => d.Id == id && d.UserId == userId)

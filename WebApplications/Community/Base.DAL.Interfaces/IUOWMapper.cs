@@ -2,13 +2,13 @@ using Base.Interfaces;
 
 namespace Base.DAL.Interfaces;
 
-public interface IMapper<TDalEntity, TDomainEntity> : IMapper<TDalEntity, TDomainEntity, Guid>
+public interface IUOWMapper<TDalEntity, TDomainEntity> : IUOWMapper<TDalEntity, TDomainEntity, Guid>
     where TDalEntity : class, IDomainId
     where TDomainEntity : class, IDomainId
 {
 }
 
-public interface IMapper<TDalEntity, TDomainEntity, TKey>
+public interface IUOWMapper<TDalEntity, TDomainEntity, TKey>
     where TKey : IEquatable<TKey>
     where TDalEntity : class, IDomainId<TKey> 
     where TDomainEntity : class, IDomainId<TKey>

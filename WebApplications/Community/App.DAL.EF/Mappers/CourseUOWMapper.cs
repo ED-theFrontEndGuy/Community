@@ -4,7 +4,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class CourseMapper : IMapper<CourseDto, Course>
+public class CourseUOWMapper : IUOWMapper<CourseDto, Course>
 {
     public CourseDto? Map(Course? entity)
     {

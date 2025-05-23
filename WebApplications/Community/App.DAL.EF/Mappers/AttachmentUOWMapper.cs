@@ -4,7 +4,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class AttachmentMapper : IMapper<AttachmentDto, Attachment>
+public class AttachmentUOWMapper : IUOWMapper<AttachmentDto, Attachment>
 {
     public AttachmentDto? Map(Attachment? entity)
     {

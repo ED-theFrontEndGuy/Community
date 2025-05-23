@@ -9,7 +9,7 @@ namespace App.DAL.EF.Repositories;
 
 public class StudyGroupRepository : BaseRepository<StudyGroupDto, StudyGroup>, IStudyGroupRepository
 {
-    public StudyGroupRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new StudyGroupMapper())
+    public StudyGroupRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new StudyGroupUOWMapper())
     {
     }
     
@@ -21,12 +21,12 @@ public class StudyGroupRepository : BaseRepository<StudyGroupDto, StudyGroup>, I
             .ThenInclude(sgu => sgu.User)
             .Where(s => s.StudyGroupUsers!.Any(sgu => sgu.UserId == userId))
             .ToListAsync())
-            .Select(e => Mapper.Map(e)!);
+            .Select(e => UOWMapper.Map(e)!);
     }
 
     public override async Task<StudyGroupDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return Mapper.Map(await RepositoryDbSet
+        return UOWMapper.Map(await RepositoryDbSet
             .Include(s => s.StudySession)
             .Include(s => s.StudyGroupUsers)
             .ThenInclude(sgu => sgu.User)

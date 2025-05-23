@@ -9,7 +9,7 @@ namespace App.DAL.EF.Repositories;
 
 public class AttachmentRepository : BaseRepository<AttachmentDto, Attachment>, IAttachmentRepository
 {
-    public AttachmentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new AttachmentMapper())
+    public AttachmentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new AttachmentUOWMapper())
     {
     }
 
@@ -18,12 +18,12 @@ public class AttachmentRepository : BaseRepository<AttachmentDto, Attachment>, I
         return (await RepositoryDbSet
             .Include(a => a.Assignment)
             .ToListAsync())
-            .Select(e => Mapper.Map(e)!);
+            .Select(e => UOWMapper.Map(e)!);
     }
 
     public override async Task<AttachmentDto?> FindAsync(Guid id, Guid userid = default)
     {
-        return Mapper.Map(await RepositoryDbSet
+        return UOWMapper.Map(await RepositoryDbSet
             .Include(a => a.Assignment)
             .FirstOrDefaultAsync());
     }

@@ -9,7 +9,7 @@ namespace App.DAL.EF.Repositories;
 
 public class TimelogRepository : BaseRepository<TimelogDto, Timelog>, ITimelogRepository
 {
-    public TimelogRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new TimelogMapper())
+    public TimelogRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new TimelogUOWMapper())
     {
     }
     
@@ -21,12 +21,12 @@ public class TimelogRepository : BaseRepository<TimelogDto, Timelog>, ITimelogRe
             .Include(t => t.Assignment)
             .Where(t => t.Declaration!.UserId == userId)
             .ToListAsync())
-            .Select(e => Mapper.Map(e)!);
+            .Select(e => UOWMapper.Map(e)!);
     }
 
     public override async Task<TimelogDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return Mapper.Map(await RepositoryDbSet
+        return UOWMapper.Map(await RepositoryDbSet
             .Include(t => t.Declaration)
             .ThenInclude(d => d!.Course)
             .Include(t => t.Assignment)

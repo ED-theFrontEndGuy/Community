@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using App.BLL;
+using App.BLL.Interfaces;
 using App.DAL.EF;
 using App.DAL.EF.Repositories;
 using App.DAL.Interfaces;
@@ -47,6 +49,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // scoped - get created once per web client request (same as dbcontext)
 builder.Services.AddScoped<IAppUOW, AppUOW>();
+builder.Services.AddScoped<IAppBLL, AppBLL>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)
