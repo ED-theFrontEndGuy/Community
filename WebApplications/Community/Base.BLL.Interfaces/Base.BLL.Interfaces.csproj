@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Base.DAL.Interfaces\Base.DAL.Interfaces.csproj" />
+      <ProjectReference Include="..\Base.Interfaces\Base.Interfaces.csproj" />
+    </ItemGroup>
+
+</Project>

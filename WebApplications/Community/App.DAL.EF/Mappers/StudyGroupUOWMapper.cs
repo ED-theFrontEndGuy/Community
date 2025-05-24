@@ -4,7 +4,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class StudyGroupMapper : IMapper<StudyGroupDto, StudyGroup>
+public class StudyGroupUOWMapper : IUOWMapper<StudyGroupDto, StudyGroup>
 {
     public StudyGroupDto? Map(StudyGroup? entity)
     {

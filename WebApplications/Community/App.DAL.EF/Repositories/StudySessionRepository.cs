@@ -9,7 +9,7 @@ namespace App.DAL.EF.Repositories;
 
 public class StudySessionRepository : BaseRepository<StudySessionDto, StudySession>, IStudySessionRepository
 {
-    public StudySessionRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new StudySessionMapper())
+    public StudySessionRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new StudySessionUOWMapper())
     {
     }
 
@@ -19,12 +19,12 @@ public class StudySessionRepository : BaseRepository<StudySessionDto, StudySessi
             .Include(s => s.Assignment)
             .Include(s => s.Room)
             .ToListAsync())
-            .Select(e => Mapper.Map(e)!);
+            .Select(e => UOWMapper.Map(e)!);
     }
 
     public override async Task<StudySessionDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return Mapper.Map(await RepositoryDbSet
+        return UOWMapper.Map(await RepositoryDbSet
             .Include(s => s.Assignment)
             .Include(s => s.Room)
             .Where(s => s.Id == id)

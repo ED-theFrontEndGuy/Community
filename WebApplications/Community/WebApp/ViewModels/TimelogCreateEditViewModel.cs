@@ -1,3 +1,4 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
 using App.Domain;
 using Base.Domain;
@@ -8,7 +9,7 @@ namespace WebApp.ViewModels;
 
 public class TimelogCreateEditViewModel : BaseEntity
 {
-    public TimelogDto Timelog { get; set; } = default!;
+    public TimelogBLLDto Timelog { get; set; } = default!;
 
     [ValidateNever]
     public SelectList DeclarationSelectList { get; set; } = default!;

@@ -1,3 +1,4 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
 using App.Domain;
 using Base.Domain;
@@ -8,7 +9,7 @@ namespace WebApp.ViewModels;
 
 public class StudyGroupCreateEditViewModel : BaseEntity
 {
-    public StudyGroupDto StudyGroup { get; set; } = default!;
+    public StudyGroupBLLDto StudyGroup { get; set; } = default!;
     
     [ValidateNever]
     public SelectList StudySessionSelectList { get; set; } = default!;

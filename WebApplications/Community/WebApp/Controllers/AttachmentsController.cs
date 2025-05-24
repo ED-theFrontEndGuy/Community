@@ -1,6 +1,6 @@
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.Interfaces;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.ViewModels;
@@ -10,17 +10,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class AttachmentsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public AttachmentsController(IAppUOW uow)
+        public AttachmentsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Attachments
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.AttachmentRepository.AllAsync(User.GetUserId());
+            var res = await _bll.AttachmentService.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -33,7 +33,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.AttachmentRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.AttachmentService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -46,7 +46,7 @@ namespace WebApp.Controllers
         // GET: Attachments/Create
         public async Task<IActionResult> Create()
         {
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
             
             var vm = new AttachmentCreateEditViewModel()
             {
@@ -73,9 +73,9 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.AttachmentRepository.Add(vm.Attachment);
+                _bll.AttachmentService.Add(vm.Attachment);
                 
-                await _uow.SaveChangesAsync();
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -90,8 +90,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var attachment = await _uow.AttachmentRepository.FindAsync(id.Value, User.GetUserId());
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
+            var attachment = await _bll.AttachmentService.FindAsync(id.Value, User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
             
             if (attachment == null)
             {
@@ -129,13 +129,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.AttachmentRepository.Update(vm.Attachment);
-                await _uow.SaveChangesAsync();
+                _bll.AttachmentService.Update(vm.Attachment);
+                await _bll.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
             
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
 
             vm.AssignmentSelectList = new SelectList(
                 assignments.Select(a => new
@@ -158,7 +158,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.AttachmentRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.AttachmentService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -173,8 +173,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.AttachmentRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.AttachmentService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

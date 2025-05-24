@@ -1,3 +1,4 @@
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using App.DAL.Interfaces;
@@ -11,17 +12,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class TimelogsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public TimelogsController(IAppUOW uow)
+        public TimelogsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Timelogs
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.TimelogRepository.AllAsync(User.GetUserId());
+            var res = await _bll.TimelogService.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -34,7 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.TimelogRepository.FindAsync(id.Value, User.GetUserId()); 
+            var entity = await _bll.TimelogService.FindAsync(id.Value, User.GetUserId()); 
                 
             if (entity == null)
             {
@@ -47,8 +48,8 @@ namespace WebApp.Controllers
         // GET: Timelogs/Create
         public async Task<IActionResult> Create()
         {
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
 
             var vm = new TimelogCreateEditViewModel()
             {
@@ -77,14 +78,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.TimelogRepository.Add(vm.Timelog);
-                await _uow.SaveChangesAsync();
+                _bll.TimelogService.Add(vm.Timelog);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
             
             vm.AssignmentSelectList = new SelectList(assignments,
                 nameof(Assignment.Id),
@@ -112,15 +113,15 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var timelog = await _uow.TimelogRepository.FindAsync(id.Value, User.GetUserId());
+            var timelog = await _bll.TimelogService.FindAsync(id.Value, User.GetUserId());
             
             if (timelog == null)
             {
                 return NotFound();
             }
             
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
 
             var vm = new TimelogCreateEditViewModel()
             {
@@ -158,14 +159,14 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.TimelogRepository.Update(vm.Timelog);
-                await _uow.SaveChangesAsync();
+                _bll.TimelogService.Update(vm.Timelog);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
-            var declarations = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
+            var declarations = await _bll.DeclarationService.AllAsync(User.GetUserId());
 
             vm.DeclarationSelectList = new SelectList(declarations.Select(
                     d => new
@@ -193,7 +194,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.TimelogRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.TimelogService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -208,8 +209,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.TimelogRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.TimelogService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

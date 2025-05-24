@@ -1,16 +1,16 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
-using App.Domain;
-using Base.DAL.Interfaces;
+using Base.BLL.Interfaces;
 
-namespace App.DAL.EF.Mappers;
+namespace App.BLL.Mappers;
 
-public class CourseMapper : IMapper<CourseDto, Course>
+public class CourseBLLMapper : IBLLMapper<CourseBLLDto, CourseDto>
 {
-    public CourseDto? Map(Course? entity)
+    public CourseBLLDto? Map(CourseDto? entity)
     {
         if (entity == null) return null;
 
-        var res = new CourseDto()
+        var res = new CourseBLLDto()
         {
             Id = entity.Id,
             Name = entity.Name
@@ -19,11 +19,11 @@ public class CourseMapper : IMapper<CourseDto, Course>
         return res;
     }
 
-    public Course? Map(CourseDto? entity)
+    public CourseDto? Map(CourseBLLDto? entity)
     {
         if (entity == null) return null;
 
-        var res = new Course()
+        var res = new CourseDto()
         {
             Id = entity.Id,
             Name = entity.Name

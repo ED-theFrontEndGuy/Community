@@ -1,30 +1,30 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
-using Base.DAL.Interfaces;
-using App.Domain;
+using Base.BLL.Interfaces;
 
-namespace App.DAL.EF.Mappers;
+namespace App.BLL.Mappers;
 
-public class AssignmentMapper : IMapper<AssignmentDto, Assignment>
+public class AssignmentBLLMapper : IBLLMapper<AssignmentBLLDto, AssignmentDto>
 {
-    public AssignmentDto? Map(Assignment? entity)
+    public AssignmentBLLDto? Map(AssignmentDto? entity)
     {
         if (entity == null) return null;
         
-        var res = new AssignmentDto()
+        var res = new AssignmentBLLDto()
         {
             Id = entity.Id,
             Name = entity.Name,
             DeclarationId = entity.DeclarationId,
             Declaration = entity.Declaration == null
                 ? null
-                : new DeclarationDto()
+                : new DeclarationBLLDto()
                 {
                     Id = entity.Declaration.Id,
                     Active = entity.Declaration.Active,
                     CourseId = entity.Declaration.CourseId,
                     Course = entity.Declaration.Course == null
                         ? null
-                        : new CourseDto()
+                        : new CourseBLLDto()
                         {
                             Id = entity.Declaration.Course.Id,
                             Name = entity.Declaration.Course.Name,
@@ -35,11 +35,11 @@ public class AssignmentMapper : IMapper<AssignmentDto, Assignment>
         return res;
     }
 
-    public Assignment? Map(AssignmentDto? entity)
+    public AssignmentDto? Map(AssignmentBLLDto? entity)
     {
         if (entity == null) return null;
         
-        var res = new Assignment()
+        var res = new AssignmentDto()
         {
             Id = entity.Id,
             Name = entity.Name,

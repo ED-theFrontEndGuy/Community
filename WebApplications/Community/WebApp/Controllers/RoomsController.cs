@@ -1,3 +1,5 @@
+using App.BLL.DTO;
+using App.BLL.Interfaces;
 using App.DAL.DTO;
 using Microsoft.AspNetCore.Mvc;
 using App.DAL.Interfaces;
@@ -10,17 +12,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class RoomsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public RoomsController(IAppUOW uow)
+        public RoomsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.RoomRepository.AllAsync(User.GetUserId());
+            var res = await _bll.RoomService.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -33,7 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _uow.RoomRepository.FindAsync(id.Value, User.GetUserId());
+            var room = await _bll.RoomService.FindAsync(id.Value, User.GetUserId());
             
             if (room == null)
             {
@@ -54,12 +56,12 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RoomDto room)
+        public async Task<IActionResult> Create(RoomBLLDto room)
         {
             if (ModelState.IsValid)
             {
-                _uow.RoomRepository.Add(room);
-                await _uow.SaveChangesAsync();
+                _bll.RoomService.Add(room);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -74,7 +76,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var room = await _uow.RoomRepository.FindAsync(id.Value, User.GetUserId());
+            var room = await _bll.RoomService.FindAsync(id.Value, User.GetUserId());
             
             if (room == null)
             {
@@ -89,7 +91,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, RoomDto room)
+        public async Task<IActionResult> Edit(Guid id, RoomBLLDto room)
         {
             if (id != room.Id)
             {
@@ -98,8 +100,8 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.RoomRepository.Update(room);
-                await _uow.SaveChangesAsync();
+                _bll.RoomService.Update(room);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
@@ -115,7 +117,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.RoomRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.RoomService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -130,8 +132,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.RoomRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.RoomService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

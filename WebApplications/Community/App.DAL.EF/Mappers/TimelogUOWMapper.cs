@@ -4,7 +4,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class TimelogMapper : IMapper<TimelogDto, Timelog>
+public class TimelogUOWMapper : IUOWMapper<TimelogDto, Timelog>
 {
     public TimelogDto? Map(Timelog? entity)
     {

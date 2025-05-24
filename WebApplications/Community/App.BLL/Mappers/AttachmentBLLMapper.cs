@@ -1,16 +1,16 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
-using App.Domain;
-using Base.DAL.Interfaces;
+using Base.BLL.Interfaces;
 
-namespace App.DAL.EF.Mappers;
+namespace App.BLL.Mappers;
 
-public class AttachmentMapper : IMapper<AttachmentDto, Attachment>
+public class AttachmentBLLMapper : IBLLMapper<AttachmentBLLDto, AttachmentDto>
 {
-    public AttachmentDto? Map(Attachment? entity)
+    public AttachmentBLLDto? Map(AttachmentDto? entity)
     {
         if (entity == null) return null;
         
-        var res = new AttachmentDto()
+        var res = new AttachmentBLLDto()
         {
             Id = entity.Id,
             Link = entity.Link,
@@ -18,7 +18,7 @@ public class AttachmentMapper : IMapper<AttachmentDto, Attachment>
             AssignmentId = entity.AssignmentId,
             Assignment = entity.Assignment == null
                 ? null
-                : new AssignmentDto()
+                : new AssignmentBLLDto()
                 {
                     Id = entity.Assignment.Id,
                     Name = entity.Assignment.Name,
@@ -28,11 +28,11 @@ public class AttachmentMapper : IMapper<AttachmentDto, Attachment>
         return res;
     }
 
-    public Attachment? Map(AttachmentDto? entity)
+    public AttachmentDto? Map(AttachmentBLLDto? entity)
     {
         if (entity == null) return null;
         
-        var res = new Attachment()
+        var res = new AttachmentDto()
         {
             Id = entity.Id,
             Link = entity.Link,

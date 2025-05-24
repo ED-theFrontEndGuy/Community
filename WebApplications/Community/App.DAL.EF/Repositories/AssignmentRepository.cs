@@ -9,7 +9,7 @@ namespace App.DAL.EF.Repositories;
 
 public class AssignmentRepository : BaseRepository<AssignmentDto, Assignment>, IAssignmentRepository
 {
-    public AssignmentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new AssignmentMapper())
+    public AssignmentRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new AssignmentUOWMapper())
     {
     }
 
@@ -20,12 +20,12 @@ public class AssignmentRepository : BaseRepository<AssignmentDto, Assignment>, I
                 .ThenInclude(d => d!.Course)
             .Where(a => a.Declaration!.UserId == userId)
             .ToListAsync())
-            .Select(e => Mapper.Map(e)!);
+            .Select(e => UOWMapper.Map(e)!);
     }
 
     public override async Task<AssignmentDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return Mapper.Map(await RepositoryDbSet
+        return UOWMapper.Map(await RepositoryDbSet
             .Include(a => a.Declaration)
                 .ThenInclude(d => d!.Course)
             .Where(a => a.Id == id && a.Declaration!.UserId == userId)

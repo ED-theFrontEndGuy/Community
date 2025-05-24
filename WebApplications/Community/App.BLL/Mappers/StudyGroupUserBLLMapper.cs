@@ -1,23 +1,23 @@
+using App.BLL.DTO;
 using App.DAL.DTO;
-using App.Domain;
-using Base.DAL.Interfaces;
+using Base.BLL.Interfaces;
 
-namespace App.DAL.EF.Mappers;
+namespace App.BLL.Mappers;
 
-public class StudyGroupUserMapper : IMapper<StudyGroupUserDto, StudyGroupUser>
+public class StudyGroupUserBLLMapper : IBLLMapper<StudyGroupUserBLLDto, StudyGroupUserDto>
 {
-    public StudyGroupUserDto? Map(StudyGroupUser? entity)
+    public StudyGroupUserBLLDto? Map(StudyGroupUserDto? entity)
     {
         if (entity == null) return null;
 
-        var res = new StudyGroupUserDto()
+        var res = new StudyGroupUserBLLDto()
         {
             Id = entity.Id,
             isOwner = entity.isOwner,
             StudyGroupId = entity.StudyGroupId,
             StudyGroup = entity.StudyGroup == null
                 ? null
-                : new StudyGroupDto()
+                : new StudyGroupBLLDto()
                 {
                     Id = entity.StudyGroup.Id,
                     Name = entity.StudyGroup.Name,
@@ -28,11 +28,11 @@ public class StudyGroupUserMapper : IMapper<StudyGroupUserDto, StudyGroupUser>
         return res;
     }
 
-    public StudyGroupUser? Map(StudyGroupUserDto? entity)
+    public StudyGroupUserDto? Map(StudyGroupUserBLLDto? entity)
     {
         if (entity == null) return null;
         
-        var res = new StudyGroupUser()
+        var res = new StudyGroupUserDto()
         {
             Id = entity.Id,
             isOwner = entity.isOwner,

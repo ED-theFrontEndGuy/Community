@@ -4,7 +4,7 @@ using Base.DAL.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class DeclarationMapper : IMapper<DeclarationDto, Declaration>
+public class DeclarationUOWMapper : IUOWMapper<DeclarationDto, Declaration>
 {
     public DeclarationDto? Map(Declaration? entity)
     {

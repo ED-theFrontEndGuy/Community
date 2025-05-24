@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using App.Resources.Domain;
 using Base.Interfaces;
 
 namespace App.DAL.DTO;
@@ -16,5 +15,5 @@ public class RoomDto : IDomainId
     public string Description { get; set; } = default!;
 
     [Display(Name = nameof(StudySessions), Prompt = nameof(StudySessions), ResourceType = typeof(App.Resources.Domain.Room))]
-    public ICollection<StudySession>? StudySessions { get; set; }
+    public ICollection<StudySessionDto>? StudySessions { get; set; }
 }

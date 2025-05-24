@@ -1,3 +1,4 @@
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using App.DAL.Interfaces;
@@ -11,17 +12,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class StudySessionsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public StudySessionsController(IAppUOW uow)
+        public StudySessionsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: StudySessions
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.StudySessionRepository.AllAsync(User.GetUserId());
+            var res = await _bll.StudySessionService.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -34,7 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.StudySessionRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.StudySessionService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -47,8 +48,8 @@ namespace WebApp.Controllers
         // GET: StudySessions/Create
         public async Task<IActionResult> Create()
         {
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
-            var rooms = await _uow.RoomRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
+            var rooms = await _bll.RoomService.AllAsync(User.GetUserId());
 
             var vm = new StudySessionCreateEditViewModel()
             {
@@ -72,14 +73,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.StudySessionRepository.Add(vm.StudySession);
-                await _uow.SaveChangesAsync();
+                _bll.StudySessionService.Add(vm.StudySession);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            var assignments = await _uow.AssignmentRepository.AllAsync(User.GetUserId());
-            var rooms = await _uow.RoomRepository.AllAsync(User.GetUserId());
+            var assignments = await _bll.AssignmentService.AllAsync(User.GetUserId());
+            var rooms = await _bll.RoomService.AllAsync(User.GetUserId());
             
             vm.AssignmentSelectList = new SelectList(assignments,
                 nameof(Assignment.Id),
@@ -102,7 +103,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studySession = await _uow.StudySessionRepository.FindAsync(id.Value, User.GetUserId());
+            var studySession = await _bll.StudySessionService.FindAsync(id.Value, User.GetUserId());
             
             if (studySession == null)
             {
@@ -111,11 +112,11 @@ namespace WebApp.Controllers
 
             var vm = new StudySessionCreateEditViewModel()
             {
-                AssignmentSelectList = new SelectList(await _uow.AssignmentRepository.AllAsync(User.GetUserId()),
+                AssignmentSelectList = new SelectList(await _bll.AssignmentService.AllAsync(User.GetUserId()),
                     nameof(Assignment.Id),
                     nameof(Assignment.Name),
                     studySession.AssignmentId),
-                RoomSelectList = new SelectList(await _uow.RoomRepository.AllAsync(User.GetUserId()),
+                RoomSelectList = new SelectList(await _bll.RoomService.AllAsync(User.GetUserId()),
                     nameof(Room.Id),
                     nameof(Room.Name),
                     studySession.RoomId),
@@ -139,17 +140,17 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.StudySessionRepository.Update(vm.StudySession);
-                await _uow.SaveChangesAsync();
+                _bll.StudySessionService.Update(vm.StudySession);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.AssignmentSelectList = new SelectList(await _uow.AssignmentRepository.AllAsync(User.GetUserId()),
+            vm.AssignmentSelectList = new SelectList(await _bll.AssignmentService.AllAsync(User.GetUserId()),
                 nameof(Assignment.Id),
                 nameof(Assignment.Name),
                 vm.StudySession.AssignmentId);
-            vm.RoomSelectList = new SelectList(await _uow.RoomRepository.AllAsync(User.GetUserId()),
+            vm.RoomSelectList = new SelectList(await _bll.RoomService.AllAsync(User.GetUserId()),
                 nameof(Room.Id),
                 nameof(Room.Name),
                 vm.StudySession.RoomId);
@@ -165,7 +166,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.StudySessionRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.StudySessionService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -180,8 +181,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.StudySessionRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.StudySessionService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

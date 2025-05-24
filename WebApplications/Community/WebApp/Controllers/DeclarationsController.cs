@@ -1,6 +1,6 @@
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -11,17 +11,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class DeclarationsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public DeclarationsController(IAppUOW uow)
+        public DeclarationsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: Declarations
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.DeclarationRepository.AllAsync(User.GetUserId());
+            var res = await _bll.DeclarationService.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -34,7 +34,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.DeclarationRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.DeclarationService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -49,7 +49,7 @@ namespace WebApp.Controllers
         {
             var vm = new DeclarationCreateEditViewModel()
             {
-                CourseSelectList = new SelectList(await _uow.CourseRepository.AllAsync(User.GetUserId()),
+                CourseSelectList = new SelectList(await _bll.CourseService.AllAsync(User.GetUserId()),
                     nameof(Course.Id),
                     nameof(Course.Name))
             };
@@ -66,9 +66,9 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.DeclarationRepository.Add(vm.Declaration, User.GetUserId());
+                _bll.DeclarationService.Add(vm.Declaration, User.GetUserId());
                 
-                await _uow.SaveChangesAsync();
+                await _bll.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
@@ -83,7 +83,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var declaration = await _uow.DeclarationRepository.FindAsync(id.Value, User.GetUserId());
+            var declaration = await _bll.DeclarationService.FindAsync(id.Value, User.GetUserId());
             
             if (declaration == null)
             {
@@ -92,7 +92,7 @@ namespace WebApp.Controllers
 
             var vm = new DeclarationCreateEditViewModel()
             {
-                CourseSelectList = new SelectList(await _uow.CourseRepository.AllAsync(User.GetUserId()),
+                CourseSelectList = new SelectList(await _bll.CourseService.AllAsync(User.GetUserId()),
                     nameof(Course.Id),
                     nameof(Course.Name),
                     declaration.CourseId),
@@ -116,13 +116,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.DeclarationRepository.Update(vm.Declaration);
-                await _uow.SaveChangesAsync();
+                _bll.DeclarationService.Update(vm.Declaration);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
 
-            vm.CourseSelectList = new SelectList(await _uow.CourseRepository.AllAsync(User.GetUserId()),
+            vm.CourseSelectList = new SelectList(await _bll.CourseService.AllAsync(User.GetUserId()),
                 nameof(Course.Id),
                 nameof(Course.Name),
                 vm.Declaration.CourseId);
@@ -138,7 +138,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.DeclarationRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.DeclarationService.FindAsync(id.Value, User.GetUserId());
                 
             if (entity == null)
             {
@@ -153,8 +153,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.DeclarationRepository.RemoveAsync(id, User.GetUserId());
-            await _uow.SaveChangesAsync();
+            await _bll.DeclarationService.RemoveAsync(id, User.GetUserId());
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }

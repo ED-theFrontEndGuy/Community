@@ -8,7 +8,7 @@ namespace App.DAL.EF.Repositories;
 
 public class CourseRepository : BaseRepository<CourseDto, Course>, ICourseRepository
 {
-    public CourseRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new CourseMapper())
+    public CourseRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new CourseUOWMapper())
     {
     }
 }

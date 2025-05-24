@@ -8,7 +8,7 @@ namespace App.DAL.EF.Repositories;
 
 public class RoomRepository : BaseRepository<RoomDto, Room>, IRoomRepository
 {
-    public RoomRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new RoomMapper())
+    public RoomRepository(AppDbContext repositoryDbContext) : base(repositoryDbContext, new RoomUOWMapper())
     {
     }
 }

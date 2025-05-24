@@ -1,3 +1,4 @@
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using App.DAL.Interfaces;
@@ -11,17 +12,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class StudyGroupsController : Controller
     {
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public StudyGroupsController(IAppUOW uow)
+        public StudyGroupsController(IAppBLL bll)
         {
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: StudyGroups
         public async Task<IActionResult> Index()
         {
-            var res = await _uow.StudyGroupRepository.AllAsync(User.GetUserId());
+            var res = await _bll.StudyGroupService.AllAsync(User.GetUserId());
             
             return View(res);
         }
@@ -34,7 +35,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.StudyGroupRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.StudyGroupService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -49,7 +50,7 @@ namespace WebApp.Controllers
         {
             var vm = new StudyGroupCreateEditViewModel()
             {
-                StudySessionSelectList = new SelectList(await _uow.StudySessionRepository.AllAsync(User.GetUserId()),
+                StudySessionSelectList = new SelectList(await _bll.StudySessionService.AllAsync(User.GetUserId()),
                     nameof(StudySession.Id),
                     nameof(StudySession.Description))
             };
@@ -66,13 +67,13 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _uow.StudyGroupRepository.Add(vm.StudyGroup, User.GetUserId());
-                await _uow.SaveChangesAsync();
+                _bll.StudyGroupService.Add(vm.StudyGroup, User.GetUserId());
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
 
-            vm.StudySessionSelectList = new SelectList(await _uow.StudySessionRepository.AllAsync(User.GetUserId()),
+            vm.StudySessionSelectList = new SelectList(await _bll.StudySessionService.AllAsync(User.GetUserId()),
                 nameof(StudySession.Id),
                 nameof(StudySession.Description),
                 vm.StudyGroup.Id);
@@ -88,7 +89,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var studyGroup = await _uow.StudyGroupRepository.FindAsync(id.Value, User.GetUserId());
+            var studyGroup = await _bll.StudyGroupService.FindAsync(id.Value, User.GetUserId());
             
             if (studyGroup == null)
             {
@@ -97,7 +98,7 @@ namespace WebApp.Controllers
 
             var vm = new StudyGroupCreateEditViewModel()
             {
-                StudySessionSelectList = new SelectList(await _uow.StudySessionRepository.AllAsync(User.GetUserId()),
+                StudySessionSelectList = new SelectList(await _bll.StudySessionService.AllAsync(User.GetUserId()),
                     nameof(StudySession.Id),
                     nameof(StudySession.Description)),
                 StudyGroup = studyGroup
@@ -120,13 +121,13 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _uow.StudyGroupRepository.Update(vm.StudyGroup);
-                await _uow.SaveChangesAsync();
+                _bll.StudyGroupService.Update(vm.StudyGroup);
+                await _bll.SaveChangesAsync();
                 
                 return RedirectToAction(nameof(Index));
             }
             
-            vm.StudySessionSelectList = new SelectList(await _uow.StudySessionRepository.AllAsync(User.GetUserId()),
+            vm.StudySessionSelectList = new SelectList(await _bll.StudySessionService.AllAsync(User.GetUserId()),
                 nameof(StudySession.Id),
                 nameof(StudySession.Description),
                 vm.StudyGroup.Id);
@@ -142,7 +143,7 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var entity = await _uow.StudyGroupRepository.FindAsync(id.Value, User.GetUserId());
+            var entity = await _bll.StudyGroupService.FindAsync(id.Value, User.GetUserId());
             
             if (entity == null)
             {
@@ -157,8 +158,8 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _uow.StudyGroupRepository.RemoveAsync(id);
-            await _uow.SaveChangesAsync();
+            await _bll.StudyGroupService.RemoveAsync(id);
+            await _bll.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }
