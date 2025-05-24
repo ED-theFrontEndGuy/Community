@@ -1,18 +1,17 @@
 using App.BLL.DTO;
 using App.BLL.Interfaces;
 using App.DAL.DTO;
+using App.DAL.Interfaces;
 using Base.BLL;
 using Base.BLL.Interfaces;
-using Base.DAL.Interfaces;
 
 namespace App.BLL.Services;
 
-public class AssignmentService : BaseService<AssignmentBLLDto, AssignmentDto>, IAssignmentService
+public class AssignmentService : BaseService<AssignmentBLLDto, AssignmentDto, IAssignmentRepository>, IAssignmentService
 {
     public AssignmentService(
-        IBaseUOW serviceUOW, 
-        IBaseRepository<AssignmentDto, Guid> serviceRepository,
-        IBLLMapper<AssignmentBLLDto, AssignmentDto, Guid> bllMapper) : base(serviceUOW, serviceRepository, bllMapper)
+        IAppUOW serviceUOW, 
+        IBLLMapper<AssignmentBLLDto, AssignmentDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.AssignmentRepository, bllMapper)
     {
     }
-}
+} 

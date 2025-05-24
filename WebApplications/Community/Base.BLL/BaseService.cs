@@ -4,28 +4,31 @@ using Base.Interfaces;
 
 namespace Base.BLL;
 
-public class BaseService<TBllEntity, TDalEntity> : BaseService<TBllEntity, TDalEntity, Guid>, IBaseService<TBllEntity>
+public class BaseService<TBllEntity, TDalEntity, TDalRepository> : BaseService<TBllEntity, TDalEntity, TDalRepository, Guid>, IBaseService<TBllEntity>
     where TBllEntity : class, IDomainId
     where TDalEntity : class, IDomainId
+    where TDalRepository : class, IBaseRepository<TDalEntity>
 {
     public BaseService(
             IBaseUOW serviceUOW,
-            IBaseRepository<TDalEntity, Guid> serviceRepository, IBLLMapper<TBllEntity, TDalEntity, Guid> bllMapper
+            TDalRepository serviceRepository,
+            IBLLMapper<TBllEntity, TDalEntity, Guid> bllMapper
         ) : base(serviceUOW, serviceRepository, bllMapper)
     {
     }
 }
 
-public class BaseService<TBllEntity, TDalEntity, TKey> : IBaseService<TBllEntity, TKey>
+public class BaseService<TBllEntity, TDalEntity, TDalRepository, TKey> : IBaseService<TBllEntity, TKey>
     where TBllEntity : class, IDomainId<TKey>
     where TDalEntity : class, IDomainId<TKey>
+    where TDalRepository : class, IBaseRepository<TDalEntity, TKey>
     where TKey : IEquatable<TKey>
 {
     protected IBaseUOW ServiceUOW;
-    protected IBaseRepository<TDalEntity, TKey> ServiceRepository ;
+    protected TDalRepository ServiceRepository;
     protected IBLLMapper<TBllEntity, TDalEntity, TKey> BLLMapper;
 
-    public BaseService(IBaseUOW serviceUOW, IBaseRepository<TDalEntity, TKey> serviceRepository, IBLLMapper<TBllEntity, TDalEntity, TKey> bllMapper)
+    public BaseService(IBaseUOW serviceUOW, TDalRepository serviceRepository, IBLLMapper<TBllEntity, TDalEntity, TKey> bllMapper)
     {
         ServiceUOW = serviceUOW;
         ServiceRepository = serviceRepository;
