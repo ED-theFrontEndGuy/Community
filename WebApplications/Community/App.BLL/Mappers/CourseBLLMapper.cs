@@ -8,11 +8,27 @@ public class CourseBLLMapper : IBLLMapper<CourseBLLDto, CourseDto>
 {
     public CourseBLLDto? Map(CourseDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+
+        var res = new CourseBLLDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name
+        };
+
+        return res;
     }
 
     public CourseDto? Map(CourseBLLDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+
+        var res = new CourseDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name
+        };
+
+        return res;
     }
 }

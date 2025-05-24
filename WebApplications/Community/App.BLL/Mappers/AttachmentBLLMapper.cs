@@ -8,11 +8,38 @@ public class AttachmentBLLMapper : IBLLMapper<AttachmentBLLDto, AttachmentDto>
 {
     public AttachmentBLLDto? Map(AttachmentDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new AttachmentBLLDto()
+        {
+            Id = entity.Id,
+            Link = entity.Link,
+            Description = entity.Description,
+            AssignmentId = entity.AssignmentId,
+            Assignment = entity.Assignment == null
+                ? null
+                : new AssignmentBLLDto()
+                {
+                    Id = entity.Assignment.Id,
+                    Name = entity.Assignment.Name,
+                }
+        };
+
+        return res;
     }
 
     public AttachmentDto? Map(AttachmentBLLDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new AttachmentDto()
+        {
+            Id = entity.Id,
+            Link = entity.Link,
+            Description = entity.Description,
+            AssignmentId = entity.AssignmentId,
+        };
+        
+        return res;
     }
 }

@@ -8,11 +8,36 @@ public class DeclarationBLLMapper : IBLLMapper<DeclarationBLLDto, DeclarationDto
 {
     public DeclarationBLLDto? Map(DeclarationDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new DeclarationBLLDto()
+        {
+            Id = entity.Id,
+            Active = entity.Active,
+            CourseId = entity.CourseId,
+            Course = entity.Course == null
+                ? null
+                : new CourseBLLDto()
+                {
+                    Id = entity.Course.Id,
+                    Name = entity.Course.Name,
+                }
+        };
+
+        return res;
     }
 
     public DeclarationDto? Map(DeclarationBLLDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new DeclarationDto()
+        {
+            Id = entity.Id,
+            Active = entity.Active,
+            CourseId = entity.CourseId,
+        };
+        
+        return res;
     }
 }

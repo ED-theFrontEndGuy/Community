@@ -8,11 +8,29 @@ public class RoomBLLMapper : IBLLMapper<RoomBLLDto, RoomDto>
 {
     public RoomBLLDto? Map(RoomDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new RoomBLLDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+        };
+        
+        return res;
     }
 
     public RoomDto? Map(RoomBLLDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new RoomDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Description = entity.Description,
+        };
+
+        return res;
     }
 }

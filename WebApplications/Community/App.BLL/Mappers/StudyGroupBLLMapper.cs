@@ -8,11 +8,39 @@ public class StudyGroupBLLMapper : IBLLMapper<StudyGroupBLLDto, StudyGroupDto>
 {
     public StudyGroupBLLDto? Map(StudyGroupDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+
+        var res = new StudyGroupBLLDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            StudySessionId = entity.StudySessionId,
+            StudySession = entity.StudySession == null
+                ? null
+                : new StudySessionBLLDto()
+                {
+                    Id = entity.StudySession.Id,
+                    Description = entity.StudySession.Description,
+                    Active = entity.StudySession.Active,
+                    AssignmentId = entity.StudySession.AssignmentId,
+                    RoomId = entity.StudySession.RoomId,
+                }
+        };
+
+        return res;
     }
 
     public StudyGroupDto? Map(StudyGroupBLLDto? entity)
     {
-        throw new NotImplementedException();
+        if (entity == null) return null;
+        
+        var res = new StudyGroupDto()
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            StudySessionId = entity.StudySessionId,
+        };
+
+        return res;
     }
 }
