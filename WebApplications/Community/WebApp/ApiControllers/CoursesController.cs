@@ -17,28 +17,40 @@ namespace WebApp.ApiControllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CoursesController : ControllerBase
     {
-        private readonly AppDbContext _context;
-
         private readonly IAppBLL _bll;
 
-        public CoursesController(AppDbContext context, IAppBLL bll)
+        public CoursesController(IAppBLL bll)
         {
-            _context = context;
             _bll = bll;
         }
 
-        // GET: api/Courses
+        /// <summary>
+        /// Get all courses available
+        /// </summary>
+        /// <returns>List of courses</returns>
         [HttpGet]
-        public async Task<List<CourseBLLDto>> GetCourses()
+        [Produces( "application/json" )]
+        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Course> ), 200 )]
+        [ProducesResponseType( 404 )]
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Course>>> GetCourses()
         {
-            return (await _bll.CourseService.AllAsync(User.GetUserId())).ToList();
+            var data = (await _bll.CourseService.AllAsync(User.GetUserId())).ToList();
+            
+            // ToDo - Add mapper
+            var res = data.Select(c => new App.DTO.v1.Course
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+
+            return res;
         }
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Course>> GetCourse(Guid id)
+        public async Task<ActionResult<CourseBLLDto>> GetCourse(Guid id)
         {
-            var course = await _context.Courses.FindAsync(id);
+            var course = await _bll.CourseService.FindAsync(id);
 
             if (course == null)
             {
@@ -51,30 +63,14 @@ namespace WebApp.ApiControllers
         // PUT: api/Courses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(Guid id, Course course)
+        public async Task<IActionResult> PutCourse(Guid id, CourseBLLDto course)
         {
             if (id != course.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(course).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CourseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _bll.CourseService.Update(course);
 
             return NoContent();
         }
@@ -99,21 +95,16 @@ namespace WebApp.ApiControllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
-            var course = await _context.Courses.FindAsync(id);
+            var course = await _bll.CourseService.FindAsync(id);
             if (course == null)
             {
                 return NotFound();
             }
 
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
+            _bll.CourseService.Remove(course);
+            await _bll.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool CourseExists(Guid id)
-        {
-            return _context.Courses.Any(e => e.Id == id);
         }
     }
 }
