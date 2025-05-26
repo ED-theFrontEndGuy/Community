@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using App.DAL.DTO;
-using Microsoft.AspNetCore.Http;
+using App.BLL.DTO;
+using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
-using App.DAL.Interfaces;
 using App.Domain;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,19 +17,19 @@ namespace WebApp.ApiControllers
     {
         private readonly AppDbContext _context;
 
-        private readonly IAppUOW _uow;
+        private readonly IAppBLL _bll;
 
-        public CoursesController(AppDbContext context, IAppUOW uow)
+        public CoursesController(AppDbContext context, IAppBLL bll)
         {
             _context = context;
-            _uow = uow;
+            _bll = bll;
         }
 
         // GET: api/Courses
         [HttpGet]
-        public async Task<List<CourseDto>> GetCourses()
+        public async Task<List<CourseBLLDto>> GetCourses()
         {
-            return (await _uow.CourseRepository.AllAsync(User.GetUserId())).ToList();
+            return (await _bll.CourseService.AllAsync(User.GetUserId())).ToList();
         }
 
         // GET: api/Courses/5
