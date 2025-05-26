@@ -227,9 +227,18 @@ public class AccountController : ControllerBase
             return BadRequest(new Message($"Cant parse the token, {e.Message}"));
         }
         
-        // ToDo: validate token signature
+        // validate token signature
         // validate jwt, ignore expiration date
         // https://stackoverflow.com/questions/49407749/jwt-token-validation-in-asp-net
+        if (!IdentityExtensions.ValidateJwt(
+                refreshTokenModel.JWT,
+                _configuration.GetValue<string>("JWTSecurity:Key")!,
+                _configuration.GetValue<string>("JWTSecurity:Issuer")!,
+                _configuration.GetValue<string>("JWTSecurity:Audience")!
+            ))
+        {
+            return BadRequest(new Message("JWT validation failed"));
+        }
         
         var userEmail = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
 

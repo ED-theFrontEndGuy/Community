@@ -37,4 +37,32 @@ public static class IdentityExtensions
         
         return JWTSecurityTokenHandler.WriteToken(token);
     }
+
+    public static bool ValidateJwt(string jwt, string key, string issuer, string audience)
+    {
+        var validateParams = new TokenValidationParameters()
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = issuer,
+            ValidateIssuer = true,
+
+            ValidAudience = audience,
+            ValidateAudience = true,
+
+            ValidateLifetime = true
+        };
+
+        try
+        {
+            new JwtSecurityTokenHandler().ValidateToken(jwt, validateParams, out _);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+        
+        return true;
+    }
 }
