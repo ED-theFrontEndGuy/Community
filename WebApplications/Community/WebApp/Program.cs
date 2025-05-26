@@ -7,12 +7,16 @@ using App.DAL.EF;
 using App.DAL.EF.Repositories;
 using App.DAL.Interfaces;
 using App.Domain.Identity;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using WebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -126,7 +130,31 @@ builder.Services.AddCors(options =>
     });
 });
 
+var apiVersioningBuilder = builder.Services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+    // in case of no explicit version
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+});
+
+apiVersioningBuilder.AddApiExplorer(options =>
+{
+    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+    // note: the specified format code will format the version as "'v'major[.minor][-status]"
+    options.GroupNameFormat = "'v'VVV";
+
+    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+    // can also be used to control the format of the API version in route templates
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen();
+
+// ============================================================================================================
 var app = builder.Build();
+// ============================================================================================================
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -148,6 +176,21 @@ app.UseRouting();
 
 // CORS
 app.UseCors("CorsAllowAll");
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+    foreach ( var description in provider.ApiVersionDescriptions )
+    {
+        options.SwaggerEndpoint(
+            $"/swagger/{description.GroupName}/swagger.json",
+            description.GroupName.ToUpperInvariant()
+        );
+    }
+    // serve from root
+    // options.RoutePrefix = string.Empty;
+});
 
 app.UseAuthorization();
 

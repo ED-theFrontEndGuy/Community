@@ -4,6 +4,7 @@ using App.DAL.EF;
 using App.Domain.Identity;
 using App.DTO;
 using App.DTO.Identity;
+using Asp.Versioning;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -13,8 +14,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.ApiControllers.Identity;
 
-[Route("api/[controller]/[action]")]
 [ApiController]
+[ApiVersion("1")]
+[Route("api/v{version:apiVersion}/[controller]/[action]")]
 public class AccountController : ControllerBase
 {
     private readonly IConfiguration _configuration;
