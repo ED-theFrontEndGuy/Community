@@ -1,10 +1,10 @@
 using App.DAL.DTO;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 using App.Domain;
 
 namespace App.DAL.EF.Mappers;
 
-public class AssignmentUOWMapper : IUOWMapper<AssignmentDto, Assignment>
+public class AssignmentUOWMapper : IMapper<AssignmentDto, Assignment>
 {
     public AssignmentDto? Map(Assignment? entity)
     {

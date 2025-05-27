@@ -1,10 +1,10 @@
 using App.BLL.DTO;
 using App.DAL.DTO;
-using Base.BLL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Mappers;
 
-public class StudySessionBLLMapper : IBLLMapper<StudySessionBLLDto, StudySessionDto>
+public class StudySessionBLLMapper : IMapper<StudySessionBLLDto, StudySessionDto>
 {
     public StudySessionBLLDto? Map(StudySessionDto? entity)
     {

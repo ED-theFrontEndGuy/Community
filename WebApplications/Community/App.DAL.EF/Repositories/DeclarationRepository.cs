@@ -20,12 +20,12 @@ public class DeclarationRepository : BaseRepository<DeclarationDto, Declaration>
             .Include(ua => ua.User)
             .Where(ua => ua.UserId == userId)
             .ToListAsync())
-            .Select(e => UOWMapper.Map(e)!);
+            .Select(e => Mapper.Map(e)!);
     }
     
     public override async Task<DeclarationDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return UOWMapper.Map(await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(d => d.Course)
             .Include(d => d.User)
             .Where(d => d.Id == id && d.UserId == userId)

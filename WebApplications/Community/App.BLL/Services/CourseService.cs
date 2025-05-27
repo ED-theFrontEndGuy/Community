@@ -3,8 +3,7 @@ using App.BLL.Interfaces;
 using App.DAL.DTO;
 using App.DAL.Interfaces;
 using Base.BLL;
-using Base.BLL.Interfaces;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Services;
 
@@ -12,7 +11,7 @@ public class CourseService : BaseService<CourseBLLDto, CourseDto, ICourseReposit
 {
     public CourseService(
         IAppUOW serviceUOW,
-        IBLLMapper<CourseBLLDto, CourseDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.CourseRepository, bllMapper)
+        IMapper<CourseBLLDto, CourseDto, Guid> mapper) : base(serviceUOW, serviceUOW.CourseRepository, mapper)
     {
     }
 }

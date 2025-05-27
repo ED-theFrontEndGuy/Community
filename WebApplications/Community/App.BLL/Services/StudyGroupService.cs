@@ -3,8 +3,7 @@ using App.BLL.Interfaces;
 using App.DAL.DTO;
 using App.DAL.Interfaces;
 using Base.BLL;
-using Base.BLL.Interfaces;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Services;
 
@@ -12,7 +11,7 @@ public class StudyGroupService : BaseService<StudyGroupBLLDto, StudyGroupDto, IS
 {
     public StudyGroupService(
         IAppUOW serviceUOW,
-        IBLLMapper<StudyGroupBLLDto, StudyGroupDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.StudyGroupRepository, bllMapper)
+        IMapper<StudyGroupBLLDto, StudyGroupDto, Guid> mapper) : base(serviceUOW, serviceUOW.StudyGroupRepository, mapper)
     {
     }
 }

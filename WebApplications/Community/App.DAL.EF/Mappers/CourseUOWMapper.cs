@@ -1,10 +1,10 @@
 using App.DAL.DTO;
 using App.Domain;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class CourseUOWMapper : IUOWMapper<CourseDto, Course>
+public class CourseUOWMapper : IMapper<CourseDto, Course>
 {
     public CourseDto? Map(Course? entity)
     {

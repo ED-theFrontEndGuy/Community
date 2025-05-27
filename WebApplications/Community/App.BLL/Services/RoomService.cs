@@ -3,8 +3,7 @@ using App.BLL.Interfaces;
 using App.DAL.DTO;
 using App.DAL.Interfaces;
 using Base.BLL;
-using Base.BLL.Interfaces;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Services;
 
@@ -12,7 +11,7 @@ public class RoomService : BaseService<RoomBLLDto, RoomDto, IRoomRepository>, IR
 {
     public RoomService(
         IAppUOW serviceUOW, 
-        IBLLMapper<RoomBLLDto, RoomDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.RoomRepository, bllMapper)
+        IMapper<RoomBLLDto, RoomDto, Guid> mapper) : base(serviceUOW, serviceUOW.RoomRepository, mapper)
     {
     }
 }

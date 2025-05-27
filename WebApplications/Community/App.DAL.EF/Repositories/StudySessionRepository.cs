@@ -19,12 +19,12 @@ public class StudySessionRepository : BaseRepository<StudySessionDto, StudySessi
             .Include(s => s.Assignment)
             .Include(s => s.Room)
             .ToListAsync())
-            .Select(e => UOWMapper.Map(e)!);
+            .Select(e => Mapper.Map(e)!);
     }
 
     public override async Task<StudySessionDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return UOWMapper.Map(await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(s => s.Assignment)
             .Include(s => s.Room)
             .Where(s => s.Id == id)

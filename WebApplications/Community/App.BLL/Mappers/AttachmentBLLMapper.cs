@@ -1,10 +1,11 @@
 using App.BLL.DTO;
 using App.DAL.DTO;
 using Base.BLL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Mappers;
 
-public class AttachmentBLLMapper : IBLLMapper<AttachmentBLLDto, AttachmentDto>
+public class AttachmentBLLMapper : IMapper<AttachmentBLLDto, AttachmentDto>
 {
     public AttachmentBLLDto? Map(AttachmentDto? entity)
     {

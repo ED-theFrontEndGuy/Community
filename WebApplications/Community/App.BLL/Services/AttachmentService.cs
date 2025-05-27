@@ -3,8 +3,7 @@ using App.BLL.Interfaces;
 using App.DAL.DTO;
 using App.DAL.Interfaces;
 using Base.BLL;
-using Base.BLL.Interfaces;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Services;
 
@@ -12,7 +11,7 @@ public class AttachmentService : BaseService<AttachmentBLLDto, AttachmentDto, IA
 {
     public AttachmentService(
         IAppUOW serviceUOW,
-        IBLLMapper<AttachmentBLLDto, AttachmentDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.AttachmentRepository, bllMapper)
+        IMapper<AttachmentBLLDto, AttachmentDto, Guid> mapper) : base(serviceUOW, serviceUOW.AttachmentRepository, mapper)
     {
     }
 }

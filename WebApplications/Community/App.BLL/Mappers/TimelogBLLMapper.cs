@@ -1,10 +1,10 @@
 using App.BLL.DTO;
 using App.DAL.DTO;
-using Base.BLL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Mappers;
 
-public class TimelogBLLMapper : IBLLMapper<TimelogBLLDto, TimelogDto>
+public class TimelogBLLMapper : IMapper<TimelogBLLDto, TimelogDto>
 {
     public TimelogBLLDto? Map(TimelogDto? entity)
     {

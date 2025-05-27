@@ -3,8 +3,7 @@ using App.BLL.Interfaces;
 using App.DAL.DTO;
 using App.DAL.Interfaces;
 using Base.BLL;
-using Base.BLL.Interfaces;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Services;
 
@@ -12,7 +11,7 @@ public class TimelogService : BaseService<TimelogBLLDto, TimelogDto, ITimelogRep
 {
     public TimelogService(
         IAppUOW serviceUOW,
-        IBLLMapper<TimelogBLLDto, TimelogDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.TimelogRepository, bllMapper)
+        IMapper<TimelogBLLDto, TimelogDto, Guid> mapper) : base(serviceUOW, serviceUOW.TimelogRepository, mapper)
     {
     }
 }

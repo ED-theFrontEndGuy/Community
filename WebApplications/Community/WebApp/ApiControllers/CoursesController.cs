@@ -1,8 +1,6 @@
 using App.BLL.DTO;
 using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
 using App.Domain;
 using Asp.Versioning;
 using Base.Helpers;
@@ -50,7 +48,7 @@ namespace WebApp.ApiControllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CourseBLLDto>> GetCourse(Guid id)
         {
-            var course = await _bll.CourseService.FindAsync(id);
+            var course = await _bll.CourseService.FindAsync(id, User.GetUserId());
 
             if (course == null)
             {

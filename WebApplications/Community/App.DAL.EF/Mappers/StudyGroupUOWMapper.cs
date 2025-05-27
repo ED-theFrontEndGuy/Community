@@ -1,10 +1,10 @@
 using App.DAL.DTO;
 using App.Domain;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class StudyGroupUOWMapper : IUOWMapper<StudyGroupDto, StudyGroup>
+public class StudyGroupUOWMapper : IMapper<StudyGroupDto, StudyGroup>
 {
     public StudyGroupDto? Map(StudyGroup? entity)
     {

@@ -21,12 +21,12 @@ public class TimelogRepository : BaseRepository<TimelogDto, Timelog>, ITimelogRe
             .Include(t => t.Assignment)
             .Where(t => t.Declaration!.UserId == userId)
             .ToListAsync())
-            .Select(e => UOWMapper.Map(e)!);
+            .Select(e => Mapper.Map(e)!);
     }
 
     public override async Task<TimelogDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return UOWMapper.Map(await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(t => t.Declaration)
             .ThenInclude(d => d!.Course)
             .Include(t => t.Assignment)

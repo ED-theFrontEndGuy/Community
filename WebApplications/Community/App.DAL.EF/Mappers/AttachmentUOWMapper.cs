@@ -1,10 +1,10 @@
 using App.DAL.DTO;
 using App.Domain;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class AttachmentUOWMapper : IUOWMapper<AttachmentDto, Attachment>
+public class AttachmentUOWMapper : IMapper<AttachmentDto, Attachment>
 {
     public AttachmentDto? Map(Attachment? entity)
     {
