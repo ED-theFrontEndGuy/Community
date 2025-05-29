@@ -1,3 +1,4 @@
+import { ILoginDto } from '@/types/DTOs/ILoginDto';
 import axios from 'axios';
 
 // run once to set up the axios instance
@@ -23,6 +24,54 @@ axiosInstance.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+axiosInstance.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+
+	async (error) => {
+		const originalRequest = error.config;
+		console.log(error.response);
+		console.log(error.response.status);
+		console.log(!originalRequest._retry);
+
+
+		if (error.response && error.response.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+
+			try{
+				const jwt = localStorage.getItem("_jwt");
+				const refreshToken = localStorage.getItem("_refreshToken");
+				const response = await axios.post<ILoginDto>(
+					"http://localhost:5269/api/v1/account/renewRefreshToken?jwtExpiresInSeconds=5",
+					{
+						jwt: jwt,
+						refreshToken: refreshToken,
+					}
+				);
+
+				console.log("renewRefreshToken", response);
+
+
+				if (response && response.status <= 300) {
+					localStorage.setItem("_jwt", response.data.jwt);
+					localStorage.setItem("_refreshToken", response.data.refreshToken);
+					originalRequest.headers.Authorization = `Beaer ${response.data.jwt}`;
+
+					return axiosInstance(originalRequest);
+				}
+
+				return Promise.reject(error);
+			} catch (error) {
+				console.log("Error refreshing token:", error);
+				return Promise.reject(error);
+			}
+		}
+
 		return Promise.reject(error);
 	}
 );

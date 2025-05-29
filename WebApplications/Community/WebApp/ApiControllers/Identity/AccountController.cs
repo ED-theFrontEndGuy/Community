@@ -171,8 +171,8 @@ public class AccountController : ControllerBase
             return NotFound(new Message(UserPassProblem));
         }
         
-        // await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.GivenName, appUser.FirstName));
-        // await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Surname, appUser.LastName));
+        await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.GivenName, appUser.FirstName));
+        await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Surname, appUser.LastName));
         
         var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(appUser);
         
@@ -279,8 +279,8 @@ public class AccountController : ControllerBase
             return NotFound($"User with email {userEmail} not found");
         }
         
-        // await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.GivenName, appUser.FirstName));
-        // await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Surname, appUser.LastName));
+        await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.GivenName, appUser.FirstName));
+        await _userManager.AddClaimAsync(appUser, new Claim(ClaimTypes.Surname, appUser.LastName));
 
         // load and compare refresh tokens
         await _context.Entry(appUser).Collection(u => u.AppRefreshTokens!)
