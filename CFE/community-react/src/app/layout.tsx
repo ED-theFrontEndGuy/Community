@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "./globals.css";
 import BootstrapActivation from '@/helpers/BootstrapActivation';
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { AccountContext, IAccountInfo } from "@/context/AccountContext";
 import { useState } from "react";
 
@@ -48,7 +47,6 @@ export default function RootLayout({
 							{children}
 						</main>
 					</div>
-					< Footer />
 					<BootstrapActivation />
 				</AccountContext.Provider>
 			</body>
