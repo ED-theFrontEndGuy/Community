@@ -1,12 +1,16 @@
 "use client";
 
 import { useForm, SubmitHandler } from "react-hook-form"
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AccountService } from "@/services/AccountService";
+import { AccountContext } from "@/context/AccountContext";
 
 export default function Login() {
+	const [errorMessage, setErrorMessage] = useState("");
 	const accountService = new AccountService();
+	const { setAccountInfo } = useContext(AccountContext);
+	const router = useRouter();
 
 	type Inputs = {
 		email: string;
@@ -36,19 +40,18 @@ export default function Login() {
 				return;
 			}
 
-			setErrorMessage(JSON.stringify(result.data));
+			setErrorMessage("");
 
-			// TODO: save jwt
+			setAccountInfo!({
+				jwt: result.data!.jwt,
+				refreshToken: result.data!.refreshToken
+			});
 
-			// TODO: navigate to home
-
+			router.push("/");
 		} catch (error) {
 			setErrorMessage("Login failed - " + (error as Error).message);
 		}
 	};
-
-	const [errorMessage, setErrorMessage] = useState("");
-	// const router = useRouter();
 
 	return (
 		<div className="row">
@@ -56,7 +59,7 @@ export default function Login() {
 			<div className="col-4">
 
 				{ errorMessage }
-				
+
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<h2>Login</h2>
 					<hr />

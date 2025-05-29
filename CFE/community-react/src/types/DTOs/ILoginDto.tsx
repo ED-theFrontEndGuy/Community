@@ -1,4 +1,4 @@
 export interface ILoginDto {
-  email: string;
-  password: string;
+  jwt: string;
+  refreshToken: string;
 }
