@@ -1,8 +1,11 @@
+import { AccountContext } from '@/context/AccountContext';
 import { ILoginDto } from '@/types/DTOs/ILoginDto';
 import axios, { AxiosInstance } from 'axios';
+import { useContext } from 'react';
 
 export abstract class BaseService {
 	protected axiosInstance: AxiosInstance;
+	protected setAccountInfo = useContext(AccountContext).setAccountInfo;
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -45,7 +48,7 @@ export abstract class BaseService {
 						const jwt = localStorage.getItem("_jwt");
 						const refreshToken = localStorage.getItem("_refreshToken");
 						const response = await axios.post<ILoginDto>(
-							"http://localhost:5269/api/v1/account/renewRefreshToken?jwtExpiresInSeconds=5",
+							"http://localhost:5269/api/v1/account/renewRefreshToken",
 							{
 								jwt: jwt,
 								refreshToken: refreshToken,
@@ -59,6 +62,11 @@ export abstract class BaseService {
 							localStorage.setItem("_jwt", response.data.jwt);
 							localStorage.setItem("_refreshToken", response.data.refreshToken);
 							originalRequest.headers.Authorization = `Beaer ${response.data.jwt}`;
+
+							this.setAccountInfo!({
+								jwt: response.data.jwt,
+								refreshToken: response.data.refreshToken,
+							})
 
 							return this.axiosInstance(originalRequest);
 						}
