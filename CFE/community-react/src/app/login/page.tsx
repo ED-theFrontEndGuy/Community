@@ -7,9 +7,9 @@ import { AccountService } from "@/services/AccountService";
 import { AccountContext } from "@/context/AccountContext";
 
 export default function Login() {
-	const [errorMessage, setErrorMessage] = useState("");
 	const accountService = new AccountService();
 	const { setAccountInfo } = useContext(AccountContext);
+	const [errorMessage, setErrorMessage] = useState("");
 	const router = useRouter();
 
 	type Inputs = {

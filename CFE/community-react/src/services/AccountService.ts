@@ -1,4 +1,4 @@
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { BaseService } from './BaseService';
 import { ILoginDto } from '@/types/DTOs/ILoginDto';
 import { IResultObject } from '@/types/DTOs/IResultObject';

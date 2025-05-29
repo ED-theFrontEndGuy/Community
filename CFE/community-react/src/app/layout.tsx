@@ -28,16 +28,20 @@ export default function RootLayout({
 }>) {
 	const [accountInfo, setAccountInfo] = useState<IAccountInfo | undefined>();
 
+	const updateAccountInfo = (value: IAccountInfo) => {
+		setAccountInfo(value);
+		localStorage.setItem("_jwt", value.jwt!);
+		localStorage.setItem("_refreshToken", value.refreshToken!);
+	}
+
 	return (
 		<html lang="en">
 			<body>
 				<AccountContext.Provider value={{
 					accountInfo: accountInfo,
-					setAccountInfo: setAccountInfo,
+					setAccountInfo: updateAccountInfo,
 				}}>
 					< Header />
-
-					{accountInfo?.jwt}
 
 					<div className="container">
 						<main role="main" className="pb-3">
