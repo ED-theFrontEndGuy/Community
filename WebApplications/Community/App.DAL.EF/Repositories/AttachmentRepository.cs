@@ -18,12 +18,12 @@ public class AttachmentRepository : BaseRepository<AttachmentDto, Attachment>, I
         return (await RepositoryDbSet
             .Include(a => a.Assignment)
             .ToListAsync())
-            .Select(e => UOWMapper.Map(e)!);
+            .Select(e => Mapper.Map(e)!);
     }
 
     public override async Task<AttachmentDto?> FindAsync(Guid id, Guid userid = default)
     {
-        return UOWMapper.Map(await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(a => a.Assignment)
             .FirstOrDefaultAsync());
     }

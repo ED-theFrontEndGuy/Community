@@ -1,10 +1,10 @@
 using App.DAL.DTO;
 using App.Domain;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class StudySessionUOWMapper : IUOWMapper<StudySessionDto, StudySession>
+public class StudySessionUOWMapper : IMapper<StudySessionDto, StudySession>
 {
     public StudySessionDto? Map(StudySession? entity)
     {

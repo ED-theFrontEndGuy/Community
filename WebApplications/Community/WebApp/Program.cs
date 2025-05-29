@@ -70,7 +70,7 @@ builder.Services
         {
             // for dev environment without https
             options.RequireHttpsMetadata = false;
-            options.SaveToken = false;
+            // options.SaveToken = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidIssuer = builder.Configuration["JWTSecurity:Issuer"],

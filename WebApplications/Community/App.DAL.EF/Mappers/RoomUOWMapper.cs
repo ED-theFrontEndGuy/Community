@@ -1,10 +1,9 @@
 using App.DAL.DTO;
 using App.Domain;
-
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 namespace App.DAL.EF.Mappers;
 
-public class RoomUOWMapper : IUOWMapper<RoomDto, Room>
+public class RoomUOWMapper : IMapper<RoomDto, Room>
 {
     public RoomDto? Map(Room? entity)
     {

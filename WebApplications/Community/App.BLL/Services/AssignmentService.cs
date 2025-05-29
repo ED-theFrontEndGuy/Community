@@ -3,7 +3,7 @@ using App.BLL.Interfaces;
 using App.DAL.DTO;
 using App.DAL.Interfaces;
 using Base.BLL;
-using Base.BLL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Services;
 
@@ -11,7 +11,7 @@ public class AssignmentService : BaseService<AssignmentBLLDto, AssignmentDto, IA
 {
     public AssignmentService(
         IAppUOW serviceUOW, 
-        IBLLMapper<AssignmentBLLDto, AssignmentDto, Guid> bllMapper) : base(serviceUOW, serviceUOW.AssignmentRepository, bllMapper)
+        IMapper<AssignmentBLLDto, AssignmentDto, Guid> mapper) : base(serviceUOW, serviceUOW.AssignmentRepository, mapper)
     {
     }
 } 

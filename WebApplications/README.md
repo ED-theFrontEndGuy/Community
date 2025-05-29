@@ -1,7 +1,7 @@
 Migrations
 ~~~sh
 dotnet ef migrations add InitialCreate
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate2
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
 dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AddNewAdditionalColumns

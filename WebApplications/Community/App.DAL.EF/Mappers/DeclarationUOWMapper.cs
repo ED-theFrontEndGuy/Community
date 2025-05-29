@@ -1,10 +1,10 @@
 using App.DAL.DTO;
 using App.Domain;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class DeclarationUOWMapper : IUOWMapper<DeclarationDto, Declaration>
+public class DeclarationUOWMapper : IMapper<DeclarationDto, Declaration>
 {
     public DeclarationDto? Map(Declaration? entity)
     {

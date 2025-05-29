@@ -28,6 +28,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/swagger">Api</a>
+                    </li>
+
                     @if (User.Identity?.IsAuthenticated ?? false)
                     {
                         <li class="nav-item">
@@ -74,8 +78,9 @@
     <div class="container">
         <!--ToDo rewatch this spot from lecture -->
         @* &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common</a> *@
-        &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common.Privacy</a>
-        @Thread.CurrentThread.CurrentCulture.Name | @Thread.CurrentThread.CurrentUICulture.Name
+        &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common.Privacy</a> | 
+        <a href="/swagger">Api</a>
+        @Thread.CurrentThread.CurrentCulture.Name | @Thread.CurrentThread.CurrentUICulture.Name 
     </div>
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

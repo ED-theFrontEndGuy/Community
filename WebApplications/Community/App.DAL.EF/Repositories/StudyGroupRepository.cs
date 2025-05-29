@@ -21,12 +21,12 @@ public class StudyGroupRepository : BaseRepository<StudyGroupDto, StudyGroup>, I
             .ThenInclude(sgu => sgu.User)
             .Where(s => s.StudyGroupUsers!.Any(sgu => sgu.UserId == userId))
             .ToListAsync())
-            .Select(e => UOWMapper.Map(e)!);
+            .Select(e => Mapper.Map(e)!);
     }
 
     public override async Task<StudyGroupDto?> FindAsync(Guid id, Guid userId = default)
     {
-        return UOWMapper.Map(await RepositoryDbSet
+        return Mapper.Map(await RepositoryDbSet
             .Include(s => s.StudySession)
             .Include(s => s.StudyGroupUsers)
             .ThenInclude(sgu => sgu.User)

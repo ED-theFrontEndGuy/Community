@@ -1,10 +1,10 @@
 using App.BLL.DTO;
 using App.DAL.DTO;
-using Base.BLL.Interfaces;
+using Base.Interfaces;
 
 namespace App.BLL.Mappers;
 
-public class RoomBLLMapper : IBLLMapper<RoomBLLDto, RoomDto>
+public class RoomBLLMapper : IMapper<RoomBLLDto, RoomDto>
 {
     public RoomBLLDto? Map(RoomDto? entity)
     {

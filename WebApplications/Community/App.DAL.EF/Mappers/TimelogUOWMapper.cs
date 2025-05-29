@@ -1,10 +1,10 @@
 using App.DAL.DTO;
 using App.Domain;
-using Base.DAL.Interfaces;
+using Base.Interfaces;
 
 namespace App.DAL.EF.Mappers;
 
-public class TimelogUOWMapper : IUOWMapper<TimelogDto, Timelog>
+public class TimelogUOWMapper : IMapper<TimelogDto, Timelog>
 {
     public TimelogDto? Map(Timelog? entity)
     {
