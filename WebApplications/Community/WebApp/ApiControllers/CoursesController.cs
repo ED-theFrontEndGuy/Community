@@ -42,21 +42,13 @@ namespace WebApp.ApiControllers
         }
 
         /// <summary>
-        // /// Get course by id
-        // /// </summary>
-        // /// <param name="id"></param>
-        // /// <returns></returns>
+        /// Get course by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<App.DTO.v1.Course>> GetCourse(Guid id)
         {
-            // var person = await _bll.PersonService.FindAsync(id, User.GetUserId());
-            //
-            // if (person == null)
-            // {
-            //     return NotFound();
-            // }
-            //
-            // return _mapper.Map(person)!;
             var course = await _bll.CourseService.FindAsync(id, User.GetUserId());
 
             if (course == null)
@@ -107,10 +99,10 @@ namespace WebApp.ApiControllers
         }
 
         /// <summary>
-        // /// Delete course by id - global
-        // /// </summary>
-        // /// <param name="id"></param>
-        // /// <returns></returns>
+        /// Delete course by id - global
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
