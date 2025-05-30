@@ -31,7 +31,7 @@ export default function Header() {
 									<Link className="nav-link text-dark" href="/timelog">Timelogs</Link>
 								</li>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/attachment">Attachments</Link>
+									<Link className="nav-link text-dark" href="/attachments">Attachments</Link>
 								</li>
 								<li className="nav-item">
 									<Link className="nav-link text-dark" href="/assignment">Assignments</Link>

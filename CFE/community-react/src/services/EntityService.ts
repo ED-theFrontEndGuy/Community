@@ -21,7 +21,6 @@ export abstract class EntityService<TEntity extends IDomainId, TAddEntity> exten
 				}
 			} else {
 				console.log(response.status);
-
 			}
 
 			return {
