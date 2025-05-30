@@ -59,11 +59,10 @@ export default function Login() {
 			<div className="col-4"></div>
 			<div className="col-4">
 
-				{ errorMessage }
+				{errorMessage}
 
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<h2>Login</h2>
-					<hr />
+
 					<div asp-validation-summary="ModelOnly" className="text-danger" role="alert"></div>
 					<div className="form-floating mb-3">
 						<input
@@ -97,9 +96,11 @@ export default function Login() {
 						}
 					</div>
 					<div>
-						<button id="login-submit" type="submit" className="w-100 btn btn-lg btn-primary">Log in</button>
+						<button id="login-submit" type="submit" className="w-100 btn btn-lg btn-dark">Log in</button>
 					</div>
-					<Link href="/register">Register</Link>
+					<Link href="/register" className="link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover mt-2">
+						Register
+					</Link>
 				</form>
 			</div>
 		</div>

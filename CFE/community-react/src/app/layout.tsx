@@ -36,19 +36,20 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<AccountContext.Provider value={{
-					accountInfo: accountInfo,
-					setAccountInfo: updateAccountInfo,
-				}}>
-					< Header />
-
-					<div className="container">
-						<main role="main" className="pb-3">
-							{children}
-						</main>
-					</div>
-					<BootstrapActivation />
-				</AccountContext.Provider>
+				<div className={!accountInfo?.jwt ? "content" : ""}>
+					<AccountContext.Provider value={{
+						accountInfo: accountInfo,
+						setAccountInfo: updateAccountInfo,
+					}}>
+						<Header />
+						<div className="container">
+							<main role="main" className="pb-3">
+								{children}
+							</main>
+						</div>
+						<BootstrapActivation />
+					</AccountContext.Provider>
+				</div>
 			</body>
 		</html>
 	);
