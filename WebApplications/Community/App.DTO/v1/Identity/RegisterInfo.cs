@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace App.DTO.Identity;
+namespace App.DTO.v1.Identity;
 
 public class RegisterInfo
 {
