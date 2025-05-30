@@ -11,6 +11,4 @@ public class AttachmentCreate
     public string Description { get; set; } = default!;
 
     public Guid AssignmentId { get; set; }
-    
-    public string AssignmentName { get; set; } = default!;
 }
