@@ -1,4 +1,4 @@
-namespace App.DTO;
+namespace App.DTO.v1;
 
 public class Message
 {

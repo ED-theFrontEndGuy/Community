@@ -20,11 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\App.BLL.DTO\App.BLL.DTO.csproj" />
       <ProjectReference Include="..\Base.Interfaces\Base.Interfaces.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="v1\Mappers\" />
     </ItemGroup>
 
 </Project>

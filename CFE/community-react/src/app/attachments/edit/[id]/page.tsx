@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { use, useContext, useEffect, useState } from "react";
-import { CourseService } from "@/services/CourseService";
-import { ICourse } from "@/types/domain/ICourse";
+import { AttachmentService } from "@/services/AttachmentService";
+import { IAttachment } from "@/types/domain/IAttachment";
 import { useForm, SubmitHandler, set } from "react-hook-form"
 import { useRouter } from 'next/navigation'
 import { AccountContext } from "@/context/AccountContext";
@@ -22,10 +22,12 @@ export default function CourseEdit({ params }: { params: Promise<{ id: string }>
 
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const courseService = new CourseService();
+	const attachmentService = new AttachmentService();
 
 	type Inputs = {
-		name: string
+		link: string;
+		description: string;
+		assignmentId: string;
 	}
 
 	const {
@@ -34,13 +36,17 @@ export default function CourseEdit({ params }: { params: Promise<{ id: string }>
 		formState: { errors },
 	} = useForm<Inputs>({
 		defaultValues: async () => {
-			const result = await courseService.getAsync(id);
+			const result = await attachmentService.getAsync(id);
 			if (result.errors && result.errors.length > 0) {
 				setErrorMessage(result.statusCode + " - " + result.errors.join(", "));
-				return { name: "" };
+				return { link: "", description: "", assignmentId: "" };
 			} else {
 				setErrorMessage("");
-				return { name: result.data!.name };
+				return {
+					link: result.data!.link,
+					description: result.data!.description,
+					assignmentId: result.data!.assignmentId
+				};
 			}
 		}
 	});
@@ -48,7 +54,11 @@ export default function CourseEdit({ params }: { params: Promise<{ id: string }>
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		setErrorMessage("Loading...");
 		try {
-			var result = await courseService.updateAsync({ id: id, name: data.name });
+			var result = await attachmentService.updateAsync({
+				link: data.link,
+				description: data.description,
+				assignmentId: data.assignmentId, id: id
+			});
 			console.log('edit result', result)
 
 			if (result.errors && result.errors.length > 0) {
@@ -57,7 +67,7 @@ export default function CourseEdit({ params }: { params: Promise<{ id: string }>
 			} else {
 				// login was ok, set state and redirect back to main list
 				setErrorMessage("");
-				router.push('/courses');
+				router.push('/attachments');
 			}
 
 		} catch (error) {
@@ -69,7 +79,7 @@ export default function CourseEdit({ params }: { params: Promise<{ id: string }>
 
 	return (
 		<>
-			<h4>Edit Course</h4>
+			<h4>Edit Attachment</h4>
 			<hr />
 			<div className="row">
 				<div className="col-md-4">
@@ -78,19 +88,41 @@ export default function CourseEdit({ params }: { params: Promise<{ id: string }>
 						{errorMessage.length > 0 && errorMessage}
 
 						<div className="form-group">
-							<label className="control-label" htmlFor="courseName">Name</label>
+							<label className="control-label" htmlFor="attachmentLink">Link</label>
 							<input
 								className="form-control"
 								type="text"
-								id="courseName"
+								id="attachmentLink"
 								maxLength={128}
-								placeholder="Name"
-								{...register("name", { required: true })}
+								placeholder="Link"
+								{...register("link", { required: true })}
 							/>
-							{errors.name &&
+							{errors.link &&
 								<span className="text-danger" >This field is required!</span>
 							}
 
+							<label className="control-label" htmlFor="attachmentDescription">Description</label>
+							<input
+								className="form-control"
+								type="text"
+								id="attachmentDescription"
+								maxLength={128}
+								placeholder="Description"
+								{...register("description", { required: true })}
+							/>
+
+							<label className="control-label" htmlFor="attachmentAssignmentId">AssignmentId</label>
+							<input
+								className="form-control"
+								type="text"
+								id="attachmentAssignmentId"
+								maxLength={128}
+								placeholder="Assignment"
+								{...register("assignmentId", { required: true })}
+							/>
+							{errors.assignmentId &&
+								<span className="text-danger" >This field is required!</span>
+							}
 						</div>
 
 						<div className="form-group">

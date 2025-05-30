@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { use, useContext, useEffect, useState } from "react";
-import { CourseService } from "@/services/CourseService";
-import { ICourse } from "@/types/domain/ICourse";
+import { AttachmentService } from "@/services/AttachmentService";
+import { IAttachment } from "@/types/domain/IAttachment";
 import { useForm, SubmitHandler, set } from "react-hook-form"
 import { useRouter } from 'next/navigation'
 import { AccountContext } from "@/context/AccountContext";
@@ -22,13 +22,13 @@ export default function CourseDelete({ params }: { params: Promise<{ id: string 
 
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const courseService = new CourseService();
+	const attachmentService = new AttachmentService();
 
-	const [data, setData] = useState<ICourse>();
+	const [data, setData] = useState<IAttachment>();
 
 	const deleteConfirmed = async () => {
 		try {
-			var result = await courseService.deleteAsync(id);
+			var result = await attachmentService.deleteAsync(id);
 
 			console.log('delete result', result)
 
@@ -38,13 +38,12 @@ export default function CourseDelete({ params }: { params: Promise<{ id: string 
 			} else {
 				// login was ok, set state and redirect back to main list
 				setErrorMessage("");
-				router.push('/courses');
+				router.push('/attachments');
 			}
 
 		} catch (error) {
 			console.log('error: ', (error as Error).message)
 			setErrorMessage((error as Error).message);
-
 		}
 	}
 
@@ -53,7 +52,7 @@ export default function CourseDelete({ params }: { params: Promise<{ id: string 
 		if (!accountInfo?.jwt) {
 			router.push('/login');
 		} else {
-			const fetchData = async () => { setData((await courseService.getAsync(id)).data!) };
+			const fetchData = async () => { setData((await attachmentService.getAsync(id)).data!) };
 			fetchData();
 		}
 	}, []);
@@ -64,7 +63,7 @@ export default function CourseDelete({ params }: { params: Promise<{ id: string 
 
 	return (
 		<div>
-			<h4>Delete Course</h4>
+			<h4>Delete Attachment</h4>
 			<h3>Are you sure you want to delete this?</h3>
 			<hr />
 
@@ -72,14 +71,26 @@ export default function CourseDelete({ params }: { params: Promise<{ id: string 
 
 			<dl className="row">
 				<dt className="col-sm-2">
-					Name
+					Link
 				</dt>
-				<dd className="col-sm-10">
-					{data.name}
+				<dd className="col-sm-4">
+					{data.link}
+				</dd>
+				<dt className="col-sm-2">
+					Link
+				</dt>
+				<dd className="col-sm-4">
+					{data.description}
+				</dd>
+				<dt className="col-sm-2">
+					Link
+				</dt>
+				<dd className="col-sm-2">
+					{data.assignmentId}
 				</dd>
 			</dl>
 
-			<button onClick={() => deleteConfirmed()} type="button" value="Delete" title="Delete" className="btn btn-danger">Delete</button> | <Link href="/courses">Cancel</Link>
+			<button onClick={() => deleteConfirmed()} type="button" value="Delete" title="Delete" className="btn btn-danger">Delete</button> | <Link href="/attachments">Cancel</Link>
 
 		</div>
 

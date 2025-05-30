@@ -12,67 +12,67 @@ namespace WebApp.ApiControllers
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class CoursesController : ControllerBase
+    public class TimelogsController : ControllerBase
     {
         private readonly ILogger<CoursesController> _logger;
         private readonly IAppBLL _bll;
-        private readonly CourseMapper _mapper = new CourseMapper();
+        private readonly TimelogMapper _mapper = new TimelogMapper();
 
-        public CoursesController(IAppBLL bll, ILogger<CoursesController> logger)
+        public TimelogsController(ILogger<CoursesController> logger, IAppBLL bll)
         {
-            _bll = bll;
             _logger = logger;
+            _bll = bll;
         }
 
         /// <summary>
-        /// Get all courses available
+        /// Get all timelogs available
         /// </summary>
-        /// <returns>List of courses</returns>
+        /// <returns>List of timelogs</returns>
         [HttpGet]
         [Produces( "application/json" )]
-        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Course> ), 200 )]
+        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Timelog> ), 200 )]
         [ProducesResponseType( 404 )]
-        public async Task<ActionResult<IEnumerable<App.DTO.v1.Course>>> GetCourses()
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Timelog>>> GetTimelogs()
         {
-            var data = await _bll.CourseService.AllAsync(User.GetUserId());
-            var res = data.Select(c => _mapper.Map(c)).ToList();
+            var data = await _bll.TimelogService.AllAsync(User.GetUserId());
+            var res = data.Select(t => _mapper.Map(t)).ToList();
 
             return res;
         }
 
         /// <summary>
-        /// Get course by id
+        /// Get timelog by id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>course</returns>
+        /// <returns>timelog</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<App.DTO.v1.Course>> GetCourse(Guid id)
+        public async Task<ActionResult<App.DTO.v1.Timelog>> GetTimelog(Guid id)
         {
-            var course = await _bll.CourseService.FindAsync(id, User.GetUserId());
+            var timelog = await _bll.TimelogService.FindAsync(id, User.GetUserId());
 
-            if (course == null)
+            if (timelog == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map(course)!;
+            return _mapper.Map(timelog)!;;
         }
 
         /// <summary>
-        /// Update course by id
+        /// Update timelog by id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="course"></param>
+        /// <param name="timelog"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(Guid id, App.DTO.v1.Course course)
+        public async Task<IActionResult> PutTimelog(Guid id, App.DTO.v1.Timelog timelog)
         {
-            if (id != course.Id)
+            if (id != timelog.Id)
             {
                 return BadRequest();
             }
 
-            await _bll.CourseService.UpdateAsync(_mapper.Map(course)!, User.GetUserId());
+            await _bll.TimelogService.UpdateAsync(_mapper.Map(timelog)!, User.GetUserId());
             await _bll.SaveChangesAsync();
 
             return NoContent();
@@ -84,30 +84,30 @@ namespace WebApp.ApiControllers
         /// <param name="course"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<App.DTO.v1.Course>> PostCourse(App.DTO.v1.CourseCreate course)
+        public async Task<ActionResult<App.DTO.v1.Timelog>> PostTimelog(App.DTO.v1.TimelogCreate timelog)
         {
-            var bllEntity = _mapper.Map(course);
-            _bll.CourseService.Add(bllEntity, User.GetUserId());
+            var bllEntity = _mapper.Map(timelog);
+            _bll.TimelogService.Add(bllEntity, User.GetUserId());
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourse", new
+            return CreatedAtAction("GetTimelog", new
             {
                 id = bllEntity.Id,
                 version = HttpContext.GetRequestedApiVersion()!.ToString()
-            }, course);
+            }, timelog);
         }
 
         /// <summary>
-        /// Delete course by id - global
+        /// Delete timelog by id - global
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(Guid id)
+        public async Task<IActionResult> DeleteTimelog(Guid id)
         {
-            await _bll.CourseService.RemoveAsync(id, User.GetUserId());
+            await _bll.TimelogService.RemoveAsync(id, User.GetUserId());
             await _bll.SaveChangesAsync();
-            
+
             return NoContent();
         }
     }

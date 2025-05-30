@@ -2,8 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using App.DAL.EF;
 using App.Domain.Identity;
-using App.DTO;
-using App.DTO.Identity;
+using App.DTO.v1;
+using App.DTO.v1.Identity;
 using Asp.Versioning;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -351,6 +351,10 @@ public class AccountController : ControllerBase
         return DateTime.UtcNow.AddSeconds(expiresInSeconds ?? 60);
     }
     
+    /// <summary>
+    /// Delete refresh token
+    /// </summary>
+    /// <returns></returns>
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(Message), StatusCodes.Status404NotFound)]

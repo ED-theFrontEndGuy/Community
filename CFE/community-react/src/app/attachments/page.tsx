@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { useEffect, useContext, useState } from "react";
 import { AccountContext } from "@/context/AccountContext";
-import { CourseService } from "@/services/CourseService"
+import { AttachmentService } from "@/services/AttachmentService"
 import { useRouter } from "next/navigation";
-import { ICourse } from "@/types/domain/ICourse";
+import { IAttachment } from "@/types/domain/IAttachment";
 
-export default function Course() {
+export default function Attachment() {
 
-	const courseService = new CourseService();
+	const attachmentService = new AttachmentService();
 	const { accountInfo } = useContext(AccountContext);
-	const [data, setData] = useState<ICourse[]>([]);
+	const [data, setData] = useState<IAttachment[]>([]);
 	const router = useRouter();
 
 	// -> useEffect runs after every render. Has access to state/prop variables.
@@ -24,7 +24,9 @@ export default function Course() {
 
 		const fetchData = async () => {
 			try {
-				const result = await courseService.getAllAsync();
+				const result = await attachmentService.getAllAsync();
+				console.log("result", result);
+
 
 				if (result.errors) {
 					console.log(result.errors);
@@ -41,34 +43,46 @@ export default function Course() {
 	}, []);
 
 	if (data.length === 0) {
-		return "Loading...";
+		return <>
+			<h1>Attachments</h1>
+
+			<p>
+				<Link href="/attachments/create">Create New attachment</Link>
+			</p>
+		</>;
 	}
 
 	return (
 		<>
-			<h1>Courses</h1>
+			<h1>Attachments</h1>
 
 			<p>
-				<Link href="/courses/create">Create New</Link>
+				<Link href="/attachments/create">Create New attachment</Link>
 			</p>
 			<table className="table">
 				<thead>
 					<tr>
 						<th>
-							Course Name
+							Link
+						</th>
+						<th>
+							Description
 						</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					{data.map((course) =>
-						<tr key={course.id}>
+					{data.map((attachment) =>
+						<tr key={attachment.id}>
 							<td>
-								{course.name}
+								{attachment.link}
 							</td>
 							<td>
-								<Link href={"/courses/edit/" + course.id}> Edit </Link> |
-								<Link href={"/courses/delete/" + course.id}> Delete </Link>
+								{attachment.description}
+							</td>
+							<td>
+								<Link href={"/attachments/edit/" + attachment.id}> Edit </Link> |
+								<Link href={"/attachments/delete/" + attachment.id}> Delete </Link>
 							</td>
 						</tr>
 					)}

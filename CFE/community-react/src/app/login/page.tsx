@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AccountService } from "@/services/AccountService";
 import { AccountContext } from "@/context/AccountContext";
+import Link from "next/link";
 
 export default function Login() {
 	const accountService = new AccountService();
@@ -98,6 +99,7 @@ export default function Login() {
 					<div>
 						<button id="login-submit" type="submit" className="w-100 btn btn-lg btn-primary">Log in</button>
 					</div>
+					<Link href="/register">Register</Link>
 				</form>
 			</div>
 		</div>

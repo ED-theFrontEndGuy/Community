@@ -12,102 +12,102 @@ namespace WebApp.ApiControllers
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class CoursesController : ControllerBase
+    public class RoomsController : ControllerBase
     {
         private readonly ILogger<CoursesController> _logger;
         private readonly IAppBLL _bll;
-        private readonly CourseMapper _mapper = new CourseMapper();
+        private readonly RoomMapper _mapper = new RoomMapper();
 
-        public CoursesController(IAppBLL bll, ILogger<CoursesController> logger)
+        public RoomsController(ILogger<CoursesController> logger, IAppBLL bll)
         {
-            _bll = bll;
             _logger = logger;
+            _bll = bll;
         }
 
         /// <summary>
-        /// Get all courses available
+        /// Get all rooms available
         /// </summary>
-        /// <returns>List of courses</returns>
+        /// <returns>List of rooms</returns>
         [HttpGet]
         [Produces( "application/json" )]
-        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Course> ), 200 )]
+        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Room> ), 200 )]
         [ProducesResponseType( 404 )]
-        public async Task<ActionResult<IEnumerable<App.DTO.v1.Course>>> GetCourses()
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Room>>> GetRooms()
         {
-            var data = await _bll.CourseService.AllAsync(User.GetUserId());
-            var res = data.Select(c => _mapper.Map(c)).ToList();
+            var data = await _bll.RoomService.AllAsync(User.GetUserId());
+            var res = data.Select(r => _mapper.Map(r)).ToList();
 
             return res;
         }
 
         /// <summary>
-        /// Get course by id
+        /// Get room by id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>course</returns>
+        /// <returns>room</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<App.DTO.v1.Course>> GetCourse(Guid id)
+        public async Task<ActionResult<App.DTO.v1.Room>> GetRoom(Guid id)
         {
-            var course = await _bll.CourseService.FindAsync(id, User.GetUserId());
+            var room = await _bll.RoomService.FindAsync(id, User.GetUserId());
 
-            if (course == null)
+            if (room == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map(course)!;
+            return _mapper.Map(room)!;
         }
 
         /// <summary>
-        /// Update course by id
+        /// Update room by id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="course"></param>
+        /// <param name="room"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(Guid id, App.DTO.v1.Course course)
+        public async Task<IActionResult> PutRoom(Guid id, App.DTO.v1.Room room)
         {
-            if (id != course.Id)
+            if (id != room.Id)
             {
                 return BadRequest();
             }
 
-            await _bll.CourseService.UpdateAsync(_mapper.Map(course)!, User.GetUserId());
+            await _bll.RoomService.UpdateAsync(_mapper.Map(room)!, User.GetUserId());
             await _bll.SaveChangesAsync();
 
             return NoContent();
         }
 
         /// <summary>
-        /// Create new course
+        /// Create new room
         /// </summary>
-        /// <param name="course"></param>
+        /// <param name="room"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<App.DTO.v1.Course>> PostCourse(App.DTO.v1.CourseCreate course)
+        public async Task<ActionResult<App.DTO.v1.Room>> PostRoom(App.DTO.v1.RoomCreate room)
         {
-            var bllEntity = _mapper.Map(course);
-            _bll.CourseService.Add(bllEntity, User.GetUserId());
+            var bllEntity = _mapper.Map(room);
+            _bll.RoomService.Add(bllEntity, User.GetUserId());
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourse", new
+            return CreatedAtAction("GetRoom", new
             {
                 id = bllEntity.Id,
                 version = HttpContext.GetRequestedApiVersion()!.ToString()
-            }, course);
+            }, room);
         }
 
         /// <summary>
-        /// Delete course by id - global
+        /// Delete room by id - global
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(Guid id)
+        public async Task<IActionResult> DeleteRoom(Guid id)
         {
-            await _bll.CourseService.RemoveAsync(id, User.GetUserId());
+            await _bll.RoomService.RemoveAsync(id, User.GetUserId());
             await _bll.SaveChangesAsync();
-            
+
             return NoContent();
         }
     }

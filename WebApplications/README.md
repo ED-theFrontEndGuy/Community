@@ -41,11 +41,14 @@ dotnet aspnet-codegenerator identity -dc App.DAL.EF.AppDbContext -f
 
 ApiControllers
 ~~~sh
-dotnet aspnet-codegenerator controller -name PersonsController -m App.Domain.Person -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-dotnet aspnet-codegenerator controller -name ContactTypesController -m App.Domain.ContactType -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-dotnet aspnet-codegenerator controller -name ContactsController -m App.Domain.Contact -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-
 dotnet aspnet-codegenerator controller -name CoursesController -m App.Domain.Course -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name AssignmentsController -m App.Domain.Assignment -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name AttachmentsController -m App.Domain.Attachment -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name DeclarationsController -m App.Domain.Declaration -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name RoomsController -m App.Domain.Room -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name StudyGroupsController -m App.Domain.StudyGroup -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name StudySessionsController -m App.Domain.StudySession -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name TimelogsController -m App.Domain.Timelog -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 ~~~
 
 Kaver compose
