@@ -1,8 +1,5 @@
 using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using App.DAL.EF;
-using App.Domain;
 using App.DTO.v1.Mappers;
 using Asp.Versioning;
 using Base.Helpers;
