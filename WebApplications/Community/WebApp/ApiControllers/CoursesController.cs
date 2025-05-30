@@ -1,7 +1,6 @@
-using App.BLL.DTO;
 using App.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using App.Domain;
+using App.DTO.v1.Mappers;
 using Asp.Versioning;
 using Base.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,15 +14,19 @@ namespace WebApp.ApiControllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CoursesController : ControllerBase
     {
+        private readonly ILogger<CoursesController> _logger;
         private readonly IAppBLL _bll;
+        // private readonly App.DTO.v1.Mappers.CourseMapper _mapper = new App.DTO.v1.Mappers.CourseMapper();
+        private readonly CourseMapper _mapper = new CourseMapper();
 
-        public CoursesController(IAppBLL bll)
+        public CoursesController(IAppBLL bll, ILogger<CoursesController> logger)
         {
             _bll = bll;
+            _logger = logger;
         }
 
         /// <summary>
-        /// Get all courses available
+        /// Get all courses availablef
         /// </summary>
         /// <returns>List of courses</returns>
         [HttpGet]
@@ -32,22 +35,28 @@ namespace WebApp.ApiControllers
         [ProducesResponseType( 404 )]
         public async Task<ActionResult<IEnumerable<App.DTO.v1.Course>>> GetCourses()
         {
-            var data = (await _bll.CourseService.AllAsync(User.GetUserId())).ToList();
-            
-            // ToDo - Add mapper
-            var res = data.Select(c => new App.DTO.v1.Course
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList();
+            var data = await _bll.CourseService.AllAsync(User.GetUserId());
+            var res = data.Select(c => _mapper.Map(c)).ToList();
 
             return res;
         }
 
-        // GET: api/Courses/5
+        /// <summary>
+        // /// Get course by id
+        // /// </summary>
+        // /// <param name="id"></param>
+        // /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<CourseBLLDto>> GetCourse(Guid id)
+        public async Task<ActionResult<App.DTO.v1.Course>> GetCourse(Guid id)
         {
+            // var person = await _bll.PersonService.FindAsync(id, User.GetUserId());
+            //
+            // if (person == null)
+            // {
+            //     return NotFound();
+            // }
+            //
+            // return _mapper.Map(person)!;
             var course = await _bll.CourseService.FindAsync(id, User.GetUserId());
 
             if (course == null)
@@ -55,53 +64,59 @@ namespace WebApp.ApiControllers
                 return NotFound();
             }
 
-            return course;
+            return _mapper.Map(course)!;
         }
 
-        // PUT: api/Courses/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update course by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="course"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse(Guid id, CourseBLLDto course)
+        public async Task<IActionResult> PutCourse(Guid id, App.DTO.v1.Course course)
         {
             if (id != course.Id)
             {
                 return BadRequest();
             }
 
-            _bll.CourseService.Update(course);
+            await _bll.CourseService.UpdateAsync(_mapper.Map(course)!, User.GetUserId());;
+            await _bll.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Courses
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create new course
+        /// </summary>
+        /// <param name="course"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Course>> PostCourse(CourseBLLDto course)
+        public async Task<ActionResult<App.DTO.v1.Course>> PostCourse(App.DTO.v1.CourseCreate course)
         {
-            _bll.CourseService.Add(course, User.GetUserId());
+            var bllEntity = _mapper.Map(course);
+            _bll.CourseService.Add(bllEntity, User.GetUserId());
             await _bll.SaveChangesAsync();
 
             return CreatedAtAction("GetCourse", new
             {
-                // todo - get person id
-                id = course.Id,
+                id = bllEntity.Id,
                 version = HttpContext.GetRequestedApiVersion()!.ToString()
             }, course);
         }
 
-        // DELETE: api/Courses/5
+        /// <summary>
+        // /// Delete course by id - global
+        // /// </summary>
+        // /// <param name="id"></param>
+        // /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
-            var course = await _bll.CourseService.FindAsync(id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            _bll.CourseService.Remove(course);
+            await _bll.CourseService.RemoveAsync(id, User.GetUserId());
             await _bll.SaveChangesAsync();
-
+            
             return NoContent();
         }
     }

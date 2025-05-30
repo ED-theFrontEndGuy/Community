@@ -111,7 +111,11 @@ public class AppDbContext :
                 
                 entry.Property(nameof(IDomainMeta.CreatedBy)).IsModified = false;
                 entry.Property(nameof(IDomainMeta.CreatedAt)).IsModified = false;
-                entry.Property(nameof(IDomainUserId.UserId)).IsModified = false;
+
+                if (entry.Entity is IDomainUserId userId)
+                {
+                    entry.Property(nameof(IDomainUserId.UserId)).IsModified = false;
+                }
             }
         }
         
