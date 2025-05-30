@@ -16,7 +16,6 @@ namespace WebApp.ApiControllers
     {
         private readonly ILogger<CoursesController> _logger;
         private readonly IAppBLL _bll;
-        // private readonly App.DTO.v1.Mappers.CourseMapper _mapper = new App.DTO.v1.Mappers.CourseMapper();
         private readonly CourseMapper _mapper = new CourseMapper();
 
         public CoursesController(IAppBLL bll, ILogger<CoursesController> logger)
@@ -26,7 +25,7 @@ namespace WebApp.ApiControllers
         }
 
         /// <summary>
-        /// Get all courses availablef
+        /// Get all courses available
         /// </summary>
         /// <returns>List of courses</returns>
         [HttpGet]
@@ -45,7 +44,7 @@ namespace WebApp.ApiControllers
         /// Get course by id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>course</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<App.DTO.v1.Course>> GetCourse(Guid id)
         {
@@ -73,7 +72,7 @@ namespace WebApp.ApiControllers
                 return BadRequest();
             }
 
-            await _bll.CourseService.UpdateAsync(_mapper.Map(course)!, User.GetUserId());;
+            await _bll.CourseService.UpdateAsync(_mapper.Map(course)!, User.GetUserId());
             await _bll.SaveChangesAsync();
 
             return NoContent();
