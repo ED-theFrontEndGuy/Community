@@ -10,16 +10,17 @@ export default function Header() {
 	const router = useRouter();
 
 	return (
-		<nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-			<div className="container-fluid">
-				<Link className="navbar-brand" href="/">Community</Link>
-				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-					aria-expanded="false" aria-label="Toggle navigation">
-					<span className="navbar-toggler-icon"></span>
-				</button>
-				<div className="navbar-collapse collapse d-sm-inline-flex justify-conten t-between">
-					<ul className="navbar-nav flex-grow-1">
-						{accountInfo?.jwt &&
+		<>{accountInfo?.jwt &&
+			<nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+				<div className="container-fluid">
+					<Link className="navbar-brand" href="/">Community</Link>
+					<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+						<span className="navbar-toggler-icon"></span>
+					</button>
+					<div className="navbar-collapse collapse d-sm-inline-flex justify-conten t-between">
+						<ul className="navbar-nav flex-grow-1">
+							{/* {accountInfo?.jwt && */}
 							<>
 								<li className="nav-item">
 									<Link className="nav-link text-dark" href="/declaration">Declarations</Link>
@@ -46,26 +47,27 @@ export default function Header() {
 									<Link className="nav-link text-dark" href="/studygroup">StudyGroups</Link>
 								</li>
 							</>
-						}
-					</ul>
 
-					<ul className="navbar-nav">
-						<li className="nav-item">
+						</ul>
 
-							{!accountInfo?.jwt &&
+						<ul className="navbar-nav">
+							<li className="nav-item">
+
+								{/* {!accountInfo?.jwt &&
 								<Link className="nav-link text-dark" href="/login">Login</Link>
-							}
+							} */}
 
-							{accountInfo?.jwt &&
-								<a className="nav-link text-dark" href="#" onClick={() => {
-									setAccountInfo!({});
-									router.push("/login");
-								}}>Logout</a>
-							}
-						</li>
-					</ul>
+								{accountInfo?.jwt &&
+									<a className="nav-link text-dark" href="#" onClick={() => {
+										setAccountInfo!({});
+										router.push("/login");
+									}}>Logout</a>
+								}
+							</li>
+						</ul>
+					</div>
 				</div>
-			</div>
-		</nav>
+			</nav>}
+		</>
 	);
 }
