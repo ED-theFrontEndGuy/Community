@@ -351,6 +351,10 @@ public class AccountController : ControllerBase
         return DateTime.UtcNow.AddSeconds(expiresInSeconds ?? 60);
     }
     
+    /// <summary>
+    /// Delete refresh token
+    /// </summary>
+    /// <returns></returns>
     [Produces("application/json")]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(Message), StatusCodes.Status404NotFound)]
