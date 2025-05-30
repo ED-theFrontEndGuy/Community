@@ -30,7 +30,7 @@ namespace WebApp.ApiControllers
         /// <returns>List of study groups</returns>
         [HttpGet]
         [Produces( "application/json" )]
-        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Course> ), 200 )]
+        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.StudyGroup> ), 200 )]
         [ProducesResponseType( 404 )]
         public async Task<ActionResult<IEnumerable<App.DTO.v1.StudyGroup>>> GetStudyGroups()
         {
