@@ -1,4 +1,5 @@
-export interface ICourse {
-	id: number;
+import { IDomainId } from "../IDomainId";
+
+export interface ICourse extends IDomainId {
 	name: string;
 }

@@ -49,7 +49,7 @@ export default function Course() {
 			<h1>Courses</h1>
 
 			<p>
-				<Link href="/courses/Create">Create New</Link>
+				<Link href="/courses/create">Create New</Link>
 			</p>
 			<table className="table">
 				<thead>
