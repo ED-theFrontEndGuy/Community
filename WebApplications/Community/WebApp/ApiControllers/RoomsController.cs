@@ -15,100 +15,100 @@ namespace WebApp.ApiControllers
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class DeclarationsController : ControllerBase
+    public class RoomsController : ControllerBase
     {
         private readonly ILogger<CoursesController> _logger;
         private readonly IAppBLL _bll;
-        private readonly DeclarationMapper _mapper = new DeclarationMapper();
+        private readonly RoomMapper _mapper = new RoomMapper();
 
-        public DeclarationsController(ILogger<CoursesController> logger, IAppBLL bll)
+        public RoomsController(ILogger<CoursesController> logger, IAppBLL bll)
         {
             _logger = logger;
             _bll = bll;
         }
 
         /// <summary>
-        /// Get all declarations available
+        /// Get all rooms available
         /// </summary>
-        /// <returns>List of declarations</returns>
+        /// <returns>List of rooms</returns>
         [HttpGet]
         [Produces( "application/json" )]
-        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Declaration> ), 200 )]
+        [ProducesResponseType( typeof( IEnumerable<App.DTO.v1.Room> ), 200 )]
         [ProducesResponseType( 404 )]
-        public async Task<ActionResult<IEnumerable<App.DTO.v1.Declaration>>> GetDeclarations()
+        public async Task<ActionResult<IEnumerable<App.DTO.v1.Room>>> GetRooms()
         {
-            var data = await _bll.DeclarationService.AllAsync(User.GetUserId());
-            var res = data.Select(c => _mapper.Map(c)).ToList();
+            var data = await _bll.RoomService.AllAsync(User.GetUserId());
+            var res = data.Select(r => _mapper.Map(r)).ToList();
 
             return res;
         }
 
         /// <summary>
-        /// Get declaration by id
+        /// Get room by id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>declaration</returns>
+        /// <returns>room</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<App.DTO.v1.Declaration>> GetDeclaration(Guid id)
+        public async Task<ActionResult<App.DTO.v1.Room>> GetRoom(Guid id)
         {
-            var declaration = await _bll.DeclarationService.FindAsync(id, User.GetUserId());
+            var room = await _bll.RoomService.FindAsync(id, User.GetUserId());
 
-            if (declaration == null)
+            if (room == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map(declaration)!;;
+            return _mapper.Map(room)!;
         }
 
         /// <summary>
-        /// Update declaration by id
+        /// Update room by id
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="declaration"></param>
+        /// <param name="room"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeclaration(Guid id, App.DTO.v1.Declaration declaration)
+        public async Task<IActionResult> PutRoom(Guid id, App.DTO.v1.Room room)
         {
-            if (id != declaration.Id)
+            if (id != room.Id)
             {
                 return BadRequest();
             }
 
-            await _bll.DeclarationService.UpdateAsync(_mapper.Map(declaration)!, User.GetUserId());
+            await _bll.RoomService.UpdateAsync(_mapper.Map(room)!, User.GetUserId());
             await _bll.SaveChangesAsync();
 
             return NoContent();
         }
 
         /// <summary>
-        /// Create new declaration
+        /// Create new room
         /// </summary>
-        /// <param name="declaration"></param>
+        /// <param name="room"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<App.DTO.v1.Declaration>> PostDeclaration(App.DTO.v1.DeclarationCreate declaration)
+        public async Task<ActionResult<App.DTO.v1.Room>> PostRoom(App.DTO.v1.RoomCreate room)
         {
-            var bllEntity = _mapper.Map(declaration);
-            _bll.DeclarationService.Add(bllEntity, User.GetUserId());
+            var bllEntity = _mapper.Map(room);
+            _bll.RoomService.Add(bllEntity, User.GetUserId());
             await _bll.SaveChangesAsync();
 
-            return CreatedAtAction("GetDeclaration", new
+            return CreatedAtAction("GetRoom", new
             {
                 id = bllEntity.Id,
                 version = HttpContext.GetRequestedApiVersion()!.ToString()
-            }, declaration);
+            }, room);
         }
 
         /// <summary>
-        /// Delete declaration by id
+        /// Delete room by id - global
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDeclaration(Guid id)
+        public async Task<IActionResult> DeleteRoom(Guid id)
         {
-            await _bll.DeclarationService.RemoveAsync(id, User.GetUserId());
+            await _bll.RoomService.RemoveAsync(id, User.GetUserId());
             await _bll.SaveChangesAsync();
 
             return NoContent();
