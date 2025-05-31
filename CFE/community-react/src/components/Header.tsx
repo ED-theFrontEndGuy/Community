@@ -20,31 +20,30 @@ export default function Header() {
 					</button>
 					<div className="navbar-collapse collapse d-sm-inline-flex justify-conten t-between">
 						<ul className="navbar-nav flex-grow-1">
-							{/* {accountInfo?.jwt && */}
 							<>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/declaration">Declarations</Link>
+									<Link className="nav-link text-dark" href="/declarations">Declarations</Link>
 								</li>
 								<li className="nav-item">
 									<Link className="nav-link text-dark" href="/courses">Courses</Link>
 								</li>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/timelog">Timelogs</Link>
+									<Link className="nav-link text-dark" href="/timelogs">Timelogs</Link>
 								</li>
 								<li className="nav-item">
 									<Link className="nav-link text-dark" href="/attachments">Attachments</Link>
 								</li>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/assignment">Assignments</Link>
+									<Link className="nav-link text-dark" href="/assignments">Assignments</Link>
 								</li>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/room">Rooms</Link>
+									<Link className="nav-link text-dark" href="/rooms">Rooms</Link>
 								</li>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/studysession">StudySessions</Link>
+									<Link className="nav-link text-dark" href="/studysessions">StudySessions</Link>
 								</li>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/studygroup">StudyGroups</Link>
+									<Link className="nav-link text-dark" href="/studygroups">StudyGroups</Link>
 								</li>
 							</>
 
