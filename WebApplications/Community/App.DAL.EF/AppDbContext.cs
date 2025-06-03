@@ -100,6 +100,18 @@ public class AppDbContext :
         
         foreach (var entry in addedEntries)
         {
+            foreach (var prop in entry.Properties)
+            {
+                if (prop.CurrentValue is DateTime dateTimeValue)
+                {
+                    if (dateTimeValue.Kind == DateTimeKind.Unspecified)
+                    {
+                        prop.CurrentValue = DateTime.SpecifyKind(dateTimeValue, DateTimeKind.Utc);
+                        prop.CurrentValue = dateTimeValue.ToUniversalTime();
+                    }
+                }
+            }
+            
             if (entry.State == EntityState.Added)
             {
                 (entry.Entity as IDomainMeta)!.CreatedAt = DateTime.UtcNow;
