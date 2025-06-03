@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { DeclarationService } from "@/services/DeclarationService";
 import { useForm, SubmitHandler, set } from "react-hook-form"
 import { useRouter } from 'next/navigation'
@@ -9,53 +9,62 @@ import { AccountContext } from "@/context/AccountContext";
 import { CourseService } from "@/services/CourseService";
 import { ICourse } from "@/types/domain/ICourse";
 
-export default function DeclarationCreate() {
+
+export default function CourseEdit({ params }: { params: Promise<{ id: string }> }) {
+	const { id } = use(params);
 	const { accountInfo, setAccountInfo } = useContext(AccountContext);
-	const [course, setCourse] = useState<ICourse[]>([]);
-	const router = useRouter();
 	const [errorMessage, setErrorMessage] = useState("");
+	const [course, setCourse] = useState<ICourse[]>([]);
 	const declarationService = new DeclarationService();
 	const courseService = new CourseService();
 
+	console.log("Params for edit: " + params);
+
+
+	const router = useRouter();
 	useEffect(() => {
 		if (!accountInfo?.jwt) {
 			router.push('/login');
 		}
 
-		const fetchData = async () => {
-			try {
-				const result = await courseService.getAllAsync();
+		async function fetchCourses() {
+			const response = await courseService.getAllAsync();
+			setCourse(response.data!);
+		}
 
-				if (result.errors) {
-					console.log(result.errors);
-					return;
-				}
-
-				setCourse(result.data!);
-			} catch (error) {
-				console.log("Error fetching data: ", error);
-			}
-		};
-
-		fetchData();
+		fetchCourses();
 	}, []);
 
 	type Inputs = {
 		active: boolean;
 		courseId: string;
+		courseName: string;
 	}
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<Inputs>({});
+	} = useForm<Inputs>({
+		defaultValues: async () => {
+			const result = await declarationService.getAsync(id);
+			if (result.errors && result.errors.length > 0) {
+				setErrorMessage(result.statusCode + " - " + result.errors.join(", "));
+
+				return { active: false, courseId: "", courseName: "" };
+			} else {
+				setErrorMessage("");
+
+				return { active: result.data!.active, courseId: result.data!.courseId, courseName: result.data!.courseName };
+			}
+		}
+	});
 
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		setErrorMessage("Loading...");
 		try {
-			var result = await declarationService.addAsync({ active: data.active, courseId: data.courseId });
-			console.log('create result', result)
+			var result = await declarationService.updateAsync({ id: id, active: data.active, courseId: data.courseId, courseName: data.courseName });
+			console.log('edit result', result)
 
 			if (result.errors && result.errors.length > 0) {
 				setErrorMessage(result.statusCode + " - " + result.errors.join(", "));
@@ -72,10 +81,9 @@ export default function DeclarationCreate() {
 		}
 	}
 
-
 	return (
 		<>
-			<h4>Create Declaration</h4>
+			<h4>Edit Declaration</h4>
 			<hr />
 			<div className="row">
 				<div className="col-md-4">
