@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,7 +25,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppUsers.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
         // GET: Admin/Users/Details/5
@@ -34,7 +36,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers
+            var appUser = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appUser == null)
             {
@@ -75,7 +77,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers.FindAsync(id);
+            var appUser = await _context.Users.FindAsync(id);
             if (appUser == null)
             {
                 return NotFound();
@@ -126,7 +128,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers
+            var appUser = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appUser == null)
             {
@@ -141,10 +143,10 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var appUser = await _context.AppUsers.FindAsync(id);
+            var appUser = await _context.Users.FindAsync(id);
             if (appUser != null)
             {
-                _context.AppUsers.Remove(appUser);
+                _context.Users.Remove(appUser);
             }
 
             await _context.SaveChangesAsync();
@@ -153,7 +155,7 @@ namespace WebApp.Areas.Admin.Controllers
 
         private bool AppUserExists(Guid id)
         {
-            return _context.AppUsers.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
     public class RefreshTokensController : Controller
     {
         private readonly AppDbContext _context;
@@ -49,7 +51,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/RefreshTokens/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName");
             return View();
         }
 
@@ -67,7 +69,7 @@ namespace WebApp.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", appRefreshToken.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", appRefreshToken.UserId);
             return View(appRefreshToken);
         }
 
@@ -84,7 +86,7 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", appRefreshToken.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", appRefreshToken.UserId);
             return View(appRefreshToken);
         }
 
@@ -120,7 +122,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", appRefreshToken.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", appRefreshToken.UserId);
             return View(appRefreshToken);
         }
 

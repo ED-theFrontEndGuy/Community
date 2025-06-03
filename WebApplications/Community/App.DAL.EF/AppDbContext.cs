@@ -20,8 +20,8 @@ public class AppDbContext :
         IdentityUserToken<Guid>
     >
 {
-    public DbSet<AppUser> AppUsers { get; set; } = default!;
-    public DbSet<AppRole> AppRoles { get; set; } = default!;
+    // public DbSet<AppUser> AppUsers { get; set; } = default!;
+    // public DbSet<AppRole> AppRoles { get; set; } = default!;
     public DbSet<Declaration> Declarations { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Timelog> Timelogs { get; set; }

@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain.Identity;
+using Base.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
     public class UserRolesController : Controller
     {
         private readonly AppDbContext _context;
@@ -50,8 +53,8 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/UserRoles/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.AppRoles, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName");
+            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName");
             return View();
         }
 
@@ -64,13 +67,13 @@ namespace WebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                appUserRole.UserId = Guid.NewGuid();
+                // appUserRole.UserId = Guid.NewGuid();
                 _context.Add(appUserRole);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.AppRoles, "Id", "Id", appUserRole.RoleId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", appUserRole.UserId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", appUserRole.RoleId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", appUserRole.UserId);
             return View(appUserRole);
         }
 
@@ -87,8 +90,8 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.AppRoles, "Id", "Id", appUserRole.RoleId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", appUserRole.UserId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id", appUserRole.RoleId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", appUserRole.UserId);
             return View(appUserRole);
         }
 
@@ -124,8 +127,8 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.AppRoles, "Id", "Id", appUserRole.RoleId);
-            ViewData["UserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", appUserRole.UserId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id", appUserRole.RoleId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName", appUserRole.UserId);
             return View(appUserRole);
         }
 

@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,7 +25,7 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Roles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppRoles.ToListAsync());
+            return View(await _context.Roles.ToListAsync());
         }
 
         // GET: Admin/Roles/Details/5
@@ -34,7 +36,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var appRole = await _context.AppRoles
+            var appRole = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appRole == null)
             {
@@ -75,7 +77,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var appRole = await _context.AppRoles.FindAsync(id);
+            var appRole = await _context.Roles.FindAsync(id);
             if (appRole == null)
             {
                 return NotFound();
@@ -126,7 +128,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var appRole = await _context.AppRoles
+            var appRole = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appRole == null)
             {
@@ -141,10 +143,10 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var appRole = await _context.AppRoles.FindAsync(id);
+            var appRole = await _context.Roles.FindAsync(id);
             if (appRole != null)
             {
-                _context.AppRoles.Remove(appRole);
+                _context.Roles.Remove(appRole);
             }
 
             await _context.SaveChangesAsync();
@@ -153,7 +155,7 @@ namespace WebApp.Areas.Admin.Controllers
 
         private bool AppRoleExists(Guid id)
         {
-            return _context.AppRoles.Any(e => e.Id == id);
+            return _context.Roles.Any(e => e.Id == id);
         }
     }
 }
