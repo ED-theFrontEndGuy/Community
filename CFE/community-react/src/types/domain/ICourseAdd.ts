@@ -1,3 +1,3 @@
-export interface ICourseAddAdd {
+export interface ICourseAdd {
     name: string,
 }

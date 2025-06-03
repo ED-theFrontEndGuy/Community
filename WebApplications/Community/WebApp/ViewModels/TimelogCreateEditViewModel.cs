@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.ViewModels;
 
-public class TimelogCreateEditViewModel : BaseEntity
+public class TimelogCreateEditViewModel //: BaseEntity
 {
     public TimelogBLLDto Timelog { get; set; } = default!;
 
