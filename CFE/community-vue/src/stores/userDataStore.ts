@@ -2,8 +2,8 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useUserDataStore = defineStore('userData', () => {
-	const email = ref('');
-	const password = ref('');
+	const jwt = ref('');
+	const refreshToken = ref('');
 
-	return { email, password };
+	return { jwt, refreshToken };
 });

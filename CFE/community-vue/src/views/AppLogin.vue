@@ -2,15 +2,24 @@
 import {ref} from 'vue';
 import {useUserDataStore} from '@/stores/userDataStore';
 import {IdentityService} from '@/services/IdentityService';
+import {useRouter} from 'vue-router';
 
 const store = useUserDataStore();
+const router = useRouter();
 const email = ref('');
 const password = ref('');
+const error = ref<string | null>(null);
 
 const doLogin = async () => {
 	const response = await IdentityService.login(email.value, password.value);
 
-	console.log(response);
+	if (response.data) {
+		store.jwt = response.data.jwt;
+		store.refreshToken = response.data.refreshToken;
+		router.push({name: 'Home'});
+	} else {
+		error.value = response.errors?.[1] || 'Login failed';
+	}
 };
 </script>
 
@@ -18,12 +27,10 @@ const doLogin = async () => {
 	<div class="row">
 		<div class="col-4"></div>
 		<div class="col-4">
+			<div v-if="error" class="alert alert-warning" role="alert">
+				{{ error }}
+			</div>
 			<form @submit.prevent="doLogin">
-				<div
-					asp-validation-summary="ModelOnly"
-					class="text-danger"
-					role="alert"
-				></div>
 				<div class="form-floating mb-3">
 					<input
 						v-model="email"
