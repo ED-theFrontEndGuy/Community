@@ -1,5 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Header from '@/navigation/AppHeader.vue';
+</script>
 
-<template>OK</template>
+<template>
+	<Header />
+	<main class="container">
+		<RouterView />
+	</main>
+</template>
 
 <style scoped></style>
