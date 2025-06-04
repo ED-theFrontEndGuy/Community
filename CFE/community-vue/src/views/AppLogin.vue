@@ -1,10 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {ref} from 'vue';
+import {useUserDataStore} from '@/stores/userDataStore';
+import {IdentityService} from '@/services/IdentityService';
+
+const store = useUserDataStore();
+const email = ref('');
+const password = ref('');
+
+const doLogin = async () => {
+	const response = await IdentityService.login(email.value, password.value);
+
+	console.log(response);
+};
+</script>
 
 <template>
 	<div class="row">
 		<div class="col-4"></div>
 		<div class="col-4">
-			<form>
+			<form @submit.prevent="doLogin">
 				<div
 					asp-validation-summary="ModelOnly"
 					class="text-danger"
@@ -12,6 +26,7 @@
 				></div>
 				<div class="form-floating mb-3">
 					<input
+						v-model="email"
 						class="form-control"
 						aria-required="true"
 						placeholder="name@example.com"
@@ -24,6 +39,7 @@
 				</div>
 				<div class="form-floating mb-3">
 					<input
+						v-model="password"
 						class="form-control"
 						aria-required="true"
 						placeholder="password"
