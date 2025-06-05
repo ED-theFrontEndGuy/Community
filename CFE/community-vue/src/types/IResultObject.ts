@@ -1,4 +1,4 @@
-export interface IResultObject<TResponseData> {
+export interface IResultObject<TResponse> {
 	errors?: string[]
-	data?: TResponseData
+	data?: TResponse
 }

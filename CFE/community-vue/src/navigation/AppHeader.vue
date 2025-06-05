@@ -86,8 +86,8 @@ const userStore = useUserDataStore();
 				</ul>
 
 				<ul class="navbar-nav">
-					<li>
-						<a href="/" class="navbar-brand">Logout</a>
+					<li class="nav-item">
+						<a href="/" class="nav-link">Logout</a>
 					</li>
 				</ul>
 			</div>
