@@ -27,4 +27,25 @@ export abstract class BaseEntityService<TEntity> extends BaseService {
 			}
 		}
 	}
+
+	async addAsync(entity: TEntity): Promise<IResultObject<TEntity>> {
+		try {
+			const response = await BaseService.axios.post<TEntity>(this.basePath, entity);
+
+			console.log('addAsync response', response);
+
+			if (response.status <= 300) {
+				return { data: response.data }
+			}
+
+			return {
+				errors: [(response.status.toString() + ' ' + response.statusText).trim()]
+			}
+		} catch (error) {
+			console.log('error: ', (error as Error).message);
+			return {
+				errors: [JSON.stringify(error)]
+			}
+		}
+	}
 }
