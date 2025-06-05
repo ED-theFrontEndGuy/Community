@@ -1,4 +1,5 @@
 import './assets/site.css'
+import './assets/logo.svg'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

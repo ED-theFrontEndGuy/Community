@@ -1,10 +1,14 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import {RouterLink} from 'vue-router';
+import {useUserDataStore} from '@/stores/userDataStore';
+
+const userStore = useUserDataStore();
 </script>
 
 <template>
 	<nav
+		v-if="userStore.jwt"
 		class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
 	>
 		<div class="container-fluid">
@@ -82,15 +86,8 @@ import {RouterLink} from 'vue-router';
 				</ul>
 
 				<ul class="navbar-nav">
-					<li class="nav-item">
-						<RouterLink class="nav-link text-dark" to="/login">
-							Login
-						</RouterLink>
-					</li>
 					<li>
-						<RouterLink class="nav-link text-dark" to="/register">
-							Register
-						</RouterLink>
+						<a href="/" class="navbar-brand">Logout</a>
 					</li>
 				</ul>
 			</div>
