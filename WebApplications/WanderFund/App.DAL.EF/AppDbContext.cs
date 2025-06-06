@@ -27,15 +27,6 @@ public class AppDbContext :
     public DbSet<Expense> Expenses { get; set; }
     public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
     public DbSet<UserTrip> UserTrips { get; set; }
-    
-    public DbSet<Declaration> Declarations { get; set; }
-    public DbSet<Course> Courses { get; set; }
-    public DbSet<Timelog> Timelogs { get; set; }
-    public DbSet<Attachment> Attachments { get; set; } 
-    public DbSet<Assignment> Assignments { get; set; }
-    public DbSet<Room> Rooms { get; set; }
-    public DbSet<StudySession> StudySessions { get; set; }
-    public DbSet<StudyGroup> StudyGroups { get; set; }
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
     
     public AppDbContext(DbContextOptions<AppDbContext> options)
