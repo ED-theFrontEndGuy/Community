@@ -1,0 +1,46 @@
+@model WebApp.ViewModels.StudySessionCreateEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>StudySession</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StudySession.Id" />
+            
+            <div class="form-group">
+                <label asp-for="StudySession.Description" class="control-label"></label>
+                <input asp-for="StudySession.Description" class="form-control" />
+                <span asp-validation-for="StudySession.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudySession.AssignmentId" class="control-label"></label>
+                <select asp-for="StudySession.AssignmentId" class="form-control" asp-items="Model.AssignmentSelectList"></select>
+                <span asp-validation-for="StudySession.AssignmentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudySession.RoomId" class="control-label"></label>
+                <select asp-for="StudySession.RoomId" class="form-control" asp-items="Model.RoomSelectList"></select>
+                <span asp-validation-for="StudySession.RoomId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

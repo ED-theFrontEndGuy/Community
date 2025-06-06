@@ -1,0 +1,46 @@
+@model WebApp.ViewModels.TimelogCreateEditViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Timelog</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Timelog.StartTime" class="control-label"></label>
+                <input asp-for="Timelog.StartTime" class="form-control" />
+                <span asp-validation-for="Timelog.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Timelog.EndTime" class="control-label"></label>
+                <input asp-for="Timelog.EndTime" class="form-control" />
+                <span asp-validation-for="Timelog.EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Timelog.DeclarationId" class="control-label"></label>
+                <select asp-for="Timelog.DeclarationId" class ="form-control" asp-items="Model.DeclarationSelectList"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Timelog.AssignmentId" class="control-label"></label>
+                <select asp-for="Timelog.AssignmentId" class ="form-control" asp-items="Model.AssignmentSelectList"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

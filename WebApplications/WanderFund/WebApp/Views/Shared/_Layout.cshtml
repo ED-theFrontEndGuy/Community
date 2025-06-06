@@ -1,0 +1,127 @@
+﻿@using App.Domain.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject SignInManager<AppUser> SignInManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - WebApp</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true"/>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-conten t-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <partial name="_LanguageSelection"/>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="/swagger">Api</a>
+                    </li>
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" href="javascript:{}" id="userDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">User</a>
+                            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Declarations"
+                                   asp-action="Index">Declarations</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Courses"
+                                   asp-action="Index">Courses</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Timelogs"
+                                   asp-action="Index">Timelogs</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Attachments"
+                                   asp-action="Index">Attachments</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Assignments"
+                                   asp-action="Index">Assignments</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="Rooms"
+                                   asp-action="Index">Rooms</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="StudySessions"
+                                   asp-action="Index">StudySessions</a>
+                                <a class="dropdown-item text-dark" asp-area="" asp-controller="StudyGroups"
+                                   asp-action="Index">StudyGroups</a>
+                            </div>
+                        </li>
+                    }
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" href="javascript:{}" id="adminDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                            <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Declarations"
+                                   asp-action="Index">Declarations</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Courses"
+                                   asp-action="Index">Courses</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Timelogs"
+                                   asp-action="Index">Timelogs</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Attachments"
+                                   asp-action="Index">Attachments</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Assignments"
+                                   asp-action="Index">Assignments</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Rooms"
+                                   asp-action="Index">Rooms</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="StudySessions"
+                                   asp-action="Index">StudySessions</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="StudyGroups"
+                                   asp-action="Index">StudyGroups</a>
+
+                                <hr class="dropdown-divider">
+
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Users"
+                                   asp-action="Index">Users</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="Roles"
+                                   asp-action="Index">Roles</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="UserRoles"
+                                   asp-action="Index">User Roles</a>
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="RefreshTokens"
+                                   asp-action="Index">Refresh Tokens</a>
+
+                                <hr class="dropdown-divider">
+                                
+                                <a class="dropdown-item text-dark" asp-area="admin" asp-controller="UserManagement"
+                                   asp-action="Index">User Management</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <partial name="_LoginPartial"/>
+        </div>
+    </nav>
+</header>
+<div class="container col-md-0 col-lg-10 p-0=4">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        <!--ToDo rewatch this spot from lecture -->
+        @* &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common</a> *@
+        &copy; 2025 - WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Base.Resources.Common.Privacy</a> | 
+        <a href="/swagger">Api</a>
+        @Thread.CurrentThread.CurrentCulture.Name | @Thread.CurrentThread.CurrentUICulture.Name 
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

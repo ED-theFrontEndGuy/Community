@@ -113,6 +113,7 @@ networks:
 ~~~sh
 docker compose --project-name local-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
 
-docker compose --project-name community-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
-docker compose --project-name community-dev-infra down
+
+docker compose --project-name wanderfund-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
+docker compose --project-name wanderfund-dev-infra down
 ~~~
