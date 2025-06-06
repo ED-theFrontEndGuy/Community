@@ -13,4 +13,11 @@ public interface IAppBLL : IBaseBLL
     // IStudyGroupUserService StudyGroupUserService { get; }
     IStudySessionService StudySessionService { get; }
     ITimelogService TimelogService { get; }
+    
+    // WanderFund
+    ITripService TripService { get; }
+    ITripExpenseService TripExpenseService { get; }
+    IUserTripService UserTripService { get; }
+    IExpenseService ExpenseService { get; }
+    IExpenseCategoryService ExpenseCategoryService { get; }    
 }

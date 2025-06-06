@@ -66,6 +66,12 @@ dotnet aspnet-codegenerator controller -name RoomsController -m App.Domain.Room 
 dotnet aspnet-codegenerator controller -name StudyGroupsController -m App.Domain.StudyGroup -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 dotnet aspnet-codegenerator controller -name StudySessionsController -m App.Domain.StudySession -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 dotnet aspnet-codegenerator controller -name TimelogsController -m App.Domain.Timelog -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+
+dotnet aspnet-codegenerator controller -name TripsController -m App.Domain.Trip -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name UserTripsController -m App.Domain.UserTrip -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name TripExpensesController -m App.Domain.TripExpense -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name ExpensesController -m App.Domain.Expense -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
+dotnet aspnet-codegenerator controller -name ExpenseCategoriesController -m App.Domain.ExpenseCategory -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 ~~~
 
 Kaver compose
