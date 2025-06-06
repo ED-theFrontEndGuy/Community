@@ -222,6 +222,26 @@
       <UpToDateCheckInput Remove="Views\Messages\Details.cshtml" />
       <UpToDateCheckInput Remove="Views\Messages\Edit.cshtml" />
       <UpToDateCheckInput Remove="Views\Messages\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Assignments\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Courses\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Courses\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Courses\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Courses\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Courses\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Rooms\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\Rooms\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\Rooms\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\Rooms\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\Rooms\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\StudySessions\Index.cshtml" />
     </ItemGroup>
 
 </Project>

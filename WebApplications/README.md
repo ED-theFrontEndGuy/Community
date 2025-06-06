@@ -4,8 +4,8 @@ dotnet ef migrations add InitialCreate
 dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
-dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AddDescriptionToStudySession
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext FixExpenseCategories2
+dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext FixExpenseCategories2
 
 dotnet ef migrations remove --project App.DAL.EF --startup-project WebApp --context AppDbContext
 
@@ -32,6 +32,13 @@ dotnet aspnet-codegenerator controller -name ConversationsController -actions -m
 dotnet aspnet-codegenerator controller -name MessagesController -actions -m App.Domain.Message -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name StudySessionsController -actions -m App.Domain.StudySession -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name StudyGroupsController -actions -m App.Domain.StudyGroup -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+
+
+dotnet aspnet-codegenerator controller -name TripsController -actions -m App.Domain.Trip -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name UserTripsController -actions -m App.Domain.UserTrip -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name TripExpensesController -actions -m App.Domain.TripExpense -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name ExpensesController -actions -m App.Domain.Expense -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name ExpenseCategoriesController -actions -m App.Domain.ExpenseCategory -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 
 
 

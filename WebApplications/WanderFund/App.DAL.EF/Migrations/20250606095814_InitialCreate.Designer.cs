@@ -3,6 +3,7 @@ using System;
 using App.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace App.DAL.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606095814_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,9 +202,6 @@ namespace App.DAL.EF.Migrations
                         .HasMaxLength(3)
                         .HasColumnType("character varying(3)");
 
-                    b.Property<Guid?>("ExpenseCategoryId")
-                        .HasColumnType("uuid");
-
                     b.Property<decimal?>("ExpenseCost")
                         .HasColumnType("numeric");
 
@@ -226,8 +226,6 @@ namespace App.DAL.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpenseCategoryId");
-
                     b.ToTable("Expenses");
                 });
 
@@ -249,6 +247,9 @@ namespace App.DAL.EF.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<Guid>("ExpenseId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -268,6 +269,8 @@ namespace App.DAL.EF.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ExpenseId");
 
                     b.HasIndex("UserId");
 
@@ -915,23 +918,21 @@ namespace App.DAL.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("App.Domain.Expense", b =>
-                {
-                    b.HasOne("App.Domain.ExpenseCategory", "ExpenseCategory")
-                        .WithMany("Expenses")
-                        .HasForeignKey("ExpenseCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("ExpenseCategory");
-                });
-
             modelBuilder.Entity("App.Domain.ExpenseCategory", b =>
                 {
+                    b.HasOne("App.Domain.Expense", "Expense")
+                        .WithMany("ExpenseCategories")
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("App.Domain.Identity.AppUser", "User")
                         .WithMany("ExpenseCategories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Expense");
 
                     b.Navigation("User");
                 });
@@ -1131,12 +1132,9 @@ namespace App.DAL.EF.Migrations
 
             modelBuilder.Entity("App.Domain.Expense", b =>
                 {
-                    b.Navigation("TripExpenses");
-                });
+                    b.Navigation("ExpenseCategories");
 
-            modelBuilder.Entity("App.Domain.ExpenseCategory", b =>
-                {
-                    b.Navigation("Expenses");
+                    b.Navigation("TripExpenses");
                 });
 
             modelBuilder.Entity("App.Domain.Identity.AppRole", b =>

@@ -22,6 +22,12 @@ public class AppDbContext :
 {
     // public DbSet<AppUser> AppUsers { get; set; } = default!;
     // public DbSet<AppRole> AppRoles { get; set; } = default!;
+    public DbSet<Trip> Trips { get; set; }
+    public DbSet<TripExpense> TripExpenses { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
+    public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
+    public DbSet<UserTrip> UserTrips { get; set; }
+    
     public DbSet<Declaration> Declarations { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Timelog> Timelogs { get; set; }
