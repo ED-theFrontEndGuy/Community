@@ -48,13 +48,18 @@ export default function Home() {
 		<>
 			<div className="trips-container">
 				<div className="trips-card-body">
-
+					<button
+						className="add-trip-btn"
+						onClick={() => router.push('/trips/create')}
+						title="Add new trip"
+					>
+						+
+					</button>
 				</div>
 				{trips.map((trip) => (
 					<Trip key={trip.id} id={trip.id} name={trip.name} destination={trip.destination} budget={trip.budget} tripExpensesTotal={trip.tripExpensesTotal} />
 				))}
 			</div>
-
 		</>
 	);
 }
