@@ -42,4 +42,25 @@ public class AppUOW : BaseUOW<AppDbContext>, IAppUOW
     private ITimelogRepository? _timelogRepository;
     public ITimelogRepository TimelogRepository =>
         _timelogRepository ??= new TimelogRepository(UOWDbContext);
+    
+    // WanderFund
+    private ITripRepository? _tripRepository;
+    public ITripRepository TripRepository =>
+        _tripRepository ??= new TripRepository(UOWDbContext);
+
+    private ITripExpenseRepository? _tripExpenseRepository;
+    public ITripExpenseRepository TripExpenseRepository =>
+        _tripExpenseRepository ??= new TripExpenseRepository(UOWDbContext);
+
+    private IUserTripRepository? _userTripRepository;
+    public IUserTripRepository UserTripRepository =>
+        _userTripRepository ??= new UserTripRepository(UOWDbContext);
+    
+    private IExpenseRepository? _expenseRepository;
+    public IExpenseRepository ExpenseRepository =>
+        _expenseRepository ??= new ExpenseRepository(UOWDbContext);
+    
+    private IExpenseCategoryRepository? _expenseCategoryRepository;
+    public IExpenseCategoryRepository ExpenseCategoryRepository =>
+        _expenseCategoryRepository ??= new ExpenseCategoryRepository(UOWDbContext);
 }

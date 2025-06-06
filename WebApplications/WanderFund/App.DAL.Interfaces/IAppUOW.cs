@@ -12,4 +12,10 @@ public interface IAppUOW : IBaseUOW
     IStudyGroupRepository StudyGroupRepository { get; }
     IStudySessionRepository StudySessionRepository { get; }
     ITimelogRepository TimelogRepository { get; }
+    
+    ITripRepository TripRepository { get; }
+    ITripExpenseRepository TripExpenseRepository { get; }
+    IUserTripRepository UserTripRepository { get; }
+    IExpenseRepository ExpenseRepository { get; }
+    IExpenseCategoryRepository ExpenseCategoryRepository { get; }
 }
