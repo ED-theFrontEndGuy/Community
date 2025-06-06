@@ -1,11 +1,12 @@
-import { AccountContext } from '@/context/AccountContext';
+// import { AccountContext } from '@/context/AccountContext';
+// import { useContext } from 'react';
+import { IAccountInfo } from '@/context/AccountContext';
 import { ILoginDto } from '@/types/DTOs/ILoginDto';
 import axios, { AxiosInstance } from 'axios';
-import { useContext } from 'react';
 
 export abstract class BaseService {
 	protected axiosInstance: AxiosInstance;
-	protected setAccountInfo = useContext(AccountContext).setAccountInfo;
+	// protected setAccountInfo = useContext(AccountContext).setAccountInfo;
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -63,10 +64,10 @@ export abstract class BaseService {
 							localStorage.setItem("_refreshToken", response.data.refreshToken);
 							originalRequest.headers.Authorization = `Beaer ${response.data.jwt}`;
 
-							this.setAccountInfo!({
-								jwt: response.data.jwt,
-								refreshToken: response.data.refreshToken,
-							})
+							// this.setAccountInfo!({
+							// 	jwt: response.data.jwt,
+							// 	refreshToken: response.data.refreshToken,
+							// })
 
 							return this.axiosInstance(originalRequest);
 						}
@@ -81,5 +82,10 @@ export abstract class BaseService {
 				return Promise.reject(error);
 			}
 		);
+	}
+
+	// Example method that accepts setAccountInfo as a parameter
+	protected updateAccountInfo(data: IAccountInfo, setAccountInfo: (info: IAccountInfo) => void) {
+		setAccountInfo(data);
 	}
 }

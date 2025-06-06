@@ -8,5 +8,5 @@ export interface ITrip extends IDomainId {
 	departureDate?: Timestamp;
 	returnDate?: Timestamp;
 	isPublic?: boolean;
-	tripExpenseTotal?: number;
+	tripExpensesTotal?: number;
 }

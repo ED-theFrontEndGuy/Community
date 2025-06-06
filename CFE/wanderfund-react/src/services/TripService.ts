@@ -1,10 +1,10 @@
-import { ICourse } from "@/types/domain/ICourse";
+import { ITrip } from "@/types/domain/ITrip";
 import { EntityService } from "./EntityService";
-import { ICourseAdd } from "@/types/domain/ICourseAdd";
+import { ITripAdd } from "@/types/domain/ITripAdd";
 
 
-export class CourseService extends EntityService<ICourse, ICourseAdd> {
+export class TripService extends EntityService<ITrip, ITripAdd> {
 	constructor() {
-		super('courses');
+		super('trips');
 	}
 }

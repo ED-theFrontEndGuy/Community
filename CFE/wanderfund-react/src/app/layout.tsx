@@ -1,7 +1,7 @@
 "use client";
 
 import 'bootstrap/dist/css/bootstrap.css';
-import "./globals.css";
+import './globals.css';
 import BootstrapActivation from '@/helpers/BootstrapActivation';
 import Header from "@/components/Header";
 import { AccountContext, IAccountInfo } from "@/context/AccountContext";
