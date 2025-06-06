@@ -93,6 +93,7 @@ public class AccountController : ControllerBase
         
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(appUser, "user");
             await _userManager.AddClaimsAsync(appUser, new List<Claim>()
             {
                 new(ClaimTypes.GivenName, appUser.FirstName),

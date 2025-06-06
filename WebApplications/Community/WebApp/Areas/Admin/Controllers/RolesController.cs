@@ -1,28 +1,34 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.EF;
 using App.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 
-namespace WebApp.Controllers
+namespace WebApp.Areas.Admin.Controllers
 {
-    [Authorize]
-    public class AppUsersController : Controller
+    [Area("Admin")]
+    [Authorize(Roles = "admin")]
+    public class RolesController : Controller
     {
         private readonly AppDbContext _context;
 
-        public AppUsersController(AppDbContext context)
+        public RolesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: AppUsers
+        // GET: Admin/Roles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppUsers.ToListAsync());
+            return View(await _context.Roles.ToListAsync());
         }
 
-        // GET: AppUsers/Details/5
+        // GET: Admin/Roles/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -30,40 +36,40 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers
+            var appRole = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (appUser == null)
+            if (appRole == null)
             {
                 return NotFound();
             }
 
-            return View(appUser);
+            return View(appRole);
         }
 
-        // GET: AppUsers/Create
+        // GET: Admin/Roles/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: AppUsers/Create
+        // POST: Admin/Roles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] AppUser appUser)
+        public async Task<IActionResult> Create([Bind("Id,Name,NormalizedName,ConcurrencyStamp")] AppRole appRole)
         {
             if (ModelState.IsValid)
             {
-                appUser.Id = Guid.NewGuid();
-                _context.Add(appUser);
+                appRole.Id = Guid.NewGuid();
+                _context.Add(appRole);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(appUser);
+            return View(appRole);
         }
 
-        // GET: AppUsers/Edit/5
+        // GET: Admin/Roles/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -71,22 +77,22 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers.FindAsync(id);
-            if (appUser == null)
+            var appRole = await _context.Roles.FindAsync(id);
+            if (appRole == null)
             {
                 return NotFound();
             }
-            return View(appUser);
+            return View(appRole);
         }
 
-        // POST: AppUsers/Edit/5
+        // POST: Admin/Roles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] AppUser appUser)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,NormalizedName,ConcurrencyStamp")] AppRole appRole)
         {
-            if (id != appUser.Id)
+            if (id != appRole.Id)
             {
                 return NotFound();
             }
@@ -95,12 +101,12 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    _context.Update(appUser);
+                    _context.Update(appRole);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AppUserExists(appUser.Id))
+                    if (!AppRoleExists(appRole.Id))
                     {
                         return NotFound();
                     }
@@ -111,10 +117,10 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(appUser);
+            return View(appRole);
         }
 
-        // GET: AppUsers/Delete/5
+        // GET: Admin/Roles/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -122,34 +128,34 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            var appUser = await _context.AppUsers
+            var appRole = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (appUser == null)
+            if (appRole == null)
             {
                 return NotFound();
             }
 
-            return View(appUser);
+            return View(appRole);
         }
 
-        // POST: AppUsers/Delete/5
+        // POST: Admin/Roles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var appUser = await _context.AppUsers.FindAsync(id);
-            if (appUser != null)
+            var appRole = await _context.Roles.FindAsync(id);
+            if (appRole != null)
             {
-                _context.AppUsers.Remove(appUser);
+                _context.Roles.Remove(appRole);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AppUserExists(Guid id)
+        private bool AppRoleExists(Guid id)
         {
-            return _context.AppUsers.Any(e => e.Id == id);
+            return _context.Roles.Any(e => e.Id == id);
         }
     }
 }

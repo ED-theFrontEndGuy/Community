@@ -44,6 +44,7 @@ export default function Course() {
 		return <>
 			<h1>Declarations</h1>
 
+			<p>You have not declared anything yet</p>
 			<p>
 				<Link href="/declarations/create">Create New Declaration</Link>
 			</p>

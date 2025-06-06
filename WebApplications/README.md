@@ -1,10 +1,10 @@
 Migrations
 ~~~sh
 dotnet ef migrations add InitialCreate
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate2
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 
-dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext AddNewAdditionalColumns
+dotnet ef migrations add --project App.DAL.EF --startup-project WebApp --context AppDbContext InitialCreate
 dotnet ef database update --project App.DAL.EF --startup-project WebApp --context AppDbContext AddDescriptionToStudySession
 
 dotnet ef migrations remove --project App.DAL.EF --startup-project WebApp --context AppDbContext
@@ -37,6 +37,16 @@ dotnet aspnet-codegenerator controller -name StudyGroupsController -actions -m A
 
 extend appuser
 dotnet aspnet-codegenerator identity -dc App.DAL.EF.AppDbContext -f
+~~~
+
+Admin Controllers
+~~~sh
+cd WebApp
+
+dotnet aspnet-codegenerator controller -name RefreshTokensController        -actions -m  App.Domain.Identity.AppRefreshToken        -dc AppDbContext -outDir Areas/Admin/Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name UsersController        -actions -m  App.Domain.Identity.AppUser        -dc AppDbContext -outDir Areas/Admin/Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name RolesController        -actions -m  App.Domain.Identity.AppRole        -dc AppDbContext -outDir Areas/Admin/Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name UserRolesController        -actions -m  App.Domain.Identity.AppUserRole        -dc AppDbContext -outDir Areas/Admin/Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 ~~~
 
 ApiControllers

@@ -20,8 +20,8 @@ public class AppDbContext :
         IdentityUserToken<Guid>
     >
 {
-    public DbSet<AppUser> AppUsers { get; set; } = default!;
-    public DbSet<AppRole> AppRoles { get; set; } = default!;
+    // public DbSet<AppUser> AppUsers { get; set; } = default!;
+    // public DbSet<AppRole> AppRoles { get; set; } = default!;
     public DbSet<Declaration> Declarations { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Timelog> Timelogs { get; set; }
@@ -52,11 +52,9 @@ public class AppDbContext :
         // We have custom UserRole - with separate PK and navigation for Role and User
         // override default Identity EF config
         // builder.Entity<AppUserRole>().HasKey(a => a.Id);
-        builder.Entity<AppUserRole>().HasKey(a => new {a.UserId, a.RoleId });
-        builder.Entity<AppUserRole>().HasAlternateKey(a => a.Id);
-
-
-        builder.Entity<AppUserRole>().HasIndex(a => new { a.UserId, a.RoleId }).IsUnique();
+        // builder.Entity<AppUserRole>().HasKey(a => new {a.UserId, a.RoleId });
+        // builder.Entity<AppUserRole>().HasAlternateKey(a => a.Id);
+        // builder.Entity<AppUserRole>().HasIndex(a => new { a.UserId, a.RoleId }).IsUnique();
 
         builder.Entity<AppUserRole>()
             .HasOne(a => a.User)
