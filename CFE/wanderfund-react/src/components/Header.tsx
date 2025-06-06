@@ -22,9 +22,6 @@ export default function Header() {
 						<ul className="navbar-nav flex-grow-1">
 							<>
 								<li className="nav-item">
-									<Link className="nav-link text-dark" href="/trips">Trips</Link>
-								</li>
-								<li className="nav-item">
 									<Link className="nav-link text-dark" href="/expenses">Expenses</Link>
 								</li>
 							</>

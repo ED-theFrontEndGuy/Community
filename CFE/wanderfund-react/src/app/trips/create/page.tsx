@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
-import { ITrip } from "@/types/domain/ITrip";
-import { useForm, SubmitHandler, set } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import { useRouter } from 'next/navigation'
 import { AccountContext } from "@/context/AccountContext";
 import { TripService } from "@/services/TripService";
 import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 
 export default function Coursecreate() {
-	const { accountInfo, setAccountInfo } = useContext(AccountContext);
+	const { accountInfo } = useContext(AccountContext);
 	const router = useRouter();
 	useEffect(() => {
 		if (!accountInfo?.jwt) {
@@ -29,7 +28,7 @@ export default function Coursecreate() {
 		departureDate?: Timestamp;
 		returnDate?: Timestamp;
 		isPublic?: boolean;
-		tripExpensesTotal?: number;
+		// tripExpensesTotal?: number;
 	}
 
 	const {
@@ -41,14 +40,20 @@ export default function Coursecreate() {
 	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		setErrorMessage("Loading...");
 		try {
-			const result = await tripService.addAsync({
+			const payload = {
 				name: data.name,
-				destination: data.destination,
-				budget: data.budget,
-				departureDate: data.departureDate,
-				returnDate: data.returnDate,
-				isPublic: data.isPublic
-			});
+				destination: data.destination || undefined,
+				budget: data.budget !== undefined && data.budget !== null ? Number(data.budget) : undefined,
+				// Send ISO string for .NET DateTime compatibility
+				departureDate: typeof data.departureDate === 'string' ? data.departureDate : data.departureDate?.toString(),
+				returnDate: typeof data.returnDate === 'string' ? data.returnDate : data.returnDate?.toString(),
+				isPublic:
+					typeof data.isPublic === 'string'
+						? (data.isPublic === 'true' ? true : data.isPublic === 'false' ? false : undefined)
+						: data.isPublic,
+			};
+
+			const result = await tripService.addAsync(payload);
 
 			console.log('create result', result)
 
@@ -102,23 +107,13 @@ export default function Coursecreate() {
 								{...register("destination", { required: false })}
 							/>
 
-							<label className="control-label" htmlFor="tripDestination">Destination</label>
-							<input
-								className="form-control"
-								type="text"
-								id="tripDestination"
-								maxLength={128}
-								placeholder="Name"
-								{...register("destination", { required: false })}
-							/>
-
 							<label className="control-label" htmlFor="tripBudget">Budget</label>
 							<input
 								className="form-control"
 								type="number"
 								id="tripBudget"
 								maxLength={128}
-								placeholder="Name"
+								placeholder="0"
 								{...register("budget", { required: false })}
 							/>
 
