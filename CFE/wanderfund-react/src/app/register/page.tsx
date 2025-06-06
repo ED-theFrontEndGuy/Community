@@ -37,7 +37,7 @@ export default function Register() {
 		setErrorMessage("Loading...");
 
 		try {
-			var result = await accountService.registerAsync(data.email, data.firstName, data.lastName, data.password);
+			const result = await accountService.registerAsync(data.email, data.firstName, data.lastName, data.password);
 
 			if (result.errors) {
 				setErrorMessage(result.statusCode + " " + result.errors[0]);

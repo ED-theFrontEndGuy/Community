@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 export default function Home() {
-	const { accountInfo, setAccountInfo } = useContext(AccountContext);
+	const { accountInfo } = useContext(AccountContext);
 	const router = useRouter();
 
 	useEffect(() => {
