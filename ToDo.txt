@@ -1,6 +1,0 @@
-Web Applications in C#
-
-1-st HW Deadline 02.03.2025 23:59
-
-Todo:
-* try out ERD whether everything works as expected in the CRUD.
