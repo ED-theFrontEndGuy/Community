@@ -1,3 +1,5 @@
+### Commands
+
 Migrations
 ~~~sh
 dotnet ef migrations add InitialCreate
@@ -32,17 +34,10 @@ dotnet aspnet-codegenerator controller -name ConversationsController -actions -m
 dotnet aspnet-codegenerator controller -name MessagesController -actions -m App.Domain.Message -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name StudySessionsController -actions -m App.Domain.StudySession -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 dotnet aspnet-codegenerator controller -name StudyGroupsController -actions -m App.Domain.StudyGroup -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-
-
-dotnet aspnet-codegenerator controller -name TripsController -actions -m App.Domain.Trip -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-dotnet aspnet-codegenerator controller -name UserTripsController -actions -m App.Domain.UserTrip -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-dotnet aspnet-codegenerator controller -name TripExpensesController -actions -m App.Domain.TripExpense -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-dotnet aspnet-codegenerator controller -name ExpensesController -actions -m App.Domain.Expense -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-dotnet aspnet-codegenerator controller -name ExpenseCategoriesController -actions -m App.Domain.ExpenseCategory -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-
-
+~~~
 
 extend appuser
+~~~sh
 dotnet aspnet-codegenerator identity -dc App.DAL.EF.AppDbContext -f
 ~~~
 
@@ -66,67 +61,8 @@ dotnet aspnet-codegenerator controller -name RoomsController -m App.Domain.Room 
 dotnet aspnet-codegenerator controller -name StudyGroupsController -m App.Domain.StudyGroup -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 dotnet aspnet-codegenerator controller -name StudySessionsController -m App.Domain.StudySession -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
 dotnet aspnet-codegenerator controller -name TimelogsController -m App.Domain.Timelog -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-
-dotnet aspnet-codegenerator controller -name TripsController -m App.Domain.Trip -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-dotnet aspnet-codegenerator controller -name UserTripsController -m App.Domain.UserTrip -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-dotnet aspnet-codegenerator controller -name TripExpensesController -m App.Domain.TripExpense -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-dotnet aspnet-codegenerator controller -name ExpensesController -m App.Domain.Expense -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-dotnet aspnet-codegenerator controller -name ExpenseCategoriesController -m App.Domain.ExpenseCategory -dc AppDbContext -outDir ApiControllers -api --useAsyncActions -f
-~~~
-
-Kaver compose
-~~~docker-compose.yml
-services:
-  postgres:
-    container_name: "postgres"
-    # https://github.com/baosystems/docker-postgis/pkgs/container/postgis
-    image: ghcr.io/baosystems/postgis:16
-    command: postgres -c 'max_connections=1000'
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./pg-dump:/var/lib/postgresql/dump
-
-volumes: 
-    postgres-data:
-
-networks:
-  default:
-    name: infra
-~~~
-
-My compose
-~~~docker-compose.yml
-services:
-  community-postgres:
-    container_name: "community-postgres"
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-volumes:
-  postgres-data:
-
-networks:
-  default:
-    name: infra
 ~~~
 
 ~~~sh
 docker compose --project-name local-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
-
-
-docker compose --project-name wanderfund-dev-infra --file docker-compose.yml up --build --remove-orphans --detach
-docker compose --project-name wanderfund-dev-infra down
 ~~~
