@@ -1,7 +1,7 @@
 ## Getting started
 
 This started out as a school project that I decided to build additional stuff on top of it.
-ERD and more info about this app is written inside Project Proposal -> CommunityApp3.0.pdf
+ERD at Community-ERD.png
 
 ### Backend
 Backend is in C# .NET 9.0
@@ -17,9 +17,9 @@ docker-compose up -d
 Run the WebApp
 
 ### Frontend
-UI is in React & next.js
+Under community-react
 
-Inside CFE -> community-react
+UI is in React & next.js
 
 ~~~sh
 npm install
