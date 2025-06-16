@@ -1,6 +1,9 @@
 ## Getting started
 
-This started out as a school project that I decided to build additional stuff on top of it.
+Community is in a nutshell a study planner.
+Currently a MVP.
+The rest is work in progress.
+
 ERD at Community-ERD.png
 
 ### Backend
